@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Camera, Upload, Phone, Globe, Calendar, Shield, AlertCircle } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from './ui/alert';
 import { useAuth } from '../context/AuthContext';
 
 export default function ProfileSetup() {
