@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Calendar, MapPin, ArrowRight, ArrowLeftRight, Shield } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from './ui/alert';
 
 const DateTradingBoard = () => {
   const [activeTab, setActiveTab] = useState('available');
