@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Mail, ArrowRight, Check } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from './ui/alert';
 
 export const NewsletterSignup = () => {
   const [email, setEmail] = useState('');
