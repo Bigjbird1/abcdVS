@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { DollarSign, Shield, Clock, CheckCircle2, AlertCircle, ArrowRight, FileText, LockKeyhole, Building2 } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from './ui/alert';
 
 interface PaymentEscrowProps {
   listingId: string;
