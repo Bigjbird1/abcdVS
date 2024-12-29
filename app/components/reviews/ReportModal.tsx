@@ -1,7 +1,6 @@
 import React from 'react';
 import { X, AlertCircle } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-
+import { Alert, AlertDescription } from '@/ui/alert';
 interface ReportModalProps {
   onClose: () => void;
   onSubmit: () => void;
