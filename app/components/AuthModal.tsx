@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Eye, EyeOff, Check, ArrowRight, Mail, Key, AlertCircle, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Link from 'next/link';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from './ui/alert';
 
 interface AuthModalProps {
   onClose: () => void;
