@@ -5,9 +5,6 @@ const nextConfig = {
   images: {
     domains: ['placeholder.com'], // Add any image domains you're using
   },
-  experimental: {
-    appDir: true,
-  },
   webpack: (config, { isServer }) => {
     // Disable asm.js optimizations
     config.optimization.minimizer.forEach((minimizer) => {
@@ -31,5 +28,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
-
+module.exports = nextConfig;
