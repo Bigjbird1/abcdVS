@@ -6,7 +6,6 @@ import { useAuth } from './context/AuthContext';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import NewsletterSignup from './components/NewsletterSignup';
-import PriceAlertComponent from './components/PriceAlertComponent';
 
 const Homepage = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -237,13 +236,6 @@ const Homepage = () => {
         </div>
       )}
 
-      {/* Price Alert Component */}
-      <div className="bg-gray-50 py-20">
-        <div className="max-w-3xl mx-auto px-4">
-          <PriceAlertComponent />
-        </div>
-      </div>
-
       {/* Trust/Benefits Section */}
       <div className="py-20">
         <div className="max-w-7xl mx-auto px-4">
@@ -281,4 +273,6 @@ const Homepage = () => {
 };
 
 export default Homepage;
+
+
 
