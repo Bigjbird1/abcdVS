@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Mail, ArrowRight, Check, Eye, EyeOff, KeyRound } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from './ui/alert';
 import { useRouter } from 'next/navigation';
 
 const PasswordRecovery = () => {
