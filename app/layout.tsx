@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import '../globals.css';
+import './globals.css';
 import { Providers } from './providers';
 import Navigation from './components/Navigation';
 
@@ -28,12 +28,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Providers>
-      <div className={inter.className}>
-        <Navigation />
-        {children}
-      </div>
-    </Providers>
+    <html lang="en" className={inter.className}>
+      <body>
+        <Providers>
+          <Navigation />
+          {children}
+        </Providers>
+      </body>
+    </html>
   );
 }
+
 
