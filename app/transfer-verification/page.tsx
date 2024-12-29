@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { CheckCircle2, AlertCircle, ClipboardCheck, Building2, Calendar, Shield, Upload, FileText, X } from 'lucide-react';
-import { Alert, AlertDescription } from '@/ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import ProgressTracker from '../components/transfer-verification/ProgressTracker';
 import VerificationStep from '../components/transfer-verification/VerificationStep';
 import UploadModal from '../components/transfer-verification/UploadModal';
