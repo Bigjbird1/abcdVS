@@ -1,6 +1,6 @@
 import React from 'react';
 import { Lock, AlertCircle } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '../ui/alert';
 
 interface OrderSummaryProps {
   cartItems: any[];
