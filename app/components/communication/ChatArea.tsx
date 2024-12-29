@@ -1,6 +1,6 @@
 import React from 'react';
 import { User, Phone, Flag, Shield, HelpCircle, Paperclip, Send } from 'lucide-react';
-import { Alert, AlertDescription } from '@/ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface Conversation {
   id: number;
