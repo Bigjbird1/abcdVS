@@ -5,9 +5,7 @@ import { MessageCircle, Search, Phone, Flag, Clock, Send, Paperclip, User, HelpC
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import ConversationList from './communication/ConversationList';
 import ChatArea from './communication/ChatArea';
-
-// Define types
-
+import { Conversation, ChatType, ChatStatus } from '@/types/chat';
 
 interface TabButtonProps {
   label: string;
@@ -141,7 +139,3 @@ const CommunicationSystem: React.FC = () => {
 };
 
 export default CommunicationSystem;
-};
-
-export default CommunicationSystem;
-
