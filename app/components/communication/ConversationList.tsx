@@ -1,4 +1,4 @@
-import { Conversation, ChatType } from '@/types/chat';
+import { Conversation, ChatType, ChatStatus } from '@/types/chat';
 import React from 'react';
 import { MessageCircle, HelpCircle, User } from 'lucide-react';
 
