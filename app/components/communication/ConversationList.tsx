@@ -1,16 +1,6 @@
+import { Conversation, ChatType } from '@/types/chat';
 import React from 'react';
 import { MessageCircle, HelpCircle, User } from 'lucide-react';
-
-interface Conversation {
-  id: number;
-  type: string;
-  name: string;
-  avatar: string | null;
-  lastMessage: string;
-  timestamp: string;
-  unread: number;
-  status: string;
-}
 
 interface ConversationListProps {
   conversations: Conversation[];
@@ -25,6 +15,17 @@ const ConversationList: React.FC<ConversationListProps> = ({
   selectedChat,
   setSelectedChat
 }) => {
+  const getIconForType = (type: ChatType) => {
+    switch (type) {
+      case 'venue':
+        return <MessageCircle className="w-6 h-6 text-gray-400" />;
+      case 'support':
+        return <HelpCircle className="w-6 h-6 text-gray-400" />;
+      case 'buyer':
+        return <User className="w-6 h-6 text-gray-400" />;
+    }
+  };
+
   return (
     <div className="flex-1 overflow-y-auto">
       {conversations
@@ -35,18 +36,12 @@ const ConversationList: React.FC<ConversationListProps> = ({
           <button
             key={conversation.id}
             onClick={() => setSelectedChat(conversation)}
-            className={`w-full p-4 flex items-center gap-3 hover:bg-gray-50 ${
+            className={`w-full p-4 flex items-center gap-3 hover:bg-gray-50 transition-colors ${
               selectedChat?.id === conversation.id ? 'bg-gray-50' : ''
             }`}
           >
             <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
-              {conversation.type === 'venue' ? (
-                <MessageCircle className="w-6 h-6 text-gray-400" />
-              ) : conversation.type === 'support' ? (
-                <HelpCircle className="w-6 h-6 text-gray-400" />
-              ) : (
-                <User className="w-6 h-6 text-gray-400" />
-              )}
+              {getIconForType(conversation.type)}
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex justify-between items-start">
