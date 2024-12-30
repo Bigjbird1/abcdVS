@@ -14,7 +14,7 @@ interface Conversation {
 
 interface ConversationListProps {
   conversations: Conversation[];
-  activeTab: string;
+  activeTab: 'messages' | 'support';
   selectedChat: Conversation | null;
   setSelectedChat: (chat: Conversation) => void;
 }
