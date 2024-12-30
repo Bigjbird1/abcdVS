@@ -1,17 +1,7 @@
 import React from 'react';
 import { User, Phone, Flag, Shield, HelpCircle, Paperclip, Send } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-
-interface Conversation {
-  id: number;
-  type: string;
-  name: string;
-  avatar: string | null;
-  lastMessage: string;
-  timestamp: string;
-  unread: number;
-  status: string;
-}
+import { Conversation } from '@/types/chat';
 
 interface ChatAreaProps {
   selectedChat: Conversation | null;
@@ -19,7 +9,33 @@ interface ChatAreaProps {
   setMessage: (message: string) => void;
 }
 
+interface MessageProps {
+  content: string;
+  timestamp: string;
+  isSent: boolean;
+}
+
+const Message: React.FC<MessageProps> = ({ content, timestamp, isSent }) => (
+  <div className={`flex ${isSent ? 'justify-end' : 'justify-start'}`}>
+    <div className={`${
+      isSent ? 'bg-gray-900 text-white' : 'bg-gray-100'
+    } rounded-lg p-3 max-w-[80%]`}>
+      <p>{content}</p>
+      <p className={`text-xs ${isSent ? 'text-gray-300' : 'text-gray-500'} mt-1`}>
+        {timestamp}
+      </p>
+    </div>
+  </div>
+);
+
 const ChatArea: React.FC<ChatAreaProps> = ({ selectedChat, message, setMessage }) => {
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      // TODO: Implement send message logic
+      setMessage('');
+    }
+  };
+
   if (!selectedChat) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center p-6">
@@ -86,20 +102,17 @@ const ChatArea: React.FC<ChatAreaProps> = ({ selectedChat, message, setMessage }
           </Alert>
         )}
 
-        {/* Message bubbles would go here */}
-        <div className="flex justify-start">
-          <div className="bg-gray-100 rounded-lg p-3 max-w-[80%]">
-            <p>Hi, I'm interested in your September 24th wedding date. Is it still available?</p>
-            <p className="text-xs text-gray-500 mt-1">10:30 AM</p>
-          </div>
-        </div>
+        <Message
+          content="Hi, I'm interested in your September 24th wedding date. Is it still available?"
+          timestamp="10:30 AM"
+          isSent={false}
+        />
 
-        <div className="flex justify-end">
-          <div className="bg-gray-900 text-white rounded-lg p-3 max-w-[80%]">
-            <p>Yes, it's still available! The venue is The Grand Estate and includes full catering package.</p>
-            <p className="text-xs text-gray-300 mt-1">10:35 AM</p>
-          </div>
-        </div>
+        <Message
+          content="Yes, it's still available! The venue is The Grand Estate and includes full catering package."
+          timestamp="10:35 AM"
+          isSent={true}
+        />
       </div>
 
       {/* Message Input */}
@@ -110,21 +123,15 @@ const ChatArea: React.FC<ChatAreaProps> = ({ selectedChat, message, setMessage }
           </button>
           <input
             type="text"
-            id="message"
-            name="message"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
             placeholder="Type your message..."
             className="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:border-gray-400"
           />
           <button 
-            className="p-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
-            onClick={() => {
-              if (message.trim()) {
-                // Send message logic
-                setMessage('');
-              }
-            }}
+            onClick={handleSendMessage}
+            className="p-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
           >
             <Send className="w-5 h-5" />
           </button>
