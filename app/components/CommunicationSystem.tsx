@@ -1,7 +1,18 @@
 'use client'
 
 import React, { useState } from 'react';
-import { MessageCircle, Search, Phone, Flag, Clock, Send, Paperclip, User, HelpCircle, AlertCircle, Shield } from 'lucide-react';
+import { 
+  MessageCircle, 
+  Search, 
+  Phone, 
+  Flag, 
+  Clock, 
+  Send, 
+  Paperclip, 
+  User, 
+  HelpCircle, 
+  Shield 
+} from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import ConversationList from './communication/ConversationList';
 import ChatArea from './communication/ChatArea';
@@ -86,6 +97,7 @@ const CommunicationSystem: React.FC = () => {
     setSearchQuery(e.target.value);
   };
 
+  // Fixed type for handleChatSelection
   const handleChatSelection = (chat: Conversation) => {
     setSelectedChat(chat);
   };
@@ -121,7 +133,7 @@ const CommunicationSystem: React.FC = () => {
             conversations={conversations}
             activeTab={activeTab}
             selectedChat={selectedChat}
-            setSelectedChat={handleChatSelection}
+            setSelectedChat={handleChatSelection}  {/* Fixed: Passing the handler function */}
           />
         </div>
 
@@ -137,5 +149,7 @@ const CommunicationSystem: React.FC = () => {
     </div>
   );
 };
+
+export default CommunicationSystem;
 
 export default CommunicationSystem;
