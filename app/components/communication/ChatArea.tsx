@@ -1,7 +1,7 @@
 import React from 'react';
 import { User, Phone, Flag, Shield, HelpCircle, Paperclip, Send } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Conversation } from '@/types/chat';
+import { Conversation, ChatType, ChatStatus } from '@/types/chat';
 
 interface ChatAreaProps {
   selectedChat: Conversation | null;
