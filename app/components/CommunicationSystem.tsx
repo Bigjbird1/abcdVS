@@ -6,14 +6,64 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import ConversationList from './communication/ConversationList';
 import ChatArea from './communication/ChatArea';
 
-const CommunicationSystem = () => {
-  const [activeTab, setActiveTab] = useState('messages');
-  const [selectedChat, setSelectedChat] = useState(null);
-  const [message, setMessage] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
+// Define types
+export type ChatStatus = 'online' | 'offline';
+export type ChatType = 'buyer' | 'venue' | 'support';
+
+export interface Conversation {
+  id: number;
+  type: ChatType;
+  name: string;
+  avatar: string | null;
+  lastMessage: string;
+  timestamp: string;
+  unread: number;
+  status: ChatStatus;
+}
+
+interface TabButtonProps {
+  label: string;
+  isActive: boolean;
+  onClick: () => void;
+}
+
+const TabButton: React.FC<TabButtonProps> = ({ label, isActive, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`flex-1 py-1.5 rounded-lg text-sm ${
+      isActive
+        ? 'bg-gray-900 text-white'
+        : 'text-gray-600 hover:bg-gray-100'
+    }`}
+  >
+    {label}
+  </button>
+);
+
+const SearchBox: React.FC<{
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}> = ({ value, onChange }) => (
+  <div className="relative mb-4">
+    <input
+      type="text"
+      value={value}
+      onChange={onChange}
+      placeholder="Search conversations..."
+      className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200"
+    />
+    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+  </div>
+);
+
+const CommunicationSystem: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'messages' | 'support'>('messages');
+  const [selectedChat, setSelectedChat] = useState<Conversation | null>(null);
+  const [message, setMessage] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Mock data for conversations
-  const conversations = [
+  const conversations: Conversation[] = [
     {
       id: 1,
       type: 'buyer',
@@ -46,6 +96,14 @@ const CommunicationSystem = () => {
     }
   ];
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleChatSelection = (chat: Conversation) => {
+    setSelectedChat(chat);
+  };
+
   return (
     <div className="bg-white rounded-xl border shadow-sm">
       <div className="grid grid-cols-12 divide-x h-[600px]">
@@ -53,38 +111,22 @@ const CommunicationSystem = () => {
         <div className="col-span-4 flex flex-col">
           {/* Search and Filters */}
           <div className="p-4 border-b">
-            <div className="relative mb-4">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search conversations..."
-                className="w-full pl-10 pr-4 py-2 border rounded-lg"
-              />
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            </div>
+            <SearchBox 
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
 
             <div className="flex gap-2">
-              <button
+              <TabButton
+                label="Messages"
+                isActive={activeTab === 'messages'}
                 onClick={() => setActiveTab('messages')}
-                className={`flex-1 py-1.5 rounded-lg text-sm ${
-                  activeTab === 'messages'
-                    ? 'bg-gray-900 text-white'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                Messages
-              </button>
-              <button
+              />
+              <TabButton
+                label="Support"
+                isActive={activeTab === 'support'}
                 onClick={() => setActiveTab('support')}
-                className={`flex-1 py-1.5 rounded-lg text-sm ${
-                  activeTab === 'support'
-                    ? 'bg-gray-900 text-white'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                Support
-              </button>
+              />
             </div>
           </div>
 
@@ -93,7 +135,7 @@ const CommunicationSystem = () => {
             conversations={conversations}
             activeTab={activeTab}
             selectedChat={selectedChat}
-            setSelectedChat={setSelectedChat}
+            setSelectedChat={handleChatSelection}
           />
         </div>
 
@@ -108,6 +150,9 @@ const CommunicationSystem = () => {
       </div>
     </div>
   );
+};
+
+export default CommunicationSystem;
 };
 
 export default CommunicationSystem;
