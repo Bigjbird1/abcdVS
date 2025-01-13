@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-import { DollarSign, Shield, Clock, CheckCircle2, AlertCircle, ArrowRight, FileText, LockKeyhole, Building2 } from 'lucide-react';
+import { DollarSign, Shield, Clock, CheckCircle2, AlertCircle, ArrowRight, FileText, Lock, Building2 } from 'lucide-react';
 import { Alert, AlertDescription } from './ui/alert';
 
 interface PaymentEscrowProps {
@@ -102,7 +102,7 @@ const PaymentEscrow: React.FC<PaymentEscrowProps> = ({ listingId }) => {
           <div className="space-y-4">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center">
-                <LockKeyhole className="w-6 h-6 text-purple-600" />
+                <Lock className="w-6 h-6 text-purple-600" />
               </div>
               <div>
                 <h3 className="font-medium">Secure Payment Processing</h3>
