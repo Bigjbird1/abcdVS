@@ -15,6 +15,12 @@ interface EnhancedSearchProps {
   initialSearchType: 'dates' | 'marketplace';
 }
 
+interface AdvancedFilters {
+  venueType: string[];
+  amenities: string[];
+  priceRange: [number, number];
+}
+
 export default function EnhancedSearch({ initialSearchType }: EnhancedSearchProps) {
   const [viewMode, setViewMode] = useState('grid');
   const [showFilters, setShowFilters] = useState(false);
@@ -37,11 +43,11 @@ export default function EnhancedSearch({ initialSearchType }: EnhancedSearchProp
   const [visibleResults, setVisibleResults] = useState(12);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
-  const [advancedFilters, setAdvancedFilters] = useState({
-    venueType: [],
-    amenities: [],
-    priceRange: [0, 50000],
-  });
+  const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilters>({
+  venueType: [],
+  amenities: [],
+  priceRange: [0, 50000],
+});
 
   const venueTypes = ['Indoor', 'Outdoor', 'Beach', 'Garden', 'Ballroom', 'Rustic'];
   const amenities = ['Catering', 'Bar Service', 'Parking', 'Wheelchair Accessible', 'Pet Friendly', 'Accommodation'];
@@ -97,8 +103,7 @@ export default function EnhancedSearch({ initialSearchType }: EnhancedSearchProp
     }));
   };
 
-  const handleAdvancedFilterChange = (filterType: string, value: any) => {
-    setAdvancedFilters(prev => ({
+ const handleAdvancedFilterChange = (filterType: keyof AdvancedFilters, value: any) => {
       ...prev,
       [filterType]: value
     }));
