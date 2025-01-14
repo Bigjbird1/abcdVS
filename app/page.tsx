@@ -188,10 +188,10 @@ const Homepage = () => {
         <button 
           key={index}
           onClick={() => {
-            router.push('/marketplace')
-              .then(() => {
-                window.scrollTo(0, 0);
-              });
+            router.push('/marketplace');
+            setTimeout(() => {
+              window.scrollTo(0, 0);
+            }, 100);
           }}
           className="flex items-center gap-3 p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition-all"
         >
