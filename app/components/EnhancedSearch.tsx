@@ -208,7 +208,6 @@ return (
                 readOnly
               />
               <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-
               {showDatePicker && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border max-h-64 overflow-y-auto z-50">
                   {/* Date picker implementation */}
@@ -216,256 +215,249 @@ return (
               )}
             </div>
           </div>
-                    {/* Date picker implementation */}
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <button className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 flex items-center gap-2">
-                <Search className="w-4 h-4" />
-                Search
-              </button>
-              <button 
-                onClick={() => setSavedSearch(!savedSearch)}
-                className={`p-2 rounded-lg border ${savedSearch ? 'text-purple-600 border-purple-200 bg-purple-50' : 'text-gray-400 hover:border-gray-300'}`}
-              >
-                <Bookmark className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          <div className="py-3 border-t flex items-center justify-between">
-            <div className="flex-1 flex items-center gap-2 overflow-x-auto pb-2">
-              <button 
-                onClick={() => setShowFilters(true)}
-                className="px-3 py-1.5 bg-gray-100 rounded-full text-sm whitespace-nowrap hover:bg-gray-200 flex items-center gap-1"
-              >
-                <Filter className="w-3 h-3" />
-                All Filters
-              </button>
-              <div className="h-4 w-px bg-gray-200"></div>
-              <button className="px-3 py-1.5 bg-gray-100 rounded-full text-sm whitespace-nowrap hover:bg-gray-200">
-                Under $15,000
-              </button>
-              <button className="px-3 py-1.5 bg-gray-100 rounded-full text-sm whitespace-nowrap hover:bg-gray-200">
-                All-Inclusive
-              </button>
-              <button className="px-3 py-1.5 bg-gray-100 rounded-full text-sm whitespace-nowrap hover:bg-gray-200">
-                Under 100 guests
-              </button>
-            </div>
-
-            <div className="flex items-center gap-3 flex-shrink-0">
-              <select
-                value={sortOption}
-                onChange={(e) => setSortOption(e.target.value)}
-                className="text-sm text-gray-600 border rounded-lg px-2 py-1"
-              >
-                <option value="relevance">Sort: Relevance</option>
-                <option value="price_low_high">Price: Low to High</option>
-                <option value="price_high_low">Price: High to Low</option>
-                <option value="date_newest">Date: Newest</option>
-                <option value="popularity">Popularity</option>
-              </select>
-              <div className="h-4 w-px bg-gray-200"></div>
-              <div className="flex border rounded-lg p-1">
-                <button 
-                  className={`p-1.5 rounded ${viewMode === 'grid' ? 'bg-gray-100' : ''}`}
-                  onClick={() => setViewMode('grid')}
-                >
-                  <LayoutGrid className="w-4 h-4" />
-                </button>
-                <button 
-                  className={`p-1.5 rounded ${viewMode === 'map' ? 'bg-gray-100' : ''}`}
-                  onClick={() => setViewMode('map')}
-                >
-                  <Globe className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {Object.entries(activeFilters).some(([key, value]) => 
-            Array.isArray(value) ? value.length > 0 : value !== null
-          ) && (
-            <div className="py-3 border-t flex items-center gap-2 overflow-x-auto">
-              {activeFilters.priceRange[0] > 0 && (
-                <div className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 rounded-full text-sm">
-                  <span>${activeFilters.priceRange[0].toLocaleString()} - ${activeFilters.priceRange[1].toLocaleString()}</span>
-                  <button 
-                    onClick={() => handleAdvancedFilterChange('priceRange', [0, 50000])}
-                    className="ml-1 p-0.5 rounded-full hover:bg-gray-200"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </div>
-              )}
-              <button 
-                onClick={clearAllFilters}
-                className="text-sm text-gray-500 hover:text-gray-700"
-              >
-                Clear all
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Add this section for advanced filters */}
-      {showFilters && (
-        <div className="bg-white border-t p-4">
-          <h3 className="font-semibold mb-4">Advanced Filters</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <h4 className="font-medium mb-2">Venue Type</h4>
-              {venueTypes.map(type => (
-                <label key={type} className="flex items-center mb-2">
-                  <input
-                    type="checkbox"
-                    checked={advancedFilters.venueType.includes(type)}
-                    onChange={(e) => {
-                      const newTypes = e.target.checked
-                        ? [...advancedFilters.venueType, type]
-                        : advancedFilters.venueType.filter(t => t !== type);
-                      handleAdvancedFilterChange('venueType', newTypes);
-                    }}
-                    className="mr-2"
-                  />
-                  {type}
-                </label>
-              ))}
-            </div>
-            <div>
-              <h4 className="font-medium mb-2">Amenities</h4>
-              {amenities.map(amenity => (
-                <label key={amenity} className="flex items-center mb-2">
-                  <input
-                    type="checkbox"
-                    checked={advancedFilters.amenities.includes(amenity)}
-                    onChange={(e) => {
-                      const newAmenities = e.target.checked
-                        ? [...advancedFilters.amenities, amenity]
-                        : advancedFilters.amenities.filter(a => a !== amenity);
-                      handleAdvancedFilterChange('amenities', newAmenities);
-                    }}
-                    className="mr-2"
-                  />
-                  {amenity}
-                </label>
-              ))}
-            </div>
-            <div>
-              <h4 className="font-medium mb-2">Price Range</h4>
-              <input
-                type="range"
-                min="0"
-                max="50000"
-                step="1000"
-                value={advancedFilters.priceRange[1]}
-                onChange={(e) => handleAdvancedFilterChange('priceRange', [0, parseInt(e.target.value)])}
-                className="w-full"
-              />
-              <div className="flex justify-between mt-2">
-                <span>$0</span>
-                <span>${advancedFilters.priceRange[1].toLocaleString()}</span>
-              </div>
-            </div>
-          </div>
-          <button
-            onClick={() => setShowFilters(false)}
-            className="mt-4 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
-          >
-            Apply Filters
-          </button>
-        </div>
-      )}
-
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {isLoading ? (
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <CardSkeleton key={i} />
-            ))}
-          </div>
-        ) : (
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {mockResults.slice(0, visibleResults).map((item, index) => (
-              <div key={item.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all group">
-                <div className="aspect-[16/9] relative">
-    <Image 
-    src={item.image}
-    alt={item.title}
-    fill
-    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-    className="group-hover:scale-105 transition-transform duration-500 object-cover"
-    onClick={() => openLightbox(index)}
-  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                  <div className="absolute top-4 right-4">
-                    <button 
-                      className="p-2 rounded-full bg-white/90 hover:bg-white transition-colors shadow-sm"
-                      onClick={() => toggleFavorite(item.id)}
-                    >
-                      <Heart className="w-4 h-4" />
-                    </button>
-                  </div>
-                  <div className="absolute bottom-4 left-4">
-                    <span className="px-2 py-1 bg-black/30 rounded-full text-sm text-white backdrop-blur-sm">
-                      32% off
-                    </span>
-                  </div>
-                </div>
-                <div className="p-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <h3 className="font-semibold text-lg">{item.title}</h3>
-                      <p className="text-gray-600">{item.location}</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-semibold">${item.price.toLocaleString()}</div>
-                      <div className="text-sm text-gray-500 line-through">${item.originalPrice.toLocaleString()}</div>
-                    </div>
-                  </div>
-                  <div className="flex gap-2 mt-3">
-                    <span className="px-2 py-1 bg-gray-100 rounded-full text-sm">{item.date}</span>
-                    <span className="px-2 py-1 bg-gray-100 rounded-full text-sm">{item.guestCapacity} guests</span>
-                  </div>
-                  <ul className="mt-3 space-y-1">
-                    {item.description.map((point, index) => (
-                      <li key={index} className="text-sm text-gray-600 flex items-center">
-                        <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-2"></div>
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {visibleResults < mockResults.length && (
-          <div className="mt-12 text-center">
+          <div className="flex gap-2">
+            <button className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 flex items-center gap-2">
+              <Search className="w-4 h-4" />
+              Search
+            </button>
             <button 
-              className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 inline-flex items-center gap-2"
-              onClick={loadMoreListings}
+              onClick={() => setSavedSearch(!savedSearch)}
+              className={`p-2 rounded-lg border ${savedSearch ? 'text-purple-600 border-purple-200 bg-purple-50' : 'text-gray-400 hover:border-gray-300'}`}
             >
-              Show more listings
+              <Bookmark className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        <div className="py-3 border-t flex items-center justify-between">
+          <div className="flex-1 flex items-center gap-2 overflow-x-auto pb-2">
+            <button 
+              onClick={() => setShowFilters(true)}
+              className="px-3 py-1.5 bg-gray-100 rounded-full text-sm whitespace-nowrap hover:bg-gray-200 flex items-center gap-1"
+            >
+              <Filter className="w-3 h-3" />
+              All Filters
+            </button>
+            <div className="h-4 w-px bg-gray-200"></div>
+            <button className="px-3 py-1.5 bg-gray-100 rounded-full text-sm whitespace-nowrap hover:bg-gray-200">
+              Under $15,000
+            </button>
+            <button className="px-3 py-1.5 bg-gray-100 rounded-full text-sm whitespace-nowrap hover:bg-gray-200">
+              All-Inclusive
+            </button>
+            <button className="px-3 py-1.5 bg-gray-100 rounded-full text-sm whitespace-nowrap hover:bg-gray-200">
+              Under 100 guests
+            </button>
+          </div>
+
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <select
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+              className="text-sm text-gray-600 border rounded-lg px-2 py-1"
+            >
+              <option value="relevance">Sort: Relevance</option>
+              <option value="price_low_high">Price: Low to High</option>
+              <option value="price_high_low">Price: High to Low</option>
+              <option value="date_newest">Date: Newest</option>
+              <option value="popularity">Popularity</option>
+            </select>
+            <div className="h-4 w-px bg-gray-200"></div>
+            <div className="flex border rounded-lg p-1">
+              <button 
+                className={`p-1.5 rounded ${viewMode === 'grid' ? 'bg-gray-100' : ''}`}
+                onClick={() => setViewMode('grid')}
+              >
+                <LayoutGrid className="w-4 h-4" />
+              </button>
+              <button 
+                className={`p-1.5 rounded ${viewMode === 'map' ? 'bg-gray-100' : ''}`}
+                onClick={() => setViewMode('map')}
+              >
+                <Globe className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {Object.entries(activeFilters).some(([key, value]) => 
+          Array.isArray(value) ? value.length > 0 : value !== null
+        ) && (
+          <div className="py-3 border-t flex items-center gap-2 overflow-x-auto">
+            {activeFilters.priceRange[0] > 0 && (
+              <div className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 rounded-full text-sm">
+                <span>${activeFilters.priceRange[0].toLocaleString()} - ${activeFilters.priceRange[1].toLocaleString()}</span>
+                <button 
+                  onClick={() => handleAdvancedFilterChange('priceRange', [0, 50000])}
+                  className="ml-1 p-0.5 rounded-full hover:bg-gray-200"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+            <button 
+              onClick={clearAllFilters}
+              className="text-sm text-gray-500 hover:text-gray-700"
+            >
+              Clear all
             </button>
           </div>
         )}
       </div>
+    </div>
 
-      {lightboxOpen && (
-        <Lightbox
-          open={lightboxOpen}
-          close={() => setLightboxOpen(false)}
-          index={lightboxIndex}
-          slides={mockResults.map(item => ({ src: item.image }))}
-        />
+    {/* Add this section for advanced filters */}
+    {showFilters && (
+      <div className="bg-white border-t p-4">
+        <h3 className="font-semibold mb-4">Advanced Filters</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <h4 className="font-medium mb-2">Venue Type</h4>
+            {venueTypes.map(type => (
+              <label key={type} className="flex items-center mb-2">
+                <input
+                  type="checkbox"
+                  checked={advancedFilters.venueType.includes(type)}
+                  onChange={(e) => {
+                    const newTypes = e.target.checked
+                      ? [...advancedFilters.venueType, type]
+                      : advancedFilters.venueType.filter(t => t !== type);
+                    handleAdvancedFilterChange('venueType', newTypes);
+                  }}
+                  className="mr-2"
+                />
+                {type}
+              </label>
+            ))}
+          </div>
+          <div>
+            <h4 className="font-medium mb-2">Amenities</h4>
+            {amenities.map(amenity => (
+              <label key={amenity} className="flex items-center mb-2">
+                <input
+                  type="checkbox"
+                  checked={advancedFilters.amenities.includes(amenity)}
+                  onChange={(e) => {
+                    const newAmenities = e.target.checked
+                      ? [...advancedFilters.amenities, amenity]
+                      : advancedFilters.amenities.filter(a => a !== amenity);
+                    handleAdvancedFilterChange('amenities', newAmenities);
+                  }}
+                  className="mr-2"
+                />
+                {amenity}
+              </label>
+            ))}
+          </div>
+          <div>
+            <h4 className="font-medium mb-2">Price Range</h4>
+            <input
+              type="range"
+              min="0"
+              max="50000"
+              step="1000"
+              value={advancedFilters.priceRange[1]}
+              onChange={(e) => handleAdvancedFilterChange('priceRange', [0, parseInt(e.target.value)])}
+              className="w-full"
+            />
+            <div className="flex justify-between mt-2">
+              <span>$0</span>
+              <span>${advancedFilters.priceRange[1].toLocaleString()}</span>
+            </div>
+          </div>
+        </div>
+        <button
+          onClick={() => setShowFilters(false)}
+          className="mt-4 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
+        >
+          Apply Filters
+        </button>
+      </div>
+    )}
+
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      {isLoading ? (
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <CardSkeleton key={i} />
+          ))}
+        </div>
+      ) : (
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {mockResults.slice(0, visibleResults).map((item, index) => (
+            <div key={item.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all group">
+              <div className="aspect-[16/9] relative">
+                <Image 
+                  src={item.image}
+                  alt={item.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                  className="group-hover:scale-105 transition-transform duration-500 object-cover"
+                  onClick={() => openLightbox(index)}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                <div className="absolute top-4 right-4">
+                  <button 
+                    className="p-2 rounded-full bg-white/90 hover:bg-white transition-colors shadow-sm"
+                    onClick={() => toggleFavorite(item.id)}
+                  >
+                    <Heart className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="absolute bottom-4 left-4">
+                  <span className="px-2 py-1 bg-black/30 rounded-full text-sm text-white backdrop-blur-sm">
+                    32% off
+                  </span>
+                </div>
+              </div>
+              <div className="p-4">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <h3 className="font-semibold text-lg">{item.title}</h3>
+                    <p className="text-gray-600">{item.location}</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-semibold">${item.price.toLocaleString()}</div>
+                    <div className="text-sm text-gray-500 line-through">${item.originalPrice.toLocaleString()}</div>
+                  </div>
+                </div>
+                <div className="flex gap-2 mt-3">
+                  <span className="px-2 py-1 bg-gray-100 rounded-full text-sm">{item.date}</span>
+                  <span className="px-2 py-1 bg-gray-100 rounded-full text-sm">{item.guestCapacity} guests</span>
+                </div>
+                <ul className="mt-3 space-y-1">
+                  {item.description.map((point, index) => (
+                    <li key={index} className="text-sm text-gray-600 flex items-center">
+                      <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-2"></div>
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {visibleResults < mockResults.length && (
+        <div className="mt-12 text-center">
+          <button 
+            className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 inline-flex items-center gap-2"
+            onClick={loadMoreListings}
+          >
+            Show more listings
+          </button>
+        </div>
       )}
     </div>
-  );
-}
 
+    {lightboxOpen && (
+      <Lightbox
+        open={lightboxOpen}
+        close={() => setLightboxOpen(false)}
+        index={lightboxIndex}
+        slides={mockResults.map(item => ({ src: item.image }))}
+      />
+    )}
+  </div>
+);
