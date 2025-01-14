@@ -10,7 +10,7 @@ import NewsletterSignup from './components/NewsletterSignup';
 const Homepage = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [activeTab, setActiveTab] = useState('dates'); // 'dates' or 'marketplace'
-  const { } = useAuth();
+  const { user, isAuthenticated } = useAuth(); // example values you might need
 
   const router = useRouter();
 
