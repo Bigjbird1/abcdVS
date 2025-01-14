@@ -157,17 +157,18 @@ const PasswordRecovery = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1.5">Confirm Password</label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full px-3 py-2 border rounded-lg pr-10"
-                      placeholder="Confirm new password"
-                      required
-                      minLength={8}
-                    />
+  <label htmlFor="confirm-password" className="block text-sm font-medium mb-1.5">Confirm Password</label>
+  <div className="relative">
+    <input
+      id="confirm-password"
+      type={showPassword ? 'text' : 'password'}
+      value={confirmPassword}
+      onChange={(e) => setConfirmPassword(e.target.value)}
+      className="w-full px-3 py-2 border rounded-lg pr-10"
+      placeholder="Confirm new password"
+      required
+      minLength={8}
+    />
                     <button 
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
