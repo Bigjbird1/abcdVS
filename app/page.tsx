@@ -176,30 +176,32 @@ const Homepage = () => {
         </div>
       ) : (
         /* Featured Marketplace Items Section */
-        <div className="bg-gray-50 py-20">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-              {[
-                { name: "Wedding Dresses", icon: Heart, color: "bg-rose-50 text-rose-500" },
-                { name: "Decor & Flowers", icon: Gift, color: "bg-purple-50 text-purple-500" },
-                { name: "Accessories", icon: Package, color: "bg-blue-50 text-blue-500" },
-                { name: "View All", icon: ArrowRight, color: "bg-gray-50 text-gray-500" }
-              ].map((category, index) => (
-                <button 
-                  key={index}
-                  onClick={() => {
-                    router.push('/marketplace', undefined, { scroll: false });
-                    window.scrollTo(0, 0);
-                  }}
-                  className="flex items-center gap-3 p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition-all"
-                >
-                  <div className={`w-10 h-10 ${category.color} rounded-full flex items-center justify-center`}>
-                    <category.icon className="w-5 h-5" />
-                  </div>
-                  <span className="font-medium">{category.name}</span>
-                </button>
-              ))}
-            </div>
+<div className="bg-gray-50 py-20">
+  <div className="max-w-7xl mx-auto px-4">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+      {[
+        { name: "Wedding Dresses", icon: Heart, color: "bg-rose-50 text-rose-500" },
+        { name: "Decor & Flowers", icon: Gift, color: "bg-purple-50 text-purple-500" },
+        { name: "Accessories", icon: Package, color: "bg-blue-50 text-blue-500" },
+        { name: "View All", icon: ArrowRight, color: "bg-gray-50 text-gray-500" }
+      ].map((category, index) => (
+        <button 
+          key={index}
+          onClick={() => {
+            router.push('/marketplace')
+              .then(() => {
+                window.scrollTo(0, 0);
+              });
+          }}
+          className="flex items-center gap-3 p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition-all"
+        >
+          <div className={`w-10 h-10 ${category.color} rounded-full flex items-center justify-center`}>
+            <category.icon className="w-5 h-5" />
+          </div>
+          <span className="font-medium">{category.name}</span>
+        </button>
+      ))}
+    </div>
 
             <div className="grid md:grid-cols-4 gap-6">
               {[1, 2, 3, 4].map((item) => (
