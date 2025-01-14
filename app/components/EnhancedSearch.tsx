@@ -96,12 +96,12 @@ export default function EnhancedSearch({ initialSearchType }: EnhancedSearchProp
     }
   }, [debouncedSearchQuery]);
 
-  const handleFilterChange = (filterType: string, value: any) => {
-    setActiveFilters(prev => ({
+  const handleAdvancedFilterChange = (filterType: keyof AdvancedFilters, value: any) => {
+    setAdvancedFilters(prev => ({  // <-- Add this part
       ...prev,
       [filterType]: value
     }));
-  };
+};
 
  const handleAdvancedFilterChange = (filterType: keyof AdvancedFilters, value: any) => {
       ...prev,
