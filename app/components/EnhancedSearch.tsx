@@ -149,69 +149,73 @@ const handleFilterChange = (filterType: string, value: any) => {
     </div>
   );
 
-  useEffect(() => {
-    import('yet-another-react-lightbox/styles.css');
-  }, []);
+ useEffect(() => {
+  import('yet-another-react-lightbox/styles.css');
+}, []);
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="sticky top-0 bg-white border-b z-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="py-4 flex gap-4">
-            <div className="flex-1 flex gap-2">
-              <div className="relative flex-1">
-                <input 
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full p-3 pl-10 border rounded-lg"
-                  placeholder="Search locations or venues"
-                />
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                {suggestions.length > 0 && (
-                {suggestions.length > 0 && (
-  <div 
-    className="absolute top-full left-0 right-0 bg-white border rounded-lg mt-1 shadow-lg"
-    role="listbox"
-    id="search-suggestions"
-  >
-    {suggestions.map((suggestion, index) => (
-      <div 
-        key={index}
-        role="option"
-        tabIndex={0}
-        aria-selected={false}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            setSearchQuery(suggestion);
-            setSuggestions([]);
-          }
-        }}
-        className="p-2 hover:bg-gray-100 cursor-pointer"
-        onClick={() => {
-          setSearchQuery(suggestion);
-          setSuggestions([]);
-        }}
-      >
-        {suggestion}
-      </div>
-    ))}
-  </div>
-)}
-              </div>
-              <div className="relative flex-1">
-                <input 
-                  type="text"
-                  value={selectedMonth}
-                  className="w-full p-3 pl-10 border rounded-lg cursor-pointer"
-                  placeholder="Select dates"
-                  onClick={() => setShowDatePicker(!showDatePicker)}
-                  readOnly
-                />
-                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                
-                {showDatePicker && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border max-h-64 overflow-y-auto z-50">
+return (
+  <div className="min-h-screen bg-gray-50">
+    <div className="sticky top-0 bg-white border-b z-50">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="py-4 flex gap-4">
+          <div className="flex-1 flex gap-2">
+            <div className="relative flex-1">
+              <input 
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full p-3 pl-10 border rounded-lg"
+                placeholder="Search locations or venues"
+              />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              {suggestions.length > 0 && (
+                <div 
+                  className="absolute top-full left-0 right-0 bg-white border rounded-lg mt-1 shadow-lg"
+                  role="listbox"
+                  id="search-suggestions"
+                >
+                  {suggestions.map((suggestion, index) => (
+                    <div 
+                      key={index}
+                      role="option"
+                      tabIndex={0}
+                      aria-selected={false}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          setSearchQuery(suggestion);
+                          setSuggestions([]);
+                        }
+                      }}
+                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        setSearchQuery(suggestion);
+                        setSuggestions([]);
+                      }}
+                    >
+                      {suggestion}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="relative flex-1">
+              <input 
+                type="text"
+                value={selectedMonth}
+                className="w-full p-3 pl-10 border rounded-lg cursor-pointer"
+                placeholder="Select dates"
+                onClick={() => setShowDatePicker(!showDatePicker)}
+                readOnly
+              />
+              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+
+              {showDatePicker && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border max-h-64 overflow-y-auto z-50">
+                  {/* Date picker implementation */}
+                </div>
+              )}
+            </div>
+          </div>
                     {/* Date picker implementation */}
                   </div>
                 )}
