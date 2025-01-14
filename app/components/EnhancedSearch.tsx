@@ -97,10 +97,17 @@ export default function EnhancedSearch({ initialSearchType }: EnhancedSearchProp
   }, [debouncedSearchQuery]);
 
   const handleAdvancedFilterChange = (filterType: keyof AdvancedFilters, value: any) => {
-    setAdvancedFilters(prev => ({  // <-- Add this part
+    setAdvancedFilters(prev => ({
       ...prev,
       [filterType]: value
     }));
+};
+
+const handleFilterChange = (filterType: string, value: any) => {
+  setActiveFilters(prev => ({
+    ...prev,
+    [filterType]: value
+  }));
 };
 
   const clearAllFilters = () => {
@@ -269,7 +276,7 @@ export default function EnhancedSearch({ initialSearchType }: EnhancedSearchProp
                 <div className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 rounded-full text-sm">
                   <span>${activeFilters.priceRange[0].toLocaleString()} - ${activeFilters.priceRange[1].toLocaleString()}</span>
                   <button 
-                    onClick={() => handleFilterChange('priceRange', [0, 50000])}
+                    onClick={() => handleAdvancedFilterChange('priceRange', [0, 50000])}
                     className="ml-1 p-0.5 rounded-full hover:bg-gray-200"
                   >
                     <X className="w-3 h-3" />
