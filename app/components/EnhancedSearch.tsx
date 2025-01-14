@@ -61,7 +61,7 @@ export default function EnhancedSearch({ initialSearchType }: EnhancedSearchProp
     originalPrice: 22000 + (i * 1500),
     date: `2024-09-${(i % 30) + 1}`,
     guestCapacity: 150,
-    image: `/placeholder.svg?height=450&width=800&text=Luxury-Venue-${i + 1}`,
+    image: `https://placehold.co/800x450/png?text=Luxury-Venue-${i + 1}`,
     description: [
       'Scenic views',
       'In-house catering',
@@ -375,14 +375,14 @@ const handleFilterChange = (filterType: string, value: any) => {
             {mockResults.slice(0, visibleResults).map((item, index) => (
               <div key={item.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all group">
                 <div className="aspect-[16/9] relative">
-                  <Image 
-                    src={item.image}
-                    alt={item.title}
-                    layout="fill"
-                    objectFit="cover"
-                    className="group-hover:scale-105 transition-transform duration-500"
-                    onClick={() => openLightbox(index)}
-                  />
+    <Image 
+    src={item.image}
+    alt={item.title}
+    fill
+    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+    className="group-hover:scale-105 transition-transform duration-500 object-cover"
+    onClick={() => openLightbox(index)}
+  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                   <div className="absolute top-4 right-4">
                     <button 
