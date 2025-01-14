@@ -103,12 +103,6 @@ export default function EnhancedSearch({ initialSearchType }: EnhancedSearchProp
     }));
 };
 
- const handleAdvancedFilterChange = (filterType: keyof AdvancedFilters, value: any) => {
-      ...prev,
-      [filterType]: value
-    }));
-  };
-
   const clearAllFilters = () => {
     setActiveFilters({
       priceRange: [0, 50000],
