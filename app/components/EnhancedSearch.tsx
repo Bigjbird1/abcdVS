@@ -169,10 +169,24 @@ const handleFilterChange = (filterType: string, value: any) => {
                 />
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 {suggestions.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 bg-white border rounded-lg mt-1 shadow-lg">
-                    {suggestions.map((suggestion, index) => (
-                      <div 
-                        key={index} 
+                  {suggestions.length > 0 && (
+  <div 
+    className="absolute top-full left-0 right-0 bg-white border rounded-lg mt-1 shadow-lg"
+    role="listbox"
+    id="search-suggestions"
+  >
+    {suggestions.map((suggestion, index) => (
+      <div 
+        key={index}
+        role="option"
+        tabIndex={0}
+        aria-selected={false}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            setSearchQuery(suggestion);
+            setSuggestions([]);
+          }
+        }}
                         className="p-2 hover:bg-gray-100 cursor-pointer"
                         onClick={() => {
                           setSearchQuery(suggestion);
