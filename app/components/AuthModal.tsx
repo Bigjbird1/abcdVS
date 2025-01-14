@@ -88,7 +88,71 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, initialMode }) => {
 const renderContent = useCallback(() => {
   if (authMode === 'login') {
     return (
-      // ... login mode JSX ...
+      <div className="p-6">
+        <h2 className="text-2xl font-bold mb-4">Log In</h2>
+        <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }} className="space-y-4">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
+            <div className="relative">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-3 py-2 border rounded-lg pl-10"
+                placeholder="Enter your email"
+                required
+              />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            </div>
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium mb-1">Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-3 py-2 border rounded-lg pl-10 pr-10"
+                placeholder="Enter your password"
+                required
+              />
+              <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-800"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Logging in...' : 'Log in'}
+          </button>
+        </form>
+        <div className="text-center mt-4">
+          <p className="text-sm text-gray-600">
+            Don't have an account?{' '}
+            <button 
+              onClick={() => changeAuthMode('signup')}
+              className="text-blue-600 hover:underline"
+            >
+              Sign up
+            </button>
+          </p>
+          <Link href="/password-recovery" className="text-sm text-blue-600 hover:underline">
+            Forgot password?
+          </Link>
+        </div>
+      </div>
     );
   }
 
@@ -177,7 +241,7 @@ const renderContent = useCallback(() => {
       </div>
     </div>
   );
-}, [authMode, changeAuthMode, email, handleSignup, isLoading, password, showPassword, togglePasswordVisibility, userType]);
+}, [authMode, changeAuthMode, email, handleLogin, handleSignup, isLoading, password, showPassword, togglePasswordVisibility, userType]);
 // To here
 
   return (
