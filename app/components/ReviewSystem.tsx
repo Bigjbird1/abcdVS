@@ -96,20 +96,21 @@ const ReviewSystem: React.FC<ReviewSystemProps> = ({ itemId, itemType }) => {
       <form onSubmit={handleSubmitReview} className="mt-8 bg-white p-4 rounded-lg shadow">
         <h3 className="text-xl font-semibold mb-4">Write a Review</h3>
         <div className="mb-4">
-          <label className="block mb-2">Rating</label>
-          <div className="flex gap-1">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <button
-                key={star}
-                type="button"
-                onClick={() => setNewReview({ ...newReview, rating: star })}
-                className={`${star <= newReview.rating ? 'text-yellow-400' : 'text-gray-300'}`}
-              >
-                <Star className="w-8 h-8 fill-current" />
-              </button>
-            ))}
-          </div>
-        </div>
+  <label htmlFor="rating-group" className="block mb-2">Rating</label>
+  <div id="rating-group" className="flex gap-1" role="group" aria-label="Rating">
+    {[1, 2, 3, 4, 5].map((star) => (
+      <button
+        key={star}
+        type="button"
+        onClick={() => setNewReview({ ...newReview, rating: star })}
+        className={`${star <= newReview.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+        aria-label={`${star} stars`}
+      >
+        <Star className="w-8 h-8 fill-current" />
+      </button>
+    ))}
+  </div>
+</div>
         <div className="mb-4">
           <label htmlFor="review-content" className="block mb-2">Your Review</label>
           <textarea
