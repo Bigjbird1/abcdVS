@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import ReviewStats from '../components/reviews/ReviewStats';
@@ -7,13 +6,44 @@ import ReviewFilters from '../components/reviews/ReviewFilters';
 import ReviewList from '../components/reviews/ReviewList';
 import ReportModal from '../components/reviews/ReportModal';
 
+// Define types for our review structure
+type ReviewResponse = {
+  author: string;
+  content: string;
+  date: string;
+};
+
+type Review = {
+  id: number;
+  rating: number;
+  title: string;
+  content: string;
+  author: string;
+  date: string;
+  verified: boolean;
+  helpfulCount: number;
+  type: string;
+  response?: ReviewResponse;
+  images?: string[];
+};
+
+// Define the structure of our reviews object
+type ReviewsData = {
+  venue: Review[];
+  seller: Review[];
+  marketplace: Review[];
+};
+
+// Define valid tab types
+type TabType = keyof ReviewsData;
+
 const ReviewsSystem = () => {
-  const [activeTab, setActiveTab] = useState('venue');
+  const [activeTab, setActiveTab] = useState<TabType>('venue');
   const [showReportModal, setShowReportModal] = useState(false);
-  const [selectedReview, setSelectedReview] = useState(null);
+  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   
-  // Mock data for different review types
-  const reviews = {
+  // Mock data with proper typing
+  const reviews: ReviewsData = {
     venue: [
       {
         id: 1,
@@ -72,7 +102,7 @@ const ReviewsSystem = () => {
     ]
   };
 
-  const handleReportReview = (review: any) => {
+  const handleReportReview = (review: Review) => {
     setSelectedReview(review);
     setShowReportModal(true);
   };
@@ -85,7 +115,6 @@ const ReviewsSystem = () => {
         reviews={reviews[activeTab]} 
         onReportReview={handleReportReview}
       />
-
       {showReportModal && (
         <ReportModal
           onClose={() => {
