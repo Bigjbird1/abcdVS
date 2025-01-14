@@ -45,5 +45,4 @@ const ContactSeller: React.FC<ContactSellerProps> = ({ onClose }) => {
 
 export default ContactSeller;
 
-export default ContactSeller
 
