@@ -72,7 +72,7 @@ const ReviewsSystem = () => {
     ]
   };
 
-  const handleReportReview = (review) => {
+  const handleReportReview = (review: any) => {
     setSelectedReview(review);
     setShowReportModal(true);
   };
