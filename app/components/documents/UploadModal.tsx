@@ -33,8 +33,9 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose }) => {
         </div>
         <div className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Document Type</label>
+            <label htmlFor="document-type" className="block text-sm font-medium mb-1">Document Type</label>
             <select
+              id="document-type"
               value={documentType}
               onChange={(e) => setDocumentType(e.target.value)}
               className="w-full px-3 py-2 border rounded-lg"
@@ -46,9 +47,10 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose }) => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">File</label>
+            <label htmlFor="file-input" className="block text-sm font-medium mb-1">File</label>
             <div className="border-2 border-dashed rounded-lg p-4">
               <input
+                id="file-input"
                 type="file"
                 onChange={handleFileChange}
                 className="hidden"
