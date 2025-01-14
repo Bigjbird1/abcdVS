@@ -3,8 +3,6 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['placeholder.com'],
-    unoptimized: true, // Add this line for static exports
     remotePatterns: [
       {
         protocol: 'https',
