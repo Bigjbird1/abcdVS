@@ -200,28 +200,30 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, initialMode }) => {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">I am a:</label>
-            <div className="flex gap-4">
-              <button
-                type="button"
-                onClick={() => setUserType('buyer')}
-                className={`flex-1 py-2 rounded-lg ${
-                  userType === 'buyer' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                }`}
-              >
-                Buyer
-              </button>
-              <button
-                type="button"
-                onClick={() => setUserType('seller')}
-                className={`flex-1 py-2 rounded-lg ${
-                  userType === 'seller' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                }`}
-              >
-                Seller
-              </button>
-            </div>
-          </div>
+            <div>
+  <label htmlFor="userType" className="block text-sm font-medium mb-1">I am a:</label>
+  <input type="hidden" id="userType" name="userType" value={userType || ''} required />
+  <div className="flex gap-4">
+    <button
+      type="button"
+      onClick={() => setUserType('buyer')}
+      className={`flex-1 py-2 rounded-lg ${
+        userType === 'buyer' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+      }`}
+    >
+      Buyer
+    </button>
+    <button
+      type="button"
+      onClick={() => setUserType('seller')}
+      className={`flex-1 py-2 rounded-lg ${
+        userType === 'seller' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+      }`}
+    >
+      Seller
+    </button>
+  </div>
+</div>
           <button
             type="submit"
             className="w-full bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-800"
