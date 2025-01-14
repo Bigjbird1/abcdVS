@@ -47,19 +47,18 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose }) => {
             </select>
           </div>
           <div>
-            <label htmlFor="file-input" className="block text-sm font-medium mb-1">File</label>
-            <div className="border-2 border-dashed rounded-lg p-4">
-              <input
-                id="file-input"
-                type="file"
-                onChange={handleFileChange}
-                className="hidden"
-                id="file-upload"
-              />
-              <label
-                htmlFor="file-upload"
-                className="flex flex-col items-center justify-center cursor-pointer"
-              >
+            <label htmlFor="file-upload" className="block text-sm font-medium mb-1">File</label>
+<div className="border-2 border-dashed rounded-lg p-4">
+  <input
+    id="file-upload"
+    type="file"
+    onChange={handleFileChange}
+    className="hidden"
+  />
+  <label
+    htmlFor="file-upload"
+    className="flex flex-col items-center justify-center cursor-pointer"
+  >
                 <Upload className="w-8 h-8 text-gray-400 mb-2" />
                 <span className="text-sm text-gray-600">
                   {file ? file.name : 'Click to upload or drag and drop'}
