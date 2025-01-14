@@ -46,19 +46,20 @@ const PasswordRecovery = () => {
 
               <form onSubmit={handleSubmitRequest} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1.5">Email</label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-3 py-2 pl-10 border rounded-lg"
-                      placeholder="Enter your email"
-                      required
-                    />
-                  </div>
-                </div>
+  <label htmlFor="email" className="block text-sm font-medium mb-1.5">Email</label>
+  <div className="relative">
+    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+    <input
+      id="email"
+      type="email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      className="w-full px-3 py-2 pl-10 border rounded-lg"
+      placeholder="Enter your email"
+      required
+    />
+  </div>
+</div>
 
                 <button 
                   type="submit"
@@ -133,17 +134,18 @@ const PasswordRecovery = () => {
 
               <form onSubmit={handleSubmitReset} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1.5">New Password</label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-3 py-2 border rounded-lg pr-10"
-                      placeholder="Enter new password"
-                      required
-                      minLength={8}
-                    />
+  <label htmlFor="new-password" className="block text-sm font-medium mb-1.5">New Password</label>
+  <div className="relative">
+    <input
+      id="new-password"
+      type={showPassword ? 'text' : 'password'}
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      className="w-full px-3 py-2 border rounded-lg pr-10"
+      placeholder="Enter new password"
+      required
+      minLength={8}
+    />
                     <button 
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
