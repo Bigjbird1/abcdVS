@@ -2,7 +2,7 @@ import React from 'react';
 import { Star } from 'lucide-react';
 
 const ReviewStats = () => {
-  const renderStars = (rating) => {
+  const renderStars = (rating: number): JSX.Element => {
     return (
       <div className="flex justify-center mb-1">
         {[1, 2, 3, 4, 5].map((star) => (
