@@ -75,14 +75,25 @@ const MultiItemListing = () => {
       </div>
 
       <div className="space-y-6">
-        {/* Image Upload */}
+       {/* Image Upload */}
         <div>
-          <label className="block text-sm font-medium mb-2">Photos</label>
-          <div className="grid grid-cols-4 gap-4">
+          <label 
+            htmlFor={`photos-${item.id}`} 
+            className="block text-sm font-medium mb-2"
+          >
+            Photos
+          </label>
+          <div 
+            id={`photos-${item.id}`} 
+            role="group" 
+            aria-label="Photo upload buttons"
+            className="grid grid-cols-4 gap-4"
+          >
             {[1, 2, 3, 4].map((num) => (
               <button 
                 key={num}
                 className="aspect-square rounded-lg border-2 border-dashed flex flex-col items-center justify-center gap-2 hover:border-gray-400"
+                aria-label={`Add photo ${num}`}
               >
                 <Camera className="w-6 h-6 text-gray-400" />
                 <span className="text-sm text-gray-600">Add Photo</span>
@@ -90,7 +101,6 @@ const MultiItemListing = () => {
             ))}
           </div>
         </div>
-
         {/* Basic Details */}
         <div className="grid grid-cols-2 gap-6">
           <div>
