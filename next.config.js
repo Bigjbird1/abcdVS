@@ -3,7 +3,14 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['placeholder.com'], // Add any image domains you're using
+    domains: ['placeholder.com'],
+    unoptimized: true, // Add this line for static exports
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   webpack: (config, { isServer }) => {
     // Disable asm.js optimizations
@@ -23,9 +30,7 @@ const nextConfig = {
         };
       }
     });
-
     return config;
   },
 }
-
 module.exports = nextConfig;
