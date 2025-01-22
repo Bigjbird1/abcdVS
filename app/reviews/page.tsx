@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import ReviewStats from '../components/reviews/ReviewStats';
+import ReviewStats, { ReviewsData, TabType } from '../components/ReviewStats';
 import ReviewFilters from '../components/reviews/ReviewFilters';
 import ReviewList from '../components/reviews/ReviewList';
 import ReportModal from '../components/reviews/ReportModal';
@@ -28,20 +28,7 @@ type Review = {
   images?: string[];
 };
 
-type ReviewsData = {
-  venue: Review[];
-  food: Review[];
-  music: Review[];
-};
-
-type TabType = keyof ReviewsData;
-
 // Define component prop types
-type ReviewStatsProps = {
-  reviews: ReviewsData;
-  activeTab: TabType;
-};
-
 type ReviewFiltersProps = {
   activeTab: TabType;
   setActiveTab: React.Dispatch<React.SetStateAction<TabType>>;
@@ -111,7 +98,7 @@ const ReviewsSystem = () => {
       <div className="max-w-3xl mx-auto p-6">
         <ReviewStats reviews={reviews} activeTab={activeTab} />
         <ReviewFilters 
-          activeTab={activeTab} 
+          activeTab={activeTab}
           setActiveTab={setActiveTab} 
         />
         <ReviewList 
