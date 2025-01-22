@@ -1,7 +1,1 @@
-{
-  "/_not-found/page": "app/_not-found/page.js",
-  "/search/page": "app/search/page.js",
-  "/page": "app/page.js",
-  "/sell-items/page": "app/sell-items/page.js",
-  "/list-date/page": "app/list-date/page.js"
-}
+{}
