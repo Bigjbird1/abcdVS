@@ -9,6 +9,7 @@ const nextConfig = {
         hostname: '**',
       },
     ],
+    domains: ['placeholder.com'],
   },
   webpack: (config, { isServer }) => {
     // Disable asm.js optimizations
