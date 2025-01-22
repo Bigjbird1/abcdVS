@@ -14,6 +14,12 @@ type ReviewFiltersProps = {
   setActiveTab: React.Dispatch<React.SetStateAction<TabType>>;
 };
 
+// Add this type definition
+type ReviewStatsProps = {
+  reviews: ReviewsData;
+  activeTab: keyof ReviewsData;
+};
+
 // Error Fallback Component
 const ErrorFallback = ({ error, resetErrorBoundary }: { error: Error; resetErrorBoundary: () => void }) => {
   return (
