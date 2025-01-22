@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import ReviewStats, { ReviewsData, TabType } from '../components/ReviewStats';
-import ReviewFilters from '../components/reviews/ReviewFilters';
+import ReviewFilters from '../components/ReviewFilters';
 import ReviewList from '../components/reviews/ReviewList';
 import ReportModal from '../components/reviews/ReportModal';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -99,11 +99,10 @@ const ReviewsSystem = () => {
         <ReviewStats reviews={reviews} activeTab={activeTab} />
         <ReviewFilters 
           activeTab={activeTab}
-          setActiveTab={setActiveTab} 
+          setActiveTab={setActiveTab}
         />
         <ReviewList 
-          reviews={reviews[activeTab]} 
-          onReportReview={handleReportReview}
+          reviews={reviews[activeTab]}
         />
         {showReportModal && (
           <ReportModal
