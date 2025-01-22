@@ -37,9 +37,14 @@ type ReviewsData = {
 type TabType = keyof ReviewsData;
 
 // Define component prop types
+type ReviewStatsProps = {
+  reviews: ReviewsData;
+  activeTab: TabType;
+};
+
 type ReviewFiltersProps = {
   activeTab: TabType;
-  setActiveTab: (tab: TabType) => void;
+  setActiveTab: React.Dispatch<React.SetStateAction<TabType>>;
 };
 
 type ReviewListProps = {
@@ -178,8 +183,6 @@ const ReviewsSystem = () => {
     </ErrorBoundary>
   );
 };
-
-export default ReviewsSystem;
 
 export default ReviewsSystem;
 
