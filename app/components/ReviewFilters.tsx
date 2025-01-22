@@ -1,5 +1,5 @@
 import React from 'react';
-import { TabType } from './ReviewStats';
+import { TabType } from '../types/reviews';
 
 export interface ReviewFiltersProps {
   activeTab: TabType;

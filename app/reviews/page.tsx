@@ -1,9 +1,10 @@
 'use client'
 import React, { useState } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import ReviewStats, { ReviewsData, TabType } from '../components/ReviewStats';
+import { ReviewsData, TabType } from '../types/reviews';
+import ReviewStats from '../components/ReviewStats';
 import ReviewFilters from '../components/ReviewFilters';
-import ReviewList from '../components/reviews/ReviewList';
+import ReviewList from '../components/ReviewList';
 import ReportModal from '../components/reviews/ReportModal';
 import { ErrorBoundary } from 'react-error-boundary';
 
