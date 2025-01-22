@@ -1,48 +1,17 @@
 'use client'
 import React, { useState } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ReviewsData, TabType } from '../types/reviews';
-import ReviewStats from '../components/ReviewStats';
-import ReviewFilters from '../components/ReviewFilters';
-import ReviewList from '../components/ReviewList';
-import ReportModal from '../components/reviews/ReportModal';
+import { ReviewsData, TabType, Review, ReviewResponse } from '../types/reviews';
+import ReviewStats from '@/components/reviews/ReviewStats';
+import ReviewFilters from '@/components/reviews/ReviewFilters';
+import ReviewList from '@/components/reviews/ReviewList';
+import ReportModal from '@/components/reviews/ReportModal';
 import { ErrorBoundary } from 'react-error-boundary';
 
-// Define base types
-type ReviewResponse = {
-  author: string;
-  content: string;
-  date: string;
-};
-
-type Review = {
-  id: string;
-  rating: number;
-  title: string;
-  content: string;
-  author: string;
-  date: string;
-  verified: boolean;
-  helpfulCount: number;
-  type: string;
-  response?: ReviewResponse;
-  images?: string[];
-};
-
-// Define component prop types
+// Keep only the component prop types
 type ReviewFiltersProps = {
   activeTab: TabType;
   setActiveTab: React.Dispatch<React.SetStateAction<TabType>>;
-};
-
-type ReviewListProps = {
-  reviews: Review[];
-  onReportReview: (review: Review) => void;
-};
-
-type ReportModalProps = {
-  onClose: () => void;
-  onSubmit: () => void;
 };
 
 // Error Fallback Component

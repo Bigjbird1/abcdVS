@@ -1,3 +1,9 @@
+export type ReviewResponse = {
+  author: string;
+  content: string;
+  date: string;
+};
+
 export type Review = {
   id: string;
   rating: number;
@@ -5,7 +11,12 @@ export type Review = {
   content: string;
   author: string;
   date: string;
-  category: string;
+  verified: boolean;
+  helpfulCount: number;
+  type: string;
+  response?: ReviewResponse;
+  images?: string[];
+  category?: string;
   reported?: boolean;
 };
 
