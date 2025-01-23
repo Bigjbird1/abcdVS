@@ -1,11 +1,5 @@
-export type ReviewResponse = {
-  author: string;
-  content: string;
-  date: string;
-};
-
-export type Review = {
-  id: string;
+export interface Review {
+  id: number;
   rating: number;
   title: string;
   content: string;
@@ -14,16 +8,18 @@ export type Review = {
   verified: boolean;
   helpfulCount: number;
   type: string;
-  response?: ReviewResponse;
+  response?: {
+    author: string;
+    content: string;
+    date: string;
+  };
   images?: string[];
-  category?: string;
-  reported?: boolean;
-};
+}
 
-export type ReviewsData = {
+export type TabType = 'venue' | 'food' | 'music';
+
+export interface ReviewsData {
   venue: Review[];
   food: Review[];
   music: Review[];
-};
-
-export type TabType = keyof ReviewsData; 
+} 

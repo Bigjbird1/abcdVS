@@ -1,5 +1,7 @@
 import React from 'react';
-import { ReviewsData } from '../types'; // Adjust the import path as needed
+import { ReviewsData } from '@/types/reviews';  // Update this line
+// OR
+import { ReviewsData } from '../types/reviews';  // If using relative path
 
 interface ReviewStatsProps {
   reviews: ReviewsData;
