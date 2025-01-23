@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import EnhancedSearch from '../EnhancedSearch'
+import EnhancedSearch from '@/enhancedsearch'
 
 export default function SearchPage() {
   const searchParams = useSearchParams()
