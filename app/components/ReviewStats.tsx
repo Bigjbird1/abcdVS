@@ -1,18 +1,18 @@
 import React from 'react';
-import { Review, ReviewsData, TabType } from '../types/reviews';
+import { ReviewsData } from '../types'; // Adjust the import path as needed
 
-export interface ReviewStatsProps {
+interface ReviewStatsProps {
   reviews: ReviewsData;
-  activeTab: TabType;
+  activeTab: keyof ReviewsData;
 }
 
-const ReviewStats: React.FC<ReviewStatsProps> = ({ reviews, activeTab }) => {
+export const ReviewStats: React.FC<ReviewStatsProps> = ({ reviews, activeTab }) => {
   return (
-    <div>
-      <h2>Reviews for {activeTab}</h2>
-      <p>Total reviews: {reviews[activeTab].length}</p>
+    <div className="mb-6">
+      <h2 className="text-xl font-semibold mb-2">Review Statistics</h2>
+      <div className="bg-white p-4 rounded-lg shadow">
+        <p>Total {activeTab} Reviews: {reviews[activeTab].length}</p>
+      </div>
     </div>
   );
-};
-
-export default ReviewStats; 
+}; 

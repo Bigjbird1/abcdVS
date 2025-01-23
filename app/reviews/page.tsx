@@ -1,24 +1,55 @@
 'use client'
 import React, { useState } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ReviewsData, TabType, Review, ReviewResponse } from '../types/reviews';
-import ReviewStats from '@/components/reviews/ReviewStats';
-import ReviewFilters from '@/components/reviews/ReviewFilters';
-import ReviewList from '@/components/reviews/ReviewList';
+import { ReviewsData, TabType, Review } from '@/types/reviews';
+import { ReviewStats } from '@/components/ReviewStats';
+import ReviewFilters from '../components/ReviewFilters';
+import ReviewList from '../components/reviews/ReviewList';
 import ReportModal from '@/components/reviews/ReportModal';
 import { ErrorBoundary } from 'react-error-boundary';
 
-// Keep only the component prop types
+// Add these type definitions at the top of the file with your other types
+type ReviewStatsProps = {
+  reviews: ReviewsData;
+  activeTab: TabType;
+};
+
+type ReviewListProps = {
+  reviews: Review[];
+};
+
+// You already have ReviewFiltersProps defined, but let's keep it for reference
 type ReviewFiltersProps = {
   activeTab: TabType;
   setActiveTab: React.Dispatch<React.SetStateAction<TabType>>;
 };
 
-// Add this type definition
-type ReviewStatsProps = {
-  reviews: ReviewsData;
-  activeTab: keyof ReviewsData;
-};
+// Add these type definitions at the top of your file
+type TabType = 'venue' | 'food' | 'music';
+
+interface Review {
+  id: number;
+  rating: number;
+  title: string;
+  content: string;
+  author: string;
+  date: string;
+  verified: boolean;
+  helpfulCount: number;
+  type: string;
+  response?: {
+    author: string;
+    content: string;
+    date: string;
+  };
+  images?: string[];
+}
+
+interface ReviewsData {
+  venue: Review[];
+  food: Review[];
+  music: Review[];
+}
 
 // Error Fallback Component
 const ErrorFallback = ({ error, resetErrorBoundary }: { error: Error; resetErrorBoundary: () => void }) => {
@@ -79,6 +110,10 @@ const ReviewsSystem = () => {
         />
         <ReviewList 
           reviews={reviews[activeTab]}
+          onReportReview={(review) => {
+            // Add your report handling logic here
+            console.log('Report review:', review);
+          }}
         />
         {showReportModal && (
           <ReportModal
