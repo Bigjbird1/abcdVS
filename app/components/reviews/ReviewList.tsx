@@ -1,38 +1,29 @@
 import React from 'react';
-import ReviewCard from './ReviewCard';
-
-interface Review {
-  id: number;
-  rating: number;
-  title: string;
-  content: string;
-  author: string;
-  date: string;
-  verified: boolean;
-  helpfulCount: number;
-  type: string;
-  response?: {
-    author: string;
-    content: string;
-    date: string;
-  };
-  images?: string[];
-}
+import { Review } from '../types/reviews';
 
 interface ReviewListProps {
   reviews: Review[];
-  onReportReview: (review: Review) => void;
 }
 
-const ReviewList: React.FC<ReviewListProps> = ({ reviews, onReportReview }) => {
+const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
   return (
     <div className="space-y-4">
       {reviews.map((review) => (
-        <ReviewCard key={review.id} review={review} onReportReview={onReportReview} />
+        <div key={review.id} className="border p-4 rounded-lg">
+          <h3 className="font-bold">{review.title}</h3>
+          <div className="flex items-center gap-2">
+            <span>{review.author}</span>
+            <span>•</span>
+            <span>{review.date}</span>
+          </div>
+          <p className="mt-2">{review.content}</p>
+          <div className="mt-2">
+            Rating: {review.rating}/5
+          </div>
+        </div>
       ))}
     </div>
   );
 };
 
-export default ReviewList;
-
+export default ReviewList; 
