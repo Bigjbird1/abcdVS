@@ -19,7 +19,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, initialMode }) => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const { login, signup, setHasCompletedProfileSetup } = useAuth();
+  const { login, signUp, setHasCompletedProfileSetup } = useAuth();
 
   const handleEscapeKey = useCallback((event: KeyboardEvent) => {
     if (event.key === 'Escape') {
@@ -45,7 +45,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, initialMode }) => {
     setIsLoading(true);
     setError('');
     try {
-      await signup(email, password, userType);
+      await signUp(email, password, userType);
       setHasCompletedProfileSetup(false);
       onClose();
     } catch (error: any) {
@@ -53,7 +53,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, initialMode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [email, password, userType, signup, setHasCompletedProfileSetup, onClose]);
+  }, [email, password, userType, signUp, setHasCompletedProfileSetup, onClose]);
 
   const handleLogin = useCallback(async () => {
     if (!email || !password) {

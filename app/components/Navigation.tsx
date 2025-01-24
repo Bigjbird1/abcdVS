@@ -1,8 +1,9 @@
 // components/Navigation.tsx
 'use client'
-import React, { useState, useCallback } from 'react';
+import * as React from 'react';
+import { useState, useCallback } from 'react';
 import Link from 'next/link';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import LoginModal from './auth/LoginModal';
 import ProfileSetup from './ProfileSetup';
 import { ArrowLeftRight } from 'lucide-react';

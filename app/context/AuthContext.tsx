@@ -1,149 +1,173 @@
 'use client'
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
+import { createClient } from '@supabase/supabase-js';
 
-import React, { createContext, useState, useContext, useEffect } from 'react';
+const supabaseUrl = 'https://sbgdbsfwpjeuzvpuzqsh.supabase.co'; // Ensure this is correct
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiZ2Ric2Z3cGpldXp2cHV6cXNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc3NDQ5OTAsImV4cCI6MjA1MzMyMDk5MH0.VX5XncLFLLfHU78un_bmU3So9G5peYlKKIvGMaebf_8'; // Ensure this is correct
 
-interface User {
+console.log('Supabase URL:', supabaseUrl);
+console.log('Supabase Anon Key:', supabaseAnonKey);
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Supabase URL or Anon Key is missing.');
+}
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+interface UserProfile {
   id: string;
   email: string;
   userType: 'buyer' | 'seller';
+  has_completed_setup: boolean;
 }
 
-interface AuthContextType {
-  user: User | null;
+type AuthContextType = {
+  user: UserProfile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   hasCompletedProfileSetup: boolean;
   login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string, userType: 'buyer' | 'seller') => Promise<void>;
-  logout: () => void;
+  signUp: (email: string, password: string, userType: 'buyer' | 'seller') => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
   setHasCompletedProfileSetup: (value: boolean) => void;
-}
+};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Simulated API delay
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hasCompletedProfileSetup, setHasCompletedProfileSetup] = useState(false);
 
+  const fetchProfile = useCallback(async (userId: string) => {
+    setIsLoading(true);
+    try {
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (profile && !error) {
+        setUser(profile);
+        setIsAuthenticated(true);
+        setHasCompletedProfileSetup(profile.has_completed_setup);
+      } else {
+        setUser(null);
+        setIsAuthenticated(false);
+        setHasCompletedProfileSetup(false);
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const handleAuthStateChange = useCallback(async (session: any) => {
+    if (session?.user) {
+      await fetchProfile(session.user.id);
+    } else {
+      setUser(null);
+      setIsAuthenticated(false);
+      setHasCompletedProfileSetup(false);
+    }
+  }, [fetchProfile]);
+
   useEffect(() => {
-    // Check for existing session only on client-side
-    const checkAuth = () => {
-      if (typeof window !== 'undefined') {
-        const storedUser = localStorage.getItem('user');
-        const storedProfileSetup = localStorage.getItem('hasCompletedProfileSetup');
-        
-        if (storedUser) {
-          try {
-            const userData = JSON.parse(storedUser);
-            setUser(userData);
-            setIsAuthenticated(true);
-            setHasCompletedProfileSetup(storedProfileSetup === 'true');
-          } catch (error) {
-            console.error('Error parsing stored user', error);
-          }
-        }
-        
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(handleAuthStateChange);
+
+    const initialize = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        await fetchProfile(session.user.id);
+      } else {
         setIsLoading(false);
       }
     };
 
-    checkAuth();
-  }, []);
+    initialize();
+    return () => subscription.unsubscribe();
+  }, [fetchProfile, handleAuthStateChange]);
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
-    
     try {
-      // Simulate API call
-      await delay(1000);
-      
-      // In v0, just create a mock user
-      const mockUser = {
-        id: Math.random().toString(36).substr(2, 9),
-        email,
-        userType: 'buyer' as const // userType is hardcoded for now, should be dynamic later
-      };
-
-      // Store in localStorage
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('user', JSON.stringify(mockUser));
-        const hasSetupProfile = localStorage.getItem('hasCompletedProfileSetup');
-        
-        setUser(mockUser);
-        setIsAuthenticated(true);
-        setHasCompletedProfileSetup(hasSetupProfile === 'true');
-      }
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
     } catch (error) {
       console.error('Login error:', error);
-      throw new Error('Failed to log in');
+      throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const signup = async (email: string, password: string, userType: 'buyer' | 'seller') => {
-    setIsLoading(true);
-    
+  const signUp = async (email: string, password: string, userType: 'buyer' | 'seller') => {
     try {
-      // Simulate API call
-      await delay(1000);
-      
-      const newUser = {
-        id: Math.random().toString(36).substr(2, 9),
-        email,
-        userType
-      };
-
-      // Store in localStorage
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('user', JSON.stringify(newUser));
-        localStorage.setItem('hasCompletedProfileSetup', 'false');
-        
-        setUser(newUser);
-        setIsAuthenticated(true);
-        setHasCompletedProfileSetup(false);
-      }
+      const { error } = await supabase.auth.signUp({ 
+        email, 
+        password,
+        options: {
+          data: { userType }
+        }
+      });
+      if (error) throw error;
+      return;
     } catch (error) {
-      console.error('Signup error:', error);
-      throw new Error('Failed to sign up');
+      console.error('Error signing up:', error);
+      throw error;
+    }
+  };
+
+  const signIn = async (email: string, password: string) => {
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const logout = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('user');
-      localStorage.removeItem('hasCompletedProfileSetup');
+  const logout = async () => {
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+    } catch (error) {
+      console.error('Logout error:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
     }
-    setUser(null);
-    setIsAuthenticated(false);
-    setHasCompletedProfileSetup(false);
   };
 
-  const handleSetProfileSetup = (value: boolean) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('hasCompletedProfileSetup', value.toString());
+  const refreshProfile = async () => {
+    if (user?.id) {
+      await fetchProfile(user.id);
     }
-    setHasCompletedProfileSetup(value);
   };
 
   return (
-    <AuthContext.Provider 
+    <AuthContext.Provider
       value={{
         user,
         isAuthenticated,
         isLoading,
         hasCompletedProfileSetup,
         login,
-        signup,
+        signUp,
+        signIn,
         logout,
-        setHasCompletedProfileSetup: handleSetProfileSetup
+        refreshProfile,
+        setHasCompletedProfileSetup,
       }}
     >
       {children}
@@ -153,9 +177,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
-

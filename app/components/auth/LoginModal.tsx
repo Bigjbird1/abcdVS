@@ -1,3 +1,4 @@
+'use client';
 import { useState } from 'react';
 import { Mail, Eye, EyeOff, Shield } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -8,7 +9,7 @@ interface LoginModalProps {
 }
 
 const LoginModal = ({ onClose }: LoginModalProps) => {
-  const { login, signup, isLoading } = useAuth();
+  const { signIn, signUp, isLoading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -22,9 +23,9 @@ const LoginModal = ({ onClose }: LoginModalProps) => {
 
     try {
       if (isSignUp) {
-        await signup(email, password, userType);
+        await signUp(email, password, userType);
       } else {
-        await login(email, password);
+        await signIn(email, password);
       }
       onClose();
     } catch (err) {
