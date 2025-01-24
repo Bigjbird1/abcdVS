@@ -1,19 +1,32 @@
 import React from 'react';
-import { TabType } from '../types/reviews';
+import { TabType } from '@/types/reviews';
 
-export interface ReviewFiltersProps {
+interface ReviewFiltersProps {
   activeTab: TabType;
-  setActiveTab: React.Dispatch<React.SetStateAction<TabType>>;
+  setActiveTab: (tab: TabType) => void;
 }
 
-const ReviewFilters: React.FC<ReviewFiltersProps> = ({ activeTab, setActiveTab }) => {
+export default function ReviewFilters({ activeTab, setActiveTab }: ReviewFiltersProps) {
   return (
-    <div>
-      <button onClick={() => setActiveTab('venue')}>Venue</button>
-      <button onClick={() => setActiveTab('food')}>Food</button>
-      <button onClick={() => setActiveTab('music')}>Music</button>
+    <div className="flex space-x-4 mb-6">
+      <button
+        onClick={() => setActiveTab('venue')}
+        className={`px-4 py-2 rounded ${activeTab === 'venue' ? 'bg-gray-900 text-white' : 'bg-gray-100'}`}
+      >
+        Venue
+      </button>
+      <button
+        onClick={() => setActiveTab('food')}
+        className={`px-4 py-2 rounded ${activeTab === 'food' ? 'bg-gray-900 text-white' : 'bg-gray-100'}`}
+      >
+        Food
+      </button>
+      <button
+        onClick={() => setActiveTab('music')}
+        className={`px-4 py-2 rounded ${activeTab === 'music' ? 'bg-gray-900 text-white' : 'bg-gray-100'}`}
+      >
+        Music
+      </button>
     </div>
   );
-};
-
-export default ReviewFilters; 
+}

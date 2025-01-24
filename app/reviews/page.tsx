@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useState } from 'react';
 import { ReviewsData, TabType } from '@/types/reviews';
 import ReviewStats from '@/components/reviews/ReviewStats';
@@ -9,8 +9,9 @@ export default function Reviews() {
   const [activeTab, setActiveTab] = useState<TabType>('venue');
   const [reviews, setReviews] = useState<ReviewsData>({
     venue: [],
+    food: [],
+    music: [],
     seller: [],
-    marketplace: []
   });
 
   return (
@@ -20,4 +21,4 @@ export default function Reviews() {
       <ReviewList reviews={reviews[activeTab]} />
     </div>
   );
-} 
+}

@@ -1,14 +1,13 @@
 import React from 'react';
-import { ReviewsData } from '@/types/reviews';  // Keep this one
-// OR
-// import { ReviewsData } from '../types/reviews';  // If using relative path
+import { ReviewsData, TabType } from '@/types/reviews';
 
 interface ReviewStatsProps {
   reviews: ReviewsData;
-  activeTab: keyof ReviewsData;
+  activeTab: TabType;
 }
 
-export const ReviewStats: React.FC<ReviewStatsProps> = ({ reviews, activeTab }) => {
+// Change to default export to match the import in page.tsx
+export default function ReviewStats({ reviews, activeTab }: ReviewStatsProps) {
   return (
     <div className="mb-6">
       <h2 className="text-xl font-semibold mb-2">Review Statistics</h2>
@@ -17,4 +16,4 @@ export const ReviewStats: React.FC<ReviewStatsProps> = ({ reviews, activeTab }) 
       </div>
     </div>
   );
-}; 
+}
