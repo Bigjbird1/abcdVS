@@ -22,4 +22,4 @@ export interface ReviewsData {
   venue: Review[];
   food: Review[];
   music: Review[];
-} 
+}

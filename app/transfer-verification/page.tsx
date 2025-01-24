@@ -7,12 +7,25 @@ import ProgressTracker from '../components/transfer-verification/ProgressTracker
 import VerificationStep from '../components/transfer-verification/VerificationStep';
 import UploadModal from '../components/transfer-verification/UploadModal';
 
+type VerificationStatus = 'pending' | 'verified' | 'rejected';
+
+type VerificationTypes = {
+  sellerIdentity: VerificationStatus;
+  bankAccount: VerificationStatus;
+  proofOfFunds: VerificationStatus;
+  venueContract: VerificationStatus;
+  buyerIdentity: VerificationStatus;
+  transferAgreement: VerificationStatus;
+};
+
 const TransferVerification = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [verificationStatus, setVerificationStatus] = useState({
+  const [verificationStatus, setVerificationStatus] = useState<VerificationTypes>({
     sellerIdentity: 'pending',
-    buyerIdentity: 'pending',
+    bankAccount: 'pending',
+    proofOfFunds: 'pending',
     venueContract: 'pending',
+    buyerIdentity: 'pending',
     transferAgreement: 'pending'
   });
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -23,9 +36,8 @@ const TransferVerification = () => {
     setShowUploadModal(true);
   };
 
-  const handleVerify = (type: string) => {
-    // Simulating verification process
-    setVerificationStatus(prev => ({ ...prev, [type]: 'verified' }));
+  const handleVerify = (type: keyof VerificationTypes) => {
+    setVerificationStatus(prev => ({ ...prev, [type]: 'verified' as VerificationStatus }));
   };
 
   const handleSubmitForReview = () => {
@@ -71,19 +83,27 @@ const TransferVerification = () => {
       />
 
       <VerificationStep
-        title="Venue Contract Verification"
-        description="Upload the original venue contract"
+        title="Venue Contract"
+        description="Upload the signed venue contract"
         status={verificationStatus.venueContract}
         onUpload={() => handleUpload('venueContract')}
         onVerify={() => handleVerify('venueContract')}
       />
 
       <VerificationStep
-        title="Transfer Agreement"
-        description="Upload the signed transfer agreement"
-        status={verificationStatus.transferAgreement}
-        onUpload={() => handleUpload('transferAgreement')}
-        onVerify={() => handleVerify('transferAgreement')}
+        title="Bank Account"
+        description="Connect your bank account for secure transfers"
+        status={verificationStatus.bankAccount}
+        onUpload={() => handleUpload('bankAccount')}
+        onVerify={() => handleVerify('bankAccount')}
+      />
+
+      <VerificationStep
+        title="Proof of Funds"
+        description="Upload proof of available funds"
+        status={verificationStatus.proofOfFunds}
+        onUpload={() => handleUpload('proofOfFunds')}
+        onVerify={() => handleVerify('proofOfFunds')}
       />
 
       <div className="flex justify-between mt-8 pt-6 border-t">
