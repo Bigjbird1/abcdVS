@@ -1,24 +1,31 @@
-import type { AppProps } from 'next/app'
-import { useEffect } from 'react'
+import type { AppProps } from 'next/app';
+import { useEffect } from 'react';
+import { AuthProvider } from '@/components/AuthProvider';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
-    // Ignore the asm.js warning
-    const originalConsoleWarn = console.warn
-    console.warn = (...args) => {
-      if (args[0] && typeof args[0] === 'string' && args[0].includes('Invalid asm.js: Undefined global variable')) {
-        return
-      }
-      originalConsoleWarn.apply(console, args)
-    }
+    const originalConsoleWarn = console.warn;
+    console.warn = (...args: any[]) => {
+      if (args[0]?.includes('Invalid asm.js: Undefined global variable')) return;
+      originalConsoleWarn.apply(console, args);
+    };
 
     return () => {
-      console.warn = originalConsoleWarn
-    }
-  }, [])
+      console.warn = originalConsoleWarn;
+    };
+  }, []);
 
-  return <Component {...pageProps} />
+  return (
+    <AuthProvider>
+      <Component {...pageProps} />
+    </AuthProvider>
+  );
 }
 
-export default MyApp
-
+export default MyApp;
