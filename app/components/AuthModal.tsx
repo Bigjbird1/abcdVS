@@ -37,23 +37,18 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, initialMode }) => {
     };
   }, [handleEscapeKey]);
 
-  const handleSignup = useCallback(async () => {
-    if (!userType || !email || !password) {
-      setError('Please fill in all fields');
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userType) {
+      setError('Please select a user type');
       return;
     }
-    setIsLoading(true);
-    setError('');
     try {
       await signUp(email, password, userType);
-      setHasCompletedProfileSetup(false);
-      onClose();
-    } catch (error: any) {
-      setError(error?.message || 'Failed to sign up. Please try again.');
-    } finally {
-      setIsLoading(false);
+    } catch (error) {
+      console.error('Error during sign up:', error);
     }
-  }, [email, password, userType, signUp, setHasCompletedProfileSetup, onClose]);
+  };
 
   const handleLogin = useCallback(async () => {
     if (!email || !password) {
@@ -85,8 +80,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, initialMode }) => {
   }, []);
 
   // Replace from here
-const renderContent = useCallback(() => {
-  if (authMode === 'login') {
+  const renderContent = useCallback(() => {
+    if (authMode === 'login') {
     return (
       <div className="p-6">
         <h2 className="text-2xl font-bold mb-4">Log In</h2>
@@ -160,7 +155,7 @@ const renderContent = useCallback(() => {
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
-      <form onSubmit={(e) => { e.preventDefault(); handleSignup(); }} className="space-y-4">
+      <form onSubmit={handleSignup} className="space-y-4">
         <div>
           <label htmlFor="signup-email" className="block text-sm font-medium mb-1">Email</label>
           <div className="relative">
@@ -241,8 +236,7 @@ const renderContent = useCallback(() => {
       </div>
     </div>
   );
-}, [authMode, changeAuthMode, email, handleLogin, handleSignup, isLoading, password, showPassword, togglePasswordVisibility, userType]);
-// To here
+}, [authMode, changeAuthMode, email, handleLogin, handleSignup, isLoading, password, showPassword, togglePasswordVisibility, userType]);// To here
 
   return (
     <div 
