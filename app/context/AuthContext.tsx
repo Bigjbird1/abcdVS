@@ -17,7 +17,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 interface UserProfile {
   id: string;
   email: string;
-  userType: 'buyer' | 'seller';
+  userType: 'buyer' | 'seller'; // Ensure this matches your Supabase table's column name
   has_completed_setup: boolean;
 }
 
@@ -27,11 +27,11 @@ type AuthContextType = {
   isLoading: boolean;
   hasCompletedProfileSetup: boolean;
   login: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, userType: 'buyer' | 'seller') => Promise<void>;
-  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, userType: 'buyer' | 'seller') => Promise<void>; // Ensure this is defined
+  signIn: (email: string, password: string) => Promise<void>; // Ensure this is defined
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
-  setHasCompletedProfileSetup: (value: boolean) => void;
+  setHasCompletedProfileSetup: (value: boolean) => void; // Ensure this is present
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

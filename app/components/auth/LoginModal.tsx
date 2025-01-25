@@ -8,7 +8,7 @@ interface LoginModalProps {
   onClose: () => void;
 }
 
-const LoginModal = ({ onClose }: LoginModalProps) => {
+  const LoginModal = ({ onClose }: LoginModalProps) => {
   const { signIn, signUp, isLoading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

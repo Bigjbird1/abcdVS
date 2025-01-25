@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-import { Search, User, HelpCircle } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import ConversationList from './communication/ConversationList';
 import ChatArea from './communication/ChatArea';

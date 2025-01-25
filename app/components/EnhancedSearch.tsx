@@ -103,10 +103,10 @@ export default function EnhancedSearch({ initialSearchType }: EnhancedSearchProp
     }));
 };
 
-const handleFilterChange = (filterType: string, value: any) => {
+const handleFilterChange = (filter: string, value: any) => {
   setActiveFilters(prev => ({
     ...prev,
-    [filterType]: value
+    [filter]: value
   }));
 };
 
