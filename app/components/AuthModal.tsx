@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Eye, EyeOff, Check, ArrowRight, Mail, Key, AlertCircle, X } from 'lucide-react';
+import { Eye, EyeOff, Mail, Key, AlertCircle, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Link from 'next/link';
 import { Alert, AlertDescription } from './ui/alert';
@@ -79,19 +79,88 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, initialMode }) => {
     setUserType(null);
   }, []);
 
-  // Replace from here
-  const renderContent = useCallback(() => {
+  const renderContent = () => {
     if (authMode === 'login') {
+      return (
+        <div className="p-6">
+          <h2 className="text-2xl font-bold mb-4">Log In</h2>
+          <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }} className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
+              <div className="relative">
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-lg pl-10"
+                  placeholder="Enter your email"
+                  required
+                />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium mb-1">Password</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  name="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-lg pl-10 pr-10"
+                  placeholder="Enter your password"
+                  required
+                />
+                <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-800"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Logging in...' : 'Log in'}
+            </button>
+          </form>
+          <div className="text-center mt-4">
+            <p className="text-sm text-gray-600">
+              Don't have an account?{' '}
+              <button 
+                onClick={() => changeAuthMode('signup')}
+                className="text-blue-600 hover:underline"
+              >
+                Sign up
+              </button>
+            </p>
+            <Link href="/password-recovery" className="text-sm text-blue-600 hover:underline">
+              Forgot password?
+            </Link>
+          </div>
+        </div>
+      );
+    }
+
+    // Signup mode
     return (
       <div className="p-6">
-        <h2 className="text-2xl font-bold mb-4">Log In</h2>
-        <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }} className="space-y-4">
+        <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
+        <form onSubmit={handleSignup} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
+            <label htmlFor="signup-email" className="block text-sm font-medium mb-1">Email</label>
             <div className="relative">
               <input
                 type="email"
-                id="email"
+                id="signup-email"
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -103,16 +172,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, initialMode }) => {
             </div>
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">Password</label>
+            <label htmlFor="signup-password" className="block text-sm font-medium mb-1">Password</label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
-                id="password"
+                id="signup-password"
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-3 py-2 border rounded-lg pl-10 pr-10"
-                placeholder="Enter your password"
+                placeholder="Create a password"
                 required
               />
               <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -125,132 +194,67 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, initialMode }) => {
               </button>
             </div>
           </div>
+          <div>
+            <label htmlFor="userType" className="block text-sm font-medium mb-1">I am a:</label>
+            <input type="hidden" id="userType" name="userType" value={userType || ''} required />
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={() => setUserType('buyer')}
+                className={`flex-1 py-2 rounded-lg ${userType === 'buyer' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900 hover:bg-gray-200'}`}
+              >
+                Buyer
+              </button>
+              <button
+                type="button"
+                onClick={() => setUserType('seller')}
+                className={`flex-1 py-2 rounded-lg ${userType === 'seller' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900 hover:bg-gray-200'}`}
+              >
+                Seller
+              </button>
+            </div>
+          </div>
           <button
             type="submit"
             className="w-full bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-800"
-            disabled={isLoading}
+            disabled={isLoading || !userType}
           >
-            {isLoading ? 'Logging in...' : 'Log in'}
+            {isLoading ? 'Signing up...' : 'Sign up'}
           </button>
         </form>
         <div className="text-center mt-4">
           <p className="text-sm text-gray-600">
-            Don't have an account?{' '}
+            Already have an account?{' '}
             <button 
-              onClick={() => changeAuthMode('signup')}
+              onClick={() => changeAuthMode('login')}
               className="text-blue-600 hover:underline"
             >
-              Sign up
+              Log in
             </button>
           </p>
-          <Link href="/password-recovery" className="text-sm text-blue-600 hover:underline">
-            Forgot password?
-          </Link>
         </div>
       </div>
     );
-  }
-
-  // Signup mode
-  return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
-      <form onSubmit={handleSignup} className="space-y-4">
-        <div>
-          <label htmlFor="signup-email" className="block text-sm font-medium mb-1">Email</label>
-          <div className="relative">
-            <input
-              type="email"
-              id="signup-email"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg pl-10"
-              placeholder="Enter your email"
-              required
-            />
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          </div>
-        </div>
-        <div>
-          <label htmlFor="signup-password" className="block text-sm font-medium mb-1">Password</label>
-          <div className="relative">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              id="signup-password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg pl-10 pr-10"
-              placeholder="Create a password"
-              required
-            />
-            <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <button
-              type="button"
-              onClick={togglePasswordVisibility}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-            >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
-          </div>
-        </div>
-        <div>
-          <label htmlFor="userType" className="block text-sm font-medium mb-1">I am a:</label>
-          <input type="hidden" id="userType" name="userType" value={userType || ''} required />
-          <div className="flex gap-4">
-            <button
-              type="button"
-              onClick={() => setUserType('buyer')}
-              className={`flex-1 py-2 rounded-lg ${userType === 'buyer' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900 hover:bg-gray-200'}`}
-            >
-              Buyer
-            </button>
-            <button
-              type="button"
-              onClick={() => setUserType('seller')}
-              className={`flex-1 py-2 rounded-lg ${userType === 'seller' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900 hover:bg-gray-200'}`}
-            >
-              Seller
-            </button>
-          </div>
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-800"
-          disabled={isLoading || !userType}
-        >
-          {isLoading ? 'Signing up...' : 'Sign up'}
-        </button>
-      </form>
-      <div className="text-center mt-4">
-        <p className="text-sm text-gray-600">
-          Already have an account?{' '}
-          <button 
-            onClick={() => changeAuthMode('login')}
-            className="text-blue-600 hover:underline"
-          >
-            Log in
-          </button>
-        </p>
-      </div>
-    </div>
-  );
-}, [authMode, changeAuthMode, email, handleLogin, handleSignup, isLoading, password, showPassword, togglePasswordVisibility, userType]);// To here
+  };
 
   return (
     <div 
-      className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-      onClick={onClose}
+      className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[99]"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
     >
       <div 
-        className="bg-white rounded-xl w-full max-w-md relative"
+        className="bg-white rounded-xl w-full max-w-md relative overflow-visible shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10"
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-[100] p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-all"
           disabled={isLoading}
+          aria-label="Close modal"
         >
           <X className="w-6 h-6" />
         </button>
@@ -267,4 +271,3 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, initialMode }) => {
 };
 
 export default AuthModal;
-

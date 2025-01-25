@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-alert-dialog": "^1.0.4",
     "@radix-ui/react-dropdown-menu": "^2.0.5",
     "@radix-ui/react-popover": "^1.0.6",
     "@radix-ui/react-slot": "^1.0.2",
+    "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.48.1",
     "@types/lodash": "^4.14.202",
     "@types/papaparse": "^5.3.14",
@@ -25,11 +27,13 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^5.0.0",
+    "react-hook-form": "^7.54.2",
     "recharts": "^2.10.4",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.6",
     "use-debounce": "^9.0.4",
-    "yet-another-react-lightbox": "^3.12.2"
+    "yet-another-react-lightbox": "^3.12.2",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/node": "^20.5.0",
