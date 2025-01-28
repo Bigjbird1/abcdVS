@@ -15,6 +15,8 @@ interface OrderSummaryProps {
   calculateTotal: () => number;
 }
 
+import { useRouter } from "next/navigation";
+
 const OrderSummary: React.FC<OrderSummaryProps> = ({
   cartItems,
   shippingOption,
@@ -117,7 +119,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           </div>
         </div>
 
-        <button className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 flex items-center justify-center gap-2">
+        <button 
+          onClick={() => {
+            // Navigate to checkout page
+            window.location.href = "/marketplace/checkout";
+          }}
+          className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 flex items-center justify-center gap-2">
           <Lock className="w-4 h-4" />
           Checkout
         </button>

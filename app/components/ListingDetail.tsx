@@ -23,8 +23,13 @@ import ContactSeller from "./listings/ContactSeller"; // Importing new Contact F
 import PaymentOptions from "./listings/PaymentOptions"; // Importing new Payment Options component
 import SellerDetails from "./listings/SellerDetails"; // Importing new Seller Details component
 
-const ListingDetail = () => {
+interface ListingDetailProps {
+  params?: { id: string };
+}
+
+const ListingDetail: React.FC<ListingDetailProps> = ({ params }) => {
   const router = useRouter();
+  const id = params?.id;
   const [showContactForm, setShowContactForm] = useState(false);
 
   // Mock data - would come from props/API

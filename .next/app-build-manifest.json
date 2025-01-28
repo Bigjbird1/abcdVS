@@ -16,10 +16,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/marketplace/page.js"
     ],
-    "/search/page": [
+    "/listing/[id]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/search/page.js"
+      "static/chunks/app/listing/[id]/page.js"
+    ],
+    "/marketplace/cart/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/marketplace/cart/page.js"
     ],
     "/_not-found/page": [
       "static/chunks/webpack.js",

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Heart } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Item {
   id: number;
@@ -31,6 +31,8 @@ const ItemGrid: React.FC<ItemGridProps> = ({
   searchQuery,
   selectedCategory,
 }) => {
+  const router = useRouter();
+  
   const allItems: Item[] = [
     {
       id: 1,
@@ -322,8 +324,16 @@ const ItemGrid: React.FC<ItemGridProps> = ({
         </div>
       ) : (
         filteredItems.slice(0, visibleItems).map((item) => (
-          <Link href={`/marketplace/item/${item.id}`} key={item.id}>
-            <div className="group cursor-pointer">
+          <div key={item.id}>
+            <div 
+              className="group cursor-pointer"
+              onClick={(e) => {
+                // Don't navigate if clicking the heart button
+                if (!(e.target as HTMLElement).closest('button')) {
+                  router.push(`/listing/${item.id}`);
+                }
+              }}
+            >
               <div className="aspect-square relative rounded-xl overflow-hidden mb-3">
                 <img
                   src={`/placeholder.svg?height=400&width=400&text=Item-${item.id}`}
@@ -353,7 +363,7 @@ const ItemGrid: React.FC<ItemGridProps> = ({
                 {item.location}
               </p>
             </div>
-          </Link>
+          </div>
         ))
       )}
     </div>

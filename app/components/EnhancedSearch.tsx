@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import {
   Search,
   Calendar,
@@ -21,7 +22,6 @@ import {
 import { useDebounce } from "use-debounce";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { searchDeepSeek } from "../deepseekApi"; // Adjust the import path as necessary
 
 const Lightbox = dynamic(() => import("yet-another-react-lightbox"), {
   ssr: false,
@@ -52,6 +52,7 @@ interface SearchModeConfig {
 export default function EnhancedSearch({
   initialSearchType,
 }: EnhancedSearchProps): JSX.Element {
+  const router = useRouter();
   const [viewMode, setViewMode] = useState("grid");
   const [showFilters, setShowFilters] = useState(false);
   const [savedSearch, setSavedSearch] = useState(false);
@@ -267,8 +268,15 @@ export default function EnhancedSearch({
 
   const handleSearch = async () => {
     try {
-      const data = await searchDeepSeek(searchQuery);
-      let filteredResults: SearchResult[] = data.results || mockResults;
+      let filteredResults: SearchResult[] = mockResults;
+
+      // Filter by search query if present
+      if (searchQuery) {
+        filteredResults = filteredResults.filter((item: SearchResult) =>
+          item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.location.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      }
 
       // Apply filters
       if (advancedFilters.size) {
@@ -564,7 +572,14 @@ export default function EnhancedSearch({
               .map((item: SearchResult, index: number) => (
                 <div
                   key={item.id}
-                  className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all group"
+                  className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all group cursor-pointer"
+                  onClick={(e) => {
+                    // Don't navigate if clicking the heart button or image (lightbox)
+                    const target = e.target as HTMLElement;
+                    if (!target.closest('button') && !target.closest('img')) {
+                      router.push(`/listing/${item.id}`);
+                    }
+                  }}
                 >
                   <div className="aspect-[16/9] relative">
                     <Image
