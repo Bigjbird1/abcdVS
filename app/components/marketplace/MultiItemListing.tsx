@@ -11,11 +11,47 @@ import {
   Truck,
   Camera,
   AlertCircle,
+  Image as ImageIcon,
 } from "lucide-react";
+import { uploadMultipleImages, deleteImage } from "../../lib/supabase-utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
+interface ShippingDetails {
+  price: string;
+  method: "standard" | "express";
+}
+
+interface ListingItem {
+  id: number;
+  title: string;
+  price: string;
+  category: string;
+  condition: string;
+  description: string;
+  images: string[];
+  shipping: ShippingDetails;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  sizes?: string[];
+}
+
+interface Condition {
+  id: string;
+  name: string;
+}
+
+interface ItemFormProps {
+  item: ListingItem;
+}
+
+type ItemField = keyof ListingItem | 'shipping';
+type ItemValue = string | string[] | ShippingDetails;
+
 const MultiItemListing = () => {
-  const [items, setItems] = useState([
+  const [items, setItems] = useState<ListingItem[]>([
     {
       id: 1,
       title: "",
@@ -31,7 +67,7 @@ const MultiItemListing = () => {
     },
   ]);
 
-  const categories = [
+  const categories: Category[] = [
     {
       id: "dresses",
       name: "Wedding Dresses",
@@ -42,7 +78,7 @@ const MultiItemListing = () => {
     { id: "flowers", name: "Flowers & Bouquets" },
   ];
 
-  const conditions = [
+  const conditions: Condition[] = [
     { id: "new", name: "New with tags" },
     { id: "like_new", name: "Like new" },
     { id: "good", name: "Good" },
@@ -72,7 +108,7 @@ const MultiItemListing = () => {
     setItems(items.filter((item) => item.id !== itemId));
   };
 
-  const updateItem = (itemId: number, field: string, value: string) => {
+  const updateItem = (itemId: number, field: ItemField, value: ItemValue) => {
     setItems(
       items.map((item) =>
         item.id === itemId ? { ...item, [field]: value } : item,
@@ -80,7 +116,7 @@ const MultiItemListing = () => {
     );
   };
 
-  const ItemForm = ({ item }: { item: any }) => (
+  const ItemForm = ({ item }: ItemFormProps) => (
     <div className="p-6 bg-white rounded-xl border mb-6">
       <div className="flex justify-between items-start mb-6">
         <h3 className="font-medium text-lg">Item {item.id}</h3>
@@ -97,28 +133,70 @@ const MultiItemListing = () => {
       <div className="space-y-6">
         {/* Image Upload */}
         <div>
-          <label
-            htmlFor={`photos-${item.id}`}
-            className="block text-sm font-medium mb-2"
-          >
+          <label className="block text-sm font-medium mb-2">
             Photos
           </label>
-          <div
-            id={`photos-${item.id}`}
-            role="group"
-            aria-label="Photo upload buttons"
-            className="grid grid-cols-4 gap-4"
-          >
-            {[1, 2, 3, 4].map((num) => (
-              <button
-                key={num}
-                className="aspect-square rounded-lg border-2 border-dashed flex flex-col items-center justify-center gap-2 hover:border-gray-400"
-                aria-label={`Add photo ${num}`}
+          <div className="space-y-4">
+            <div className="flex items-center justify-center w-full">
+              <label
+                htmlFor={`images-${item.id}`}
+                className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50"
               >
-                <Camera className="w-6 h-6 text-gray-400" />
-                <span className="text-sm text-gray-600">Add Photo</span>
-              </button>
-            ))}
+                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                  <ImageIcon className="w-10 h-10 text-gray-400 mb-3" />
+                  <p className="mb-2 text-sm text-gray-500">
+                    <span className="font-semibold">Click to upload</span> or drag and drop
+                  </p>
+                  <p className="text-xs text-gray-500">PNG, JPG, WEBP up to 10MB each</p>
+                </div>
+                <input
+                  id={`images-${item.id}`}
+                  type="file"
+                  className="hidden"
+                  multiple
+                  accept="image/*"
+                  onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
+                    const files = e.target.files;
+                    if (!files || files.length === 0) return;
+
+                    try {
+                      const uploadedUrls = await uploadMultipleImages(Array.from(files));
+                      updateItem(item.id, "images", [...item.images, ...uploadedUrls]);
+                    } catch (error) {
+                      console.error('Upload error:', error);
+                    }
+                  }}
+                />
+              </label>
+            </div>
+
+            {/* Image Preview Grid */}
+            {item.images.length > 0 && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {item.images.map((url: string, index: number) => (
+                  <div key={url} className="relative group aspect-square">
+                    <img
+                      src={url}
+                      alt={`Item ${item.id} - Image ${index + 1}`}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                    <button
+                      onClick={async () => {
+                        await deleteImage(url);
+                        updateItem(
+                          item.id,
+                          "images",
+                          item.images.filter((_: string, i: number) => i !== index)
+                        );
+                      }}
+                      className="absolute top-2 right-2 p-1 bg-white rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="w-4 h-4 text-gray-500" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
         {/* Basic Details */}
@@ -135,7 +213,7 @@ const MultiItemListing = () => {
               id={`title-${item.id}`}
               name={`title-${item.id}`}
               value={item.title}
-              onChange={(e) => updateItem(item.id, "title", e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateItem(item.id, "title", e.target.value)}
               className="w-full px-3 py-2 border rounded-lg"
               placeholder="Item name"
             />
@@ -155,7 +233,7 @@ const MultiItemListing = () => {
                 id={`price-${item.id}`}
                 name={`price-${item.id}`}
                 value={item.price}
-                onChange={(e) => updateItem(item.id, "price", e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateItem(item.id, "price", e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border rounded-lg"
                 placeholder="0.00"
               />
@@ -176,7 +254,7 @@ const MultiItemListing = () => {
               id={`category-${item.id}`}
               name={`category-${item.id}`}
               value={item.category}
-              onChange={(e) => updateItem(item.id, "category", e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateItem(item.id, "category", e.target.value)}
               className="w-full px-3 py-2 border rounded-lg"
             >
               <option value="">Select category</option>
@@ -199,7 +277,7 @@ const MultiItemListing = () => {
               id={`condition-${item.id}`}
               name={`condition-${item.id}`}
               value={item.condition}
-              onChange={(e) => updateItem(item.id, "condition", e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateItem(item.id, "condition", e.target.value)}
               className="w-full px-3 py-2 border rounded-lg"
             >
               <option value="">Select condition</option>
@@ -224,7 +302,7 @@ const MultiItemListing = () => {
             id={`description-${item.id}`}
             name={`description-${item.id}`}
             value={item.description}
-            onChange={(e) => updateItem(item.id, "description", e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateItem(item.id, "description", e.target.value)}
             className="w-full px-3 py-2 border rounded-lg"
             rows={4}
             placeholder="Describe your item..."
@@ -249,7 +327,7 @@ const MultiItemListing = () => {
                   id={`shippingPrice-${item.id}`}
                   name={`shippingPrice-${item.id}`}
                   value={item.shipping.price}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     updateItem(item.id, "shipping", {
                       ...item.shipping,
                       price: e.target.value,
@@ -271,10 +349,10 @@ const MultiItemListing = () => {
                 id={`shippingMethod-${item.id}`}
                 name={`shippingMethod-${item.id}`}
                 value={item.shipping.method}
-                onChange={(e) =>
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                   updateItem(item.id, "shipping", {
                     ...item.shipping,
-                    method: e.target.value,
+                    method: e.target.value as "standard" | "express",
                   })
                 }
                 className="w-full px-3 py-2 border rounded-lg"

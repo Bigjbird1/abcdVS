@@ -1,20 +1,5 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/date-trading/page": "app/date-trading/page.js",
-  "/list-date/page": "app/list-date/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/admin/verification/page": "app/admin/verification/page.js",
-  "/listing/[id]/payment-escrow/page": "app/listing/[id]/payment-escrow/page.js",
-  "/documents/page": "app/documents/page.js",
-  "/listing/[id]/page": "app/listing/[id]/page.js",
-  "/search/page": "app/search/page.js",
-  "/marketplace/cart/page": "app/marketplace/cart/page.js",
-  "/password-recovery/page": "app/password-recovery/page.js",
   "/sell-items/page": "app/sell-items/page.js",
-  "/venue-dashboard/page": "app/venue-dashboard/page.js",
-  "/marketplace/page": "app/marketplace/page.js",
-  "/transfer-verification/page": "app/transfer-verification/page.js",
-  "/messages/page": "app/messages/page.js",
-  "/reviews/page": "app/reviews/page.js",
   "/page": "app/page.js"
 }

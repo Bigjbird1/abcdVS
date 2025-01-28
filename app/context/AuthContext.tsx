@@ -120,6 +120,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   ) => {
     setIsLoading(true);
     try {
+      // Get client info
+      const userAgent = window.navigator.userAgent;
+      
       // Sign up the user
       const { data: authData, error: signUpError } = await supabase.auth.signUp(
         {
@@ -151,6 +154,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         await supabase.auth.signOut();
         throw new Error("Failed to create user profile");
       }
+
+      // Log the signup event
+      const { error: logError } = await supabase.rpc('fn_log_auth_event', {
+        p_user_id: authData.user.id,
+        p_event_type: 'signup',
+        p_ip_address: '', // IP is captured server-side
+        p_user_agent: userAgent,
+        p_metadata: {
+          userType: userType,
+          email: email
+        }
+      });
+
+      if (logError) {
+        console.error('Error logging auth event:', logError);
+      }
     } catch (error) {
       console.error("Error signing up:", error);
       throw error;
@@ -162,15 +181,48 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const signIn = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const userAgent = window.navigator.userAgent;
+      
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       if (error) {
+        // Log failed login attempt
+        await supabase.rpc('fn_log_auth_event', {
+          p_user_id: null,
+          p_event_type: 'login',
+          p_ip_address: '',
+          p_user_agent: userAgent,
+          p_metadata: {
+            email: email,
+            success: false,
+            failure_reason: error.message
+          }
+        });
+        
         if (error.message.includes("Invalid login")) {
           throw new Error("Invalid email or password");
         }
         throw error;
+      }
+
+      // Log successful login
+      if (data.user) {
+        const { error: logError } = await supabase.rpc('fn_log_auth_event', {
+          p_user_id: data.user.id,
+          p_event_type: 'login',
+          p_ip_address: '',
+          p_user_agent: userAgent,
+          p_metadata: {
+            email: email,
+            success: true
+          }
+        });
+
+        if (logError) {
+          console.error('Error logging auth event:', logError);
+        }
       }
     } catch (error) {
       console.error("Login error:", error);

@@ -1,14 +1,17 @@
 // app/components/ListingCreation.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Calendar,
   MapPin,
   DollarSign,
   ArrowRight,
   AlertCircle,
+  Image as ImageIcon,
+  X,
 } from "lucide-react";
+import { uploadMultipleImages, deleteImage } from "../lib/supabase-utils";
 
 const ListingCreation = () => {
   const [step, setStep] = useState(1);
@@ -18,7 +21,10 @@ const ListingCreation = () => {
     originalPrice: "",
     askingPrice: "",
     description: "",
+    images: [] as string[],
   });
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -30,8 +36,45 @@ const ListingCreation = () => {
     }));
   };
 
+  const handleImageUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setIsUploading(true);
+    setUploadError(null);
+
+    try {
+      const uploadedUrls = await uploadMultipleImages(Array.from(files));
+      setFormData(prev => ({
+        ...prev,
+        images: [...prev.images, ...uploadedUrls]
+      }));
+    } catch (error) {
+      setUploadError('Failed to upload images. Please try again.');
+      console.error('Upload error:', error);
+    } finally {
+      setIsUploading(false);
+    }
+  }, []);
+
+  const handleRemoveImage = async (imageUrl: string, index: number) => {
+    try {
+      await deleteImage(imageUrl);
+      setFormData(prev => ({
+        ...prev,
+        images: prev.images.filter((_, i) => i !== index)
+      }));
+    } catch (error) {
+      console.error('Error removing image:', error);
+    }
+  };
+
   const handleNextStep = () => {
-    // Here you would typically validate the form before proceeding
+    // Validate current step before proceeding
+    if (step === 3 && formData.images.length === 0) {
+      setUploadError('Please upload at least one image');
+      return;
+    }
     setStep((prevStep) => prevStep + 1);
   };
 
@@ -94,6 +137,63 @@ const ListingCreation = () => {
 
           {/* Form Fields */}
           <div className="space-y-6">
+            {step === 3 && (
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Upload Photos
+                </label>
+                <div className="mt-2 space-y-4">
+                  <div className="flex items-center justify-center w-full">
+                    <label
+                      htmlFor="images"
+                      className={`flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer 
+                        ${isUploading ? 'bg-gray-50' : 'hover:bg-gray-50'} 
+                        ${uploadError ? 'border-red-300' : 'border-gray-300'}`}
+                    >
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <ImageIcon className="w-12 h-12 text-gray-400 mb-3" />
+                        <p className="mb-2 text-sm text-gray-500">
+                          <span className="font-semibold">Click to upload</span> or drag and drop
+                        </p>
+                        <p className="text-xs text-gray-500">PNG, JPG, WEBP up to 10MB each</p>
+                        {isUploading && <p className="text-sm text-blue-500 mt-2">Uploading...</p>}
+                        {uploadError && <p className="text-sm text-red-500 mt-2">{uploadError}</p>}
+                      </div>
+                      <input
+                        id="images"
+                        type="file"
+                        className="hidden"
+                        multiple
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        disabled={isUploading}
+                      />
+                    </label>
+                  </div>
+
+                  {/* Image Preview Grid */}
+                  {formData.images.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                      {formData.images.map((url, index) => (
+                        <div key={url} className="relative group">
+                          <img
+                            src={url}
+                            alt={`Upload ${index + 1}`}
+                            className="h-40 w-full object-cover rounded-lg"
+                          />
+                          <button
+                            onClick={() => handleRemoveImage(url, index)}
+                            className="absolute top-2 right-2 p-1 bg-white rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <X className="w-4 h-4 text-gray-500" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
             <div>
               <label
                 htmlFor="weddingDate"
