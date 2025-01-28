@@ -1,6 +1,6 @@
-import React from 'react';
-import { Lock, AlertCircle } from 'lucide-react';
-import { Alert, AlertDescription } from '../ui/alert';
+import React from "react";
+import { Lock, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "../ui/alert";
 
 interface OrderSummaryProps {
   cartItems: any[];
@@ -25,7 +25,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   handlePromoCode,
   calculateSubtotal,
   calculateShipping,
-  calculateTotal
+  calculateTotal,
 }) => {
   return (
     <div className="lg:col-span-1">
@@ -43,8 +43,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                   name="shipping"
                   id="standardShipping"
                   value="standard"
-                  checked={shippingOption === 'standard'}
-                  onChange={() => setShippingOption('standard')}
+                  checked={shippingOption === "standard"}
+                  onChange={() => setShippingOption("standard")}
                   className="text-gray-900"
                 />
                 <div>
@@ -62,8 +62,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                   name="shipping"
                   id="expressShipping"
                   value="express"
-                  checked={shippingOption === 'express'}
-                  onChange={() => setShippingOption('express')}
+                  checked={shippingOption === "express"}
+                  onChange={() => setShippingOption("express")}
                   className="text-gray-900"
                 />
                 <div>
@@ -134,4 +134,3 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
 };
 
 export default OrderSummary;
-

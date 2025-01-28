@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { FileText, Download } from 'lucide-react';
+import React, { useState } from "react";
+import { FileText, Download } from "lucide-react";
 
 interface TransferAgreementGeneratorProps {
   listingId: string;
@@ -18,9 +18,9 @@ const TransferAgreementGenerator: React.FC<TransferAgreementGeneratorProps> = ({
   transferDate,
   sellerName,
   buyerName,
-  price
+  price,
 }) => {
-  const [additionalTerms, setAdditionalTerms] = useState('');
+  const [additionalTerms, setAdditionalTerms] = useState("");
 
   const generateAgreement = () => {
     const agreement = `
@@ -54,7 +54,9 @@ const TransferAgreementGenerator: React.FC<TransferAgreementGeneratorProps> = ({
 
     // In a real application, this would generate a PDF
     console.log(agreement);
-    alert('Agreement generated! In a real application, this would create a downloadable PDF.');
+    alert(
+      "Agreement generated! In a real application, this would create a downloadable PDF.",
+    );
   };
 
   return (
@@ -73,7 +75,10 @@ const TransferAgreementGenerator: React.FC<TransferAgreementGeneratorProps> = ({
         <p className="text-gray-600">Price: ${price.toLocaleString()}</p>
       </div>
       <div className="mb-4">
-        <label htmlFor="additionalTerms" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="additionalTerms"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Additional Terms (Optional)
         </label>
         <textarea
@@ -98,4 +103,3 @@ const TransferAgreementGenerator: React.FC<TransferAgreementGeneratorProps> = ({
 };
 
 export default TransferAgreementGenerator;
-

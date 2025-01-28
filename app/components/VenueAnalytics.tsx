@@ -1,28 +1,49 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react';
-import { Calendar, TrendingUp, Clock, DollarSign, Users, BarChart3, ArrowUpRight, ArrowDownRight, Package, Award, Zap } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import React, { useState } from "react";
+import {
+  Calendar,
+  TrendingUp,
+  Clock,
+  DollarSign,
+  Users,
+  BarChart3,
+  ArrowUpRight,
+  ArrowDownRight,
+  Package,
+  Award,
+  Zap,
+} from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 const VenueAnalytics = () => {
-  const [selectedView, setSelectedView] = useState('overview');
-  const [dateRange, setDateRange] = useState('30d');
+  const [selectedView, setSelectedView] = useState("overview");
+  const [dateRange, setDateRange] = useState("30d");
 
   // Mock data for charts
   const seasonalityData = [
-    { month: 'Jan', transfers: 4, directBookings: 8, revenue: 12000 },
-    { month: 'Feb', transfers: 6, directBookings: 7, revenue: 15000 },
-    { month: 'Mar', transfers: 8, directBookings: 12, revenue: 24000 },
-    { month: 'Apr', transfers: 12, directBookings: 15, revenue: 32000 },
-    { month: 'May', transfers: 15, directBookings: 18, revenue: 40000 },
-    { month: 'Jun', transfers: 10, directBookings: 20, revenue: 36000 }
+    { month: "Jan", transfers: 4, directBookings: 8, revenue: 12000 },
+    { month: "Feb", transfers: 6, directBookings: 7, revenue: 15000 },
+    { month: "Mar", transfers: 8, directBookings: 12, revenue: 24000 },
+    { month: "Apr", transfers: 12, directBookings: 15, revenue: 32000 },
+    { month: "May", transfers: 15, directBookings: 18, revenue: 40000 },
+    { month: "Jun", transfers: 10, directBookings: 20, revenue: 36000 },
   ];
 
   const popularPackages = [
-    { name: 'Premium Weekend', transfers: 24, revenue: 72000 },
-    { name: 'Evening Reception', transfers: 18, revenue: 45000 },
-    { name: 'All-Inclusive', transfers: 15, revenue: 52500 },
-    { name: 'Intimate Ceremony', transfers: 12, revenue: 24000 }
+    { name: "Premium Weekend", transfers: 24, revenue: 72000 },
+    { name: "Evening Reception", transfers: 18, revenue: 45000 },
+    { name: "All-Inclusive", transfers: 15, revenue: 52500 },
+    { name: "Intimate Ceremony", transfers: 12, revenue: 24000 },
   ];
 
   return (
@@ -61,42 +82,48 @@ const VenueAnalytics = () => {
               value: "$48,920",
               change: "+15%",
               icon: DollarSign,
-              color: "green"
+              color: "green",
             },
             {
               title: "Successful Transfers",
               value: "32",
               change: "+8%",
               icon: Calendar,
-              color: "blue"
+              color: "blue",
             },
             {
               title: "Average Time to Transfer",
               value: "12 days",
               change: "-2 days",
               icon: Clock,
-              color: "purple"
+              color: "purple",
             },
             {
               title: "Conversion Rate",
               value: "68%",
               change: "+5%",
               icon: TrendingUp,
-              color: "rose"
-            }
+              color: "rose",
+            },
           ].map((stat, index) => (
             <div key={index} className="bg-gray-50 rounded-xl p-6">
               <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 bg-${stat.color}-100 rounded-lg flex items-center justify-center`}>
+                <div
+                  className={`w-12 h-12 bg-${stat.color}-100 rounded-lg flex items-center justify-center`}
+                >
                   <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">{stat.title}</p>
                   <div className="flex items-baseline gap-2">
                     <span className="text-2xl font-semibold">{stat.value}</span>
-                    <span className={`text-sm ${
-                      stat.change.startsWith('+') ? 'text-green-600' : 'text-rose-600'
-                    }`}>
+                    <span
+                      className={`text-sm ${
+                        stat.change.startsWith("+")
+                          ? "text-green-600"
+                          : "text-rose-600"
+                      }`}
+                    >
                       {stat.change}
                     </span>
                   </div>
@@ -120,7 +147,11 @@ const VenueAnalytics = () => {
                   <Tooltip />
                   <Legend />
                   <Bar dataKey="transfers" fill="#8b5cf6" name="Transfers" />
-                  <Bar dataKey="directBookings" fill="#10b981" name="Direct Bookings" />
+                  <Bar
+                    dataKey="directBookings"
+                    fill="#10b981"
+                    name="Direct Bookings"
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -131,7 +162,10 @@ const VenueAnalytics = () => {
             <h3 className="font-semibold mb-6">Package Performance</h3>
             <div className="space-y-4">
               {popularPackages.map((pkg, index) => (
-                <div key={index} className="flex items-center gap-4 p-4 bg-white rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-center gap-4 p-4 bg-white rounded-lg"
+                >
                   <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                     <Package className="w-5 h-5 text-purple-600" />
                   </div>
@@ -139,12 +173,16 @@ const VenueAnalytics = () => {
                     <div className="flex justify-between items-start">
                       <div>
                         <h4 className="font-medium">{pkg.name}</h4>
-                        <p className="text-sm text-gray-600">{pkg.transfers} transfers</p>
+                        <p className="text-sm text-gray-600">
+                          {pkg.transfers} transfers
+                        </p>
                       </div>
-                      <span className="font-medium">${pkg.revenue.toLocaleString()}</span>
+                      <span className="font-medium">
+                        ${pkg.revenue.toLocaleString()}
+                      </span>
                     </div>
                     <div className="mt-2 h-1 bg-gray-100 rounded-full">
-                      <div 
+                      <div
                         className="h-full bg-purple-500 rounded-full"
                         style={{ width: `${(pkg.transfers / 24) * 100}%` }}
                       />
@@ -233,4 +271,3 @@ const VenueAnalytics = () => {
 };
 
 export default VenueAnalytics;
-

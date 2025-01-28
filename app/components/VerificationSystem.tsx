@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
-import { Check, X, Upload, Shield } from 'lucide-react';
+import React, { useState } from "react";
+import { Check, X, Upload, Shield } from "lucide-react";
 
 interface VerificationSystemProps {
-  userType: 'venue' | 'user';
+  userType: "venue" | "user";
   id: string;
 }
 
-const VerificationSystem: React.FC<VerificationSystemProps> = ({ userType, id }) => {
-  const [verificationStatus, setVerificationStatus] = useState<'unverified' | 'pending' | 'verified'>('unverified');
+const VerificationSystem: React.FC<VerificationSystemProps> = ({
+  userType,
+  id,
+}) => {
+  const [verificationStatus, setVerificationStatus] = useState<
+    "unverified" | "pending" | "verified"
+  >("unverified");
   const [documents, setDocuments] = useState<File[]>([]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,7 +23,7 @@ const VerificationSystem: React.FC<VerificationSystemProps> = ({ userType, id })
 
   const handleSubmitVerification = () => {
     // In a real application, this would upload the documents and initiate the verification process
-    setVerificationStatus('pending');
+    setVerificationStatus("pending");
   };
 
   return (
@@ -28,29 +33,41 @@ const VerificationSystem: React.FC<VerificationSystemProps> = ({ userType, id })
         Verification System
       </h2>
       <p className="mb-4 text-gray-600">
-        {userType === 'venue' 
-          ? 'Verify your venue to increase trust and visibility on our platform.' 
-          : 'Verify your account to unlock all features and build trust with other users.'}
+        {userType === "venue"
+          ? "Verify your venue to increase trust and visibility on our platform."
+          : "Verify your account to unlock all features and build trust with other users."}
       </p>
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2">Status: {verificationStatus}</h3>
-        {verificationStatus === 'unverified' && (
-          <p className="text-gray-600">Please upload the required documents to start the verification process.</p>
+        <h3 className="text-lg font-semibold mb-2">
+          Status: {verificationStatus}
+        </h3>
+        {verificationStatus === "unverified" && (
+          <p className="text-gray-600">
+            Please upload the required documents to start the verification
+            process.
+          </p>
         )}
-        {verificationStatus === 'pending' && (
-          <p className="text-blue-600">Your documents are being reviewed. This process may take 1-3 business days.</p>
+        {verificationStatus === "pending" && (
+          <p className="text-blue-600">
+            Your documents are being reviewed. This process may take 1-3
+            business days.
+          </p>
         )}
-        {verificationStatus === 'verified' && (
+        {verificationStatus === "verified" && (
           <p className="text-green-600 flex items-center">
             <Check className="mr-2" />
-            Your {userType} is verified. Thank you for helping to keep our platform safe and trustworthy.
+            Your {userType} is verified. Thank you for helping to keep our
+            platform safe and trustworthy.
           </p>
         )}
       </div>
-      {verificationStatus === 'unverified' && (
+      {verificationStatus === "unverified" && (
         <>
           <div className="mb-4">
-            <label htmlFor="document-upload" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="document-upload"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Upload Verification Documents
             </label>
             <input
@@ -80,4 +97,3 @@ const VerificationSystem: React.FC<VerificationSystemProps> = ({ userType, id })
 };
 
 export default VerificationSystem;
-

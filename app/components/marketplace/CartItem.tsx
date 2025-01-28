@@ -1,5 +1,5 @@
-import React from 'react';
-import { Trash2, Minus, Plus } from 'lucide-react';
+import React from "react";
+import { Trash2, Minus, Plus } from "lucide-react";
 
 interface CartItemProps {
   item: {
@@ -18,7 +18,11 @@ interface CartItemProps {
   removeItem: (id: number) => void;
 }
 
-const CartItem: React.FC<CartItemProps> = ({ item, updateQuantity, removeItem }) => {
+const CartItem: React.FC<CartItemProps> = ({
+  item,
+  updateQuantity,
+  removeItem,
+}) => {
   return (
     <div className="flex gap-6 py-6 border-t">
       <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
@@ -28,7 +32,7 @@ const CartItem: React.FC<CartItemProps> = ({ item, updateQuantity, removeItem })
           className="w-full h-full object-cover"
         />
       </div>
-      
+
       <div className="flex-1">
         <div className="flex justify-between">
           <div>
@@ -76,4 +80,3 @@ const CartItem: React.FC<CartItemProps> = ({ item, updateQuantity, removeItem })
 };
 
 export default CartItem;
-

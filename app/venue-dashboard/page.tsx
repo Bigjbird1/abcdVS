@@ -1,4 +1,4 @@
-import VenueAnalytics from '../components/VenueAnalytics';
+import VenueAnalytics from "../components/VenueAnalytics";
 
 export default function VenueDashboard() {
   return (
@@ -10,4 +10,3 @@ export default function VenueDashboard() {
     </div>
   );
 }
-

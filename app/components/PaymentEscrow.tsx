@@ -1,8 +1,18 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react';
-import { DollarSign, Shield, Clock, CheckCircle2, AlertCircle, ArrowRight, FileText, Lock, Building2 } from 'lucide-react';
-import { Alert, AlertDescription } from './ui/alert';
+import React, { useState } from "react";
+import {
+  DollarSign,
+  Shield,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  ArrowRight,
+  FileText,
+  Lock,
+  Building2,
+} from "lucide-react";
+import { Alert, AlertDescription } from "./ui/alert";
 
 interface PaymentEscrowProps {
   listingId: string;
@@ -13,18 +23,18 @@ const PaymentEscrow: React.FC<PaymentEscrowProps> = ({ listingId }) => {
 
   // Mock transaction data
   const transaction = {
-    id: 'TRX-12345',
+    id: "TRX-12345",
     amount: 15000,
     originalAmount: 22000,
     escrowFee: 150,
     platformFee: 450,
     serviceFee: 100,
     totalAmount: 15700,
-    seller: 'Sarah M.',
-    buyer: 'Emma D.',
-    venue: 'The Grand Estate',
-    date: '2024-09-24',
-    status: 'in_escrow'
+    seller: "Sarah M.",
+    buyer: "Emma D.",
+    venue: "The Grand Estate",
+    date: "2024-09-24",
+    status: "in_escrow",
   };
 
   const renderEscrowTimeline = () => (
@@ -35,7 +45,9 @@ const PaymentEscrow: React.FC<PaymentEscrowProps> = ({ listingId }) => {
         </div>
         <div>
           <p className="font-medium">Payment Received</p>
-          <p className="text-sm text-gray-600">Buyer's payment secured in escrow</p>
+          <p className="text-sm text-gray-600">
+            Buyer's payment secured in escrow
+          </p>
         </div>
       </div>
       <div className="w-px h-8 bg-gray-200 ml-4" />
@@ -45,7 +57,9 @@ const PaymentEscrow: React.FC<PaymentEscrowProps> = ({ listingId }) => {
         </div>
         <div>
           <p className="font-medium">Venue Verification</p>
-          <p className="text-sm text-gray-600">Awaiting venue approval of transfer</p>
+          <p className="text-sm text-gray-600">
+            Awaiting venue approval of transfer
+          </p>
         </div>
       </div>
       <div className="w-px h-8 bg-gray-200 ml-4" />
@@ -65,7 +79,9 @@ const PaymentEscrow: React.FC<PaymentEscrowProps> = ({ listingId }) => {
     <div className="bg-gray-50 rounded-lg p-4 space-y-2">
       <div className="flex justify-between">
         <span className="text-gray-600">Transfer Amount</span>
-        <span className="font-medium">${transaction.amount.toLocaleString()}</span>
+        <span className="font-medium">
+          ${transaction.amount.toLocaleString()}
+        </span>
       </div>
       <div className="flex justify-between">
         <span className="text-gray-600">Escrow Fee</span>
@@ -93,7 +109,8 @@ const PaymentEscrow: React.FC<PaymentEscrowProps> = ({ listingId }) => {
           <Alert>
             <Shield className="w-4 h-4" />
             <AlertDescription>
-              Your payment is protected by our secure escrow service. Funds will only be released after successful transfer verification.
+              Your payment is protected by our secure escrow service. Funds will
+              only be released after successful transfer verification.
             </AlertDescription>
           </Alert>
 
@@ -106,7 +123,9 @@ const PaymentEscrow: React.FC<PaymentEscrowProps> = ({ listingId }) => {
               </div>
               <div>
                 <h3 className="font-medium">Secure Payment Processing</h3>
-                <p className="text-sm text-gray-600">Your payment details are encrypted and secure</p>
+                <p className="text-sm text-gray-600">
+                  Your payment details are encrypted and secure
+                </p>
               </div>
             </div>
 
@@ -116,7 +135,9 @@ const PaymentEscrow: React.FC<PaymentEscrowProps> = ({ listingId }) => {
               </div>
               <div>
                 <h3 className="font-medium">Escrow Protection</h3>
-                <p className="text-sm text-gray-600">Funds held securely until transfer is complete</p>
+                <p className="text-sm text-gray-600">
+                  Funds held securely until transfer is complete
+                </p>
               </div>
             </div>
 
@@ -126,12 +147,14 @@ const PaymentEscrow: React.FC<PaymentEscrowProps> = ({ listingId }) => {
               </div>
               <div>
                 <h3 className="font-medium">Verified Documentation</h3>
-                <p className="text-sm text-gray-600">All transfers legally documented and verified</p>
+                <p className="text-sm text-gray-600">
+                  All transfers legally documented and verified
+                </p>
               </div>
             </div>
           </div>
 
-          <button 
+          <button
             onClick={() => setStep(2)}
             className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 flex items-center justify-center gap-2"
           >
@@ -153,7 +176,8 @@ const PaymentEscrow: React.FC<PaymentEscrowProps> = ({ listingId }) => {
               <span className="font-medium">Payment Secured in Escrow</span>
             </div>
             <p className="text-sm text-gray-600">
-              Your payment is now securely held in escrow. The venue will be notified to begin the transfer process.
+              Your payment is now securely held in escrow. The venue will be
+              notified to begin the transfer process.
             </p>
           </div>
 
@@ -176,7 +200,7 @@ const PaymentEscrow: React.FC<PaymentEscrowProps> = ({ listingId }) => {
           </div>
 
           <div className="flex gap-3">
-            <button 
+            <button
               onClick={() => setStep(1)}
               className="flex-1 border py-2 rounded-lg hover:bg-gray-50"
             >
@@ -195,17 +219,16 @@ const PaymentEscrow: React.FC<PaymentEscrowProps> = ({ listingId }) => {
     <div className="max-w-2xl mx-auto">
       <div className="bg-white rounded-xl border">
         <div className="p-6 border-b">
-          <h2 className="text-xl font-semibold mb-1">Secure Payment & Escrow</h2>
+          <h2 className="text-xl font-semibold mb-1">
+            Secure Payment & Escrow
+          </h2>
           <p className="text-gray-600">Transaction ID: {transaction.id}</p>
         </div>
 
-        <div className="p-6">
-          {renderCurrentStep()}
-        </div>
+        <div className="p-6">{renderCurrentStep()}</div>
       </div>
     </div>
   );
 };
 
 export default PaymentEscrow;
-

@@ -1,30 +1,39 @@
-import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import React from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 interface AnalyticsProps {
-  userType: 'buyer' | 'seller';
+  userType: "buyer" | "seller";
 }
 
 const Analytics: React.FC<AnalyticsProps> = ({ userType }) => {
   const sellerData = [
-    { name: 'Jan', listings: 4, views: 120, inquiries: 8 },
-    { name: 'Feb', listings: 6, views: 180, inquiries: 12 },
-    { name: 'Mar', listings: 5, views: 150, inquiries: 10 },
-    { name: 'Apr', listings: 8, views: 240, inquiries: 15 },
-    { name: 'May', listings: 10, views: 300, inquiries: 20 },
-    { name: 'Jun', listings: 12, views: 360, inquiries: 25 },
+    { name: "Jan", listings: 4, views: 120, inquiries: 8 },
+    { name: "Feb", listings: 6, views: 180, inquiries: 12 },
+    { name: "Mar", listings: 5, views: 150, inquiries: 10 },
+    { name: "Apr", listings: 8, views: 240, inquiries: 15 },
+    { name: "May", listings: 10, views: 300, inquiries: 20 },
+    { name: "Jun", listings: 12, views: 360, inquiries: 25 },
   ];
 
   const buyerData = [
-    { name: 'Jan', searches: 10, viewedListings: 25, savedListings: 5 },
-    { name: 'Feb', searches: 15, viewedListings: 35, savedListings: 8 },
-    { name: 'Mar', searches: 12, viewedListings: 30, savedListings: 6 },
-    { name: 'Apr', searches: 18, viewedListings: 40, savedListings: 10 },
-    { name: 'May', searches: 20, viewedListings: 50, savedListings: 12 },
-    { name: 'Jun', searches: 25, viewedListings: 60, savedListings: 15 },
+    { name: "Jan", searches: 10, viewedListings: 25, savedListings: 5 },
+    { name: "Feb", searches: 15, viewedListings: 35, savedListings: 8 },
+    { name: "Mar", searches: 12, viewedListings: 30, savedListings: 6 },
+    { name: "Apr", searches: 18, viewedListings: 40, savedListings: 10 },
+    { name: "May", searches: 20, viewedListings: 50, savedListings: 12 },
+    { name: "Jun", searches: 25, viewedListings: 60, savedListings: 15 },
   ];
 
-  const data = userType === 'seller' ? sellerData : buyerData;
+  const data = userType === "seller" ? sellerData : buyerData;
 
   return (
     <div>
@@ -37,7 +46,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ userType }) => {
             <YAxis />
             <Tooltip />
             <Legend />
-            {userType === 'seller' ? (
+            {userType === "seller" ? (
               <>
                 <Bar dataKey="listings" fill="#8884d8" />
                 <Bar dataKey="views" fill="#82ca9d" />
@@ -58,4 +67,3 @@ const Analytics: React.FC<AnalyticsProps> = ({ userType }) => {
 };
 
 export default Analytics;
-

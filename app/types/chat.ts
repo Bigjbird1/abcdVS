@@ -1,5 +1,5 @@
-export type ChatStatus = 'online' | 'offline';
-export type ChatType = 'buyer' | 'venue' | 'support';
+export type ChatStatus = "online" | "offline";
+export type ChatType = "buyer" | "venue" | "support";
 
 export interface Conversation {
   id: number;

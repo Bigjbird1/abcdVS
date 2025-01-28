@@ -1,5 +1,5 @@
-import React from 'react';
-import { ChevronRight, Truck } from 'lucide-react';
+import React from "react";
+import { ChevronRight, Truck } from "lucide-react";
 
 const RecentOrders = () => {
   const orders = [
@@ -9,15 +9,15 @@ const RecentOrders = () => {
       status: "In Transit",
       total: 450,
       items: 3,
-      tracking: "1Z999AA1234567890"
+      tracking: "1Z999AA1234567890",
     },
     {
       id: "ORD-122",
       date: "2024-02-15",
       status: "Delivered",
       total: 899,
-      items: 1
-    }
+      items: 1,
+    },
   ];
 
   return (
@@ -49,7 +49,9 @@ const RecentOrders = () => {
                 <Truck className="w-5 h-5 text-gray-400" />
                 <div className="flex-1">
                   <p className="text-sm font-medium">Package in transit</p>
-                  <p className="text-sm text-gray-600">Tracking: {order.tracking}</p>
+                  <p className="text-sm text-gray-600">
+                    Tracking: {order.tracking}
+                  </p>
                 </div>
                 <button className="text-sm text-gray-600 hover:text-gray-900 flex items-center gap-1">
                   Track order
@@ -65,4 +67,3 @@ const RecentOrders = () => {
 };
 
 export default RecentOrders;
-

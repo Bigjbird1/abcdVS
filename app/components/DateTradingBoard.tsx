@@ -1,11 +1,17 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react';
-import { Calendar, MapPin, ArrowRight, ArrowLeftRight, Shield } from 'lucide-react';
-import { Alert, AlertDescription } from './ui/alert';
+import React, { useState } from "react";
+import {
+  Calendar,
+  MapPin,
+  ArrowRight,
+  ArrowLeftRight,
+  Shield,
+} from "lucide-react";
+import { Alert, AlertDescription } from "./ui/alert";
 
 const DateTradingBoard = () => {
-  const [activeTab, setActiveTab] = useState('available');
+  const [activeTab, setActiveTab] = useState("available");
   const [showProposalForm, setShowProposalForm] = useState(false);
 
   // Demo data
@@ -18,7 +24,7 @@ const DateTradingBoard = () => {
       location: "San Francisco, CA",
       packageValue: 15000,
       flexibility: "±2 months",
-      reason: "Seeking winter date"
+      reason: "Seeking winter date",
     },
     {
       id: 2,
@@ -28,8 +34,8 @@ const DateTradingBoard = () => {
       location: "Chicago, IL",
       packageValue: 18000,
       flexibility: "±1 month",
-      reason: "Need earlier date"
-    }
+      reason: "Need earlier date",
+    },
   ];
 
   return (
@@ -44,21 +50,21 @@ const DateTradingBoard = () => {
 
         <div className="flex gap-4 mb-4">
           <button
-            onClick={() => setActiveTab('available')}
+            onClick={() => setActiveTab("available")}
             className={`px-4 py-2 rounded-lg text-sm ${
-              activeTab === 'available'
-                ? 'bg-gray-900 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              activeTab === "available"
+                ? "bg-gray-900 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
             Available for Trade
           </button>
           <button
-            onClick={() => setActiveTab('matches')}
+            onClick={() => setActiveTab("matches")}
             className={`px-4 py-2 rounded-lg text-sm ${
-              activeTab === 'matches'
-                ? 'bg-gray-900 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              activeTab === "matches"
+                ? "bg-gray-900 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
             Potential Matches
@@ -68,7 +74,8 @@ const DateTradingBoard = () => {
         <Alert>
           <Shield className="w-4 h-4" />
           <AlertDescription>
-            All trades are protected by our secure transfer guarantee. We'll help facilitate the exchange.
+            All trades are protected by our secure transfer guarantee. We'll
+            help facilitate the exchange.
           </AlertDescription>
         </Alert>
       </div>
@@ -85,7 +92,8 @@ const DateTradingBoard = () => {
                   </div>
                   <ArrowRight className="w-4 h-4 text-gray-400" />
                   <div className="px-2 py-1 bg-gray-100 rounded-full text-sm">
-                    Desired: {post.desiredDateRange[0]} to {post.desiredDateRange[1]}
+                    Desired: {post.desiredDateRange[0]} to{" "}
+                    {post.desiredDateRange[1]}
                   </div>
                 </div>
 
@@ -95,12 +103,14 @@ const DateTradingBoard = () => {
                     <MapPin className="w-4 h-4" />
                     {post.location}
                   </div>
-                  <span>Package Value: ${post.packageValue.toLocaleString()}</span>
+                  <span>
+                    Package Value: ${post.packageValue.toLocaleString()}
+                  </span>
                   <span>Flexibility: {post.flexibility}</span>
                 </div>
               </div>
 
-              <button 
+              <button
                 onClick={() => setShowProposalForm(true)}
                 className="px-4 py-2 border rounded-lg hover:bg-gray-50 flex items-center gap-2"
               >
@@ -122,10 +132,15 @@ const DateTradingBoard = () => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl p-6 max-w-md w-full">
             <h3 className="text-lg font-semibold mb-4">Propose Date Trade</h3>
-            
+
             <div className="space-y-4">
               <div>
-                <label htmlFor="currentDate" className="block text-sm font-medium mb-1">Your Current Date</label>
+                <label
+                  htmlFor="currentDate"
+                  className="block text-sm font-medium mb-1"
+                >
+                  Your Current Date
+                </label>
                 <input
                   type="date"
                   id="currentDate"
@@ -135,7 +150,12 @@ const DateTradingBoard = () => {
               </div>
 
               <div>
-                <label htmlFor="venue" className="block text-sm font-medium mb-1">Venue</label>
+                <label
+                  htmlFor="venue"
+                  className="block text-sm font-medium mb-1"
+                >
+                  Venue
+                </label>
                 <input
                   type="text"
                   id="venue"
@@ -146,7 +166,12 @@ const DateTradingBoard = () => {
               </div>
 
               <div>
-                <label htmlFor="packageValue" className="block text-sm font-medium mb-1">Package Value</label>
+                <label
+                  htmlFor="packageValue"
+                  className="block text-sm font-medium mb-1"
+                >
+                  Package Value
+                </label>
                 <input
                   type="number"
                   id="packageValue"
@@ -157,7 +182,12 @@ const DateTradingBoard = () => {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium mb-1">Message (Optional)</label>
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium mb-1"
+                >
+                  Message (Optional)
+                </label>
                 <textarea
                   id="message"
                   name="message"
@@ -187,4 +217,3 @@ const DateTradingBoard = () => {
 };
 
 export default DateTradingBoard;
-

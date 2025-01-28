@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Shield, DollarSign, CheckCircle, AlertCircle } from 'lucide-react';
+import React, { useState } from "react";
+import { Shield, DollarSign, CheckCircle, AlertCircle } from "lucide-react";
 
 interface EscrowServiceProps {
   listingId: string;
@@ -8,22 +8,29 @@ interface EscrowServiceProps {
   buyerName: string;
 }
 
-const EscrowService: React.FC<EscrowServiceProps> = ({ listingId, price, sellerName, buyerName }) => {
-  const [status, setStatus] = useState<'pending' | 'in_escrow' | 'completed' | 'refunded'>('pending');
+const EscrowService: React.FC<EscrowServiceProps> = ({
+  listingId,
+  price,
+  sellerName,
+  buyerName,
+}) => {
+  const [status, setStatus] = useState<
+    "pending" | "in_escrow" | "completed" | "refunded"
+  >("pending");
 
   const handleInitiateEscrow = () => {
     // In a real application, this would make an API call to initiate the escrow
-    setStatus('in_escrow');
+    setStatus("in_escrow");
   };
 
   const handleReleaseEscrow = () => {
     // In a real application, this would make an API call to release the funds
-    setStatus('completed');
+    setStatus("completed");
   };
 
   const handleRefundEscrow = () => {
     // In a real application, this would make an API call to refund the buyer
-    setStatus('refunded');
+    setStatus("refunded");
   };
 
   return (
@@ -39,31 +46,36 @@ const EscrowService: React.FC<EscrowServiceProps> = ({ listingId, price, sellerN
         <p className="text-gray-600">Buyer: {buyerName}</p>
       </div>
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2">Status: {status.replace('_', ' ')}</h3>
-        {status === 'pending' && (
+        <h3 className="text-lg font-semibold mb-2">
+          Status: {status.replace("_", " ")}
+        </h3>
+        {status === "pending" && (
           <p className="text-gray-600">
-            Initiate the escrow process to securely transfer funds for this wedding date.
+            Initiate the escrow process to securely transfer funds for this
+            wedding date.
           </p>
         )}
-        {status === 'in_escrow' && (
+        {status === "in_escrow" && (
           <p className="text-gray-600">
-            Funds are held securely. They will be released to the seller once the transfer is confirmed.
+            Funds are held securely. They will be released to the seller once
+            the transfer is confirmed.
           </p>
         )}
-        {status === 'completed' && (
+        {status === "completed" && (
           <p className="text-green-600 flex items-center">
             <CheckCircle className="mr-2" />
-            Transfer completed successfully. Funds have been released to the seller.
+            Transfer completed successfully. Funds have been released to the
+            seller.
           </p>
         )}
-        {status === 'refunded' && (
+        {status === "refunded" && (
           <p className="text-orange-600 flex items-center">
             <AlertCircle className="mr-2" />
             Funds have been refunded to the buyer.
           </p>
         )}
       </div>
-      {status === 'pending' && (
+      {status === "pending" && (
         <button
           onClick={handleInitiateEscrow}
           className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
@@ -71,7 +83,7 @@ const EscrowService: React.FC<EscrowServiceProps> = ({ listingId, price, sellerN
           Initiate Escrow
         </button>
       )}
-      {status === 'in_escrow' && (
+      {status === "in_escrow" && (
         <div className="flex gap-4">
           <button
             onClick={handleReleaseEscrow}
@@ -92,4 +104,3 @@ const EscrowService: React.FC<EscrowServiceProps> = ({ listingId, price, sellerN
 };
 
 export default EscrowService;
-

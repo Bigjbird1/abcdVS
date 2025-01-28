@@ -1,4 +1,4 @@
-import DateTradingBoard from '../components/DateTradingBoard';
+import DateTradingBoard from "../components/DateTradingBoard";
 
 export default function DateTradingPage() {
   return (
@@ -10,4 +10,3 @@ export default function DateTradingPage() {
     </div>
   );
 }
-

@@ -1,1 +1,1 @@
-<p>It&apos;s a great day!</p> 
+<p>It&apos;s a great day!</p>;

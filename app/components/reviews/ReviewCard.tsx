@@ -1,5 +1,13 @@
-import React, { useState } from 'react';
-import { Star, ThumbsUp, Flag, MoreHorizontal, MessageSquare, CheckCircle, Shield } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Star,
+  ThumbsUp,
+  Flag,
+  MoreHorizontal,
+  MessageSquare,
+  CheckCircle,
+  Shield,
+} from "lucide-react";
 
 interface Review {
   id: number;
@@ -34,7 +42,9 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, onReportReview }) => {
           <Star
             key={star}
             className={`w-4 h-4 ${
-              star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+              star <= rating
+                ? "fill-yellow-400 text-yellow-400"
+                : "text-gray-300"
             }`}
           />
         ))}
@@ -62,7 +72,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, onReportReview }) => {
             <span>{new Date(review.date).toLocaleDateString()}</span>
           </div>
         </div>
-        <button 
+        <button
           onClick={() => onReportReview(review)}
           className="text-gray-400 hover:text-gray-600"
         >
@@ -74,7 +84,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, onReportReview }) => {
         <div className="flex gap-2 mb-4">
           {review.images.map((image, index) => (
             <div key={index} className="w-20 h-20 rounded-lg overflow-hidden">
-              <img 
+              <img
                 src={image}
                 alt={`Review image ${index + 1}`}
                 className="w-full h-full object-cover"
@@ -91,7 +101,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, onReportReview }) => {
           <ThumbsUp className="w-4 h-4" />
           Helpful ({review.helpfulCount})
         </button>
-        <button 
+        <button
           onClick={() => setShowReplyForm(!showReplyForm)}
           className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900"
         >
@@ -121,7 +131,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, onReportReview }) => {
             rows={3}
           />
           <div className="flex justify-end gap-2">
-            <button 
+            <button
               onClick={() => setShowReplyForm(false)}
               className="px-3 py-1.5 text-sm hover:bg-gray-100 rounded"
             >
@@ -138,4 +148,3 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, onReportReview }) => {
 };
 
 export default ReviewCard;
-

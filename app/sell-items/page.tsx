@@ -1,4 +1,4 @@
-import MultiItemListing from '../components/marketplace/MultiItemListing';
+import MultiItemListing from "../components/marketplace/MultiItemListing";
 
 export default function SellItemsPage() {
   return (
@@ -7,4 +7,3 @@ export default function SellItemsPage() {
     </div>
   );
 }
-

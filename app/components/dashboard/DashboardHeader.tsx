@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Bell, Search, ChevronDown, X } from 'lucide-react';
+import React, { useState } from "react";
+import { Bell, Search, ChevronDown, X } from "lucide-react";
 
 const DashboardHeader = () => {
   const [showToast, setShowToast] = useState(true);
@@ -39,8 +39,13 @@ const DashboardHeader = () => {
           <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
             <Bell className="w-4 h-4 text-green-500" />
           </div>
-          <p className="flex-1 text-sm">Your listing has been published successfully!</p>
-          <button onClick={() => setShowToast(false)} className="text-gray-400 hover:text-gray-600">
+          <p className="flex-1 text-sm">
+            Your listing has been published successfully!
+          </p>
+          <button
+            onClick={() => setShowToast(false)}
+            className="text-gray-400 hover:text-gray-600"
+          >
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -50,4 +55,3 @@ const DashboardHeader = () => {
 };
 
 export default DashboardHeader;
-

@@ -1,6 +1,6 @@
-'use client'
-import { useParams } from 'next/navigation';
-import PaymentEscrow from '../../../components/PaymentEscrow';
+"use client";
+import { useParams } from "next/navigation";
+import PaymentEscrow from "../../../components/PaymentEscrow";
 
 export default function PaymentEscrowPage() {
   const params = useParams();

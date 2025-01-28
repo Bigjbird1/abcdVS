@@ -1,5 +1,5 @@
-import React from 'react';
-import { useRouter } from 'next/router'; // Import useRouter for navigation
+import React from "react";
+import { useRouter } from "next/router"; // Import useRouter for navigation
 
 const Navbar = () => {
   const router = useRouter(); // Initialize the router
@@ -17,9 +17,9 @@ const Navbar = () => {
               {/* <button className="text-gray-500 hover:text-gray-900 transition-colors">
                 List your date
               </button> */}
-              <button 
+              <button
                 className="text-gray-500 hover:text-gray-900 transition-colors"
-                onClick={() => router.push('/marketplace')} // Navigate to Marketplace
+                onClick={() => router.push("/marketplace")} // Navigate to Marketplace
               >
                 Shop
               </button>
@@ -34,4 +34,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar; 
+export default Navbar;

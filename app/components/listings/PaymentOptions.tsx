@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import React from 'react';
-import { Shield, DollarSign, CalendarCheck, FileText } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import React from "react";
+import { Shield, DollarSign, CalendarCheck, FileText } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface PaymentOptionsProps {
   askingPrice: number;
@@ -11,7 +11,12 @@ interface PaymentOptionsProps {
   onContactSeller: () => void;
 }
 
-const PaymentOptions: React.FC<PaymentOptionsProps> = ({ askingPrice, originalPrice, listingId, onContactSeller }) => {
+const PaymentOptions: React.FC<PaymentOptionsProps> = ({
+  askingPrice,
+  originalPrice,
+  listingId,
+  onContactSeller,
+}) => {
   const router = useRouter();
 
   return (
@@ -19,8 +24,12 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({ askingPrice, originalPr
       <div className="space-y-4">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-2xl font-semibold">${askingPrice.toLocaleString()}</p>
-            <p className="text-gray-500 line-through">${originalPrice.toLocaleString()}</p>
+            <p className="text-2xl font-semibold">
+              ${askingPrice.toLocaleString()}
+            </p>
+            <p className="text-gray-500 line-through">
+              ${originalPrice.toLocaleString()}
+            </p>
           </div>
           <span className="px-2 py-1 bg-green-50 text-green-700 rounded-lg text-sm">
             {Math.round((1 - askingPrice / originalPrice) * 100)}% off
@@ -44,14 +53,14 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({ askingPrice, originalPr
           </div>
         </div>
 
-        <button 
+        <button
           onClick={onContactSeller}
           className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800"
         >
           Contact Seller
         </button>
-        
-        <button 
+
+        <button
           onClick={() => router.push(`/listing/${listingId}/payment-escrow`)}
           className="w-full border border-gray-300 py-3 rounded-lg hover:bg-gray-50"
         >
@@ -63,4 +72,3 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({ askingPrice, originalPr
 };
 
 export default PaymentOptions;
-

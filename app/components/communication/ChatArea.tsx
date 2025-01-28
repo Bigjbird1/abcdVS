@@ -1,7 +1,15 @@
-import React from 'react';
-import { User, Phone, Flag, Shield, HelpCircle, Paperclip, Send } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Conversation, ChatType, ChatStatus } from '@/types/chat';
+import React from "react";
+import {
+  User,
+  Phone,
+  Flag,
+  Shield,
+  HelpCircle,
+  Paperclip,
+  Send,
+} from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Conversation, ChatType, ChatStatus } from "@/types/chat";
 
 interface ChatAreaProps {
   selectedChat: Conversation | null;
@@ -16,23 +24,31 @@ interface MessageProps {
 }
 
 const Message: React.FC<MessageProps> = ({ content, timestamp, isSent }) => (
-  <div className={`flex ${isSent ? 'justify-end' : 'justify-start'}`}>
-    <div className={`${
-      isSent ? 'bg-gray-900 text-white' : 'bg-gray-100'
-    } rounded-lg p-3 max-w-[80%]`}>
+  <div className={`flex ${isSent ? "justify-end" : "justify-start"}`}>
+    <div
+      className={`${
+        isSent ? "bg-gray-900 text-white" : "bg-gray-100"
+      } rounded-lg p-3 max-w-[80%]`}
+    >
       <p>{content}</p>
-      <p className={`text-xs ${isSent ? 'text-gray-300' : 'text-gray-500'} mt-1`}>
+      <p
+        className={`text-xs ${isSent ? "text-gray-300" : "text-gray-500"} mt-1`}
+      >
         {timestamp}
       </p>
     </div>
   </div>
 );
 
-const ChatArea: React.FC<ChatAreaProps> = ({ selectedChat, message, setMessage }) => {
+const ChatArea: React.FC<ChatAreaProps> = ({
+  selectedChat,
+  message,
+  setMessage,
+}) => {
   const handleSendMessage = () => {
     if (message.trim()) {
       // TODO: Implement send message logic
-      setMessage('');
+      setMessage("");
     }
   };
 
@@ -61,17 +77,21 @@ const ChatArea: React.FC<ChatAreaProps> = ({ selectedChat, message, setMessage }
           <div>
             <h3 className="font-medium">{selectedChat.name}</h3>
             <div className="flex items-center gap-2 text-sm">
-              <span className={`w-2 h-2 rounded-full ${
-                selectedChat.status === 'online' ? 'bg-green-500' : 'bg-gray-400'
-              }`} />
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  selectedChat.status === "online"
+                    ? "bg-green-500"
+                    : "bg-gray-400"
+                }`}
+              />
               <span className="text-gray-600">
-                {selectedChat.status === 'online' ? 'Online' : 'Offline'}
+                {selectedChat.status === "online" ? "Online" : "Offline"}
               </span>
             </div>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          {selectedChat.type === 'buyer' && (
+          {selectedChat.type === "buyer" && (
             <button className="p-2 text-gray-500 hover:text-gray-900 rounded-lg hover:bg-gray-100">
               <Phone className="w-5 h-5" />
             </button>
@@ -84,20 +104,22 @@ const ChatArea: React.FC<ChatAreaProps> = ({ selectedChat, message, setMessage }
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {selectedChat.type === 'venue' && (
+        {selectedChat.type === "venue" && (
           <Alert className="mb-4">
             <Shield className="w-4 h-4" />
             <AlertDescription>
-              This is an official communication channel with your venue. All messages are recorded for verification purposes.
+              This is an official communication channel with your venue. All
+              messages are recorded for verification purposes.
             </AlertDescription>
           </Alert>
         )}
 
-        {selectedChat.type === 'support' && (
+        {selectedChat.type === "support" && (
           <Alert className="mb-4">
             <HelpCircle className="w-4 h-4" />
             <AlertDescription>
-              You're chatting with WeddingTransfer Support. We're here to help with any questions or concerns.
+              You're chatting with WeddingTransfer Support. We're here to help
+              with any questions or concerns.
             </AlertDescription>
           </Alert>
         )}
@@ -125,11 +147,11 @@ const ChatArea: React.FC<ChatAreaProps> = ({ selectedChat, message, setMessage }
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
             placeholder="Type your message..."
             className="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:border-gray-400"
           />
-          <button 
+          <button
             onClick={handleSendMessage}
             className="p-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
           >
@@ -142,4 +164,3 @@ const ChatArea: React.FC<ChatAreaProps> = ({ selectedChat, message, setMessage }
 };
 
 export default ChatArea;
-

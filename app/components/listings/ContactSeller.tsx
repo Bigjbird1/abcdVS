@@ -1,6 +1,6 @@
-'use client'
-import React, { useState } from 'react';
-import { X } from 'lucide-react';
+"use client";
+import React, { useState } from "react";
+import { X } from "lucide-react";
 
 interface ContactSellerProps {
   onClose: () => void;
@@ -13,13 +13,13 @@ const ContactSeller: React.FC<ContactSellerProps> = ({ onClose }) => {
         <h3 className="text-xl font-semibold mb-4">Contact Seller</h3>
         <div className="space-y-4">
           <div>
-            <label 
-              htmlFor="seller-message" 
+            <label
+              htmlFor="seller-message"
               className="block text-sm font-medium mb-1"
             >
               Message
             </label>
-            <textarea 
+            <textarea
               id="seller-message"
               rows={4}
               className="w-full border rounded-lg p-2"
@@ -27,7 +27,7 @@ const ContactSeller: React.FC<ContactSellerProps> = ({ onClose }) => {
             />
           </div>
           <div className="flex gap-3">
-            <button 
+            <button
               onClick={onClose}
               className="flex-1 border py-2 rounded-lg hover:bg-gray-50"
             >
@@ -44,5 +44,3 @@ const ContactSeller: React.FC<ContactSellerProps> = ({ onClose }) => {
 };
 
 export default ContactSeller;
-
-

@@ -1,8 +1,7 @@
-'use client'
-import React, { useState } from 'react';
-import { Heart, Share, ChevronLeft, ChevronRight } from 'lucide-react';
-import Image from 'next/image';
-
+"use client";
+import React, { useState } from "react";
+import { Heart, Share, ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 interface ListingGalleryProps {
   images: string[];
@@ -12,7 +11,7 @@ const ListingGallery: React.FC<ListingGalleryProps> = ({ images }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   return (
-<div className="relative h-96 bg-gray-100">
+    <div className="relative h-96 bg-gray-100">
       <Image
         src={images[currentImageIndex]}
         alt={`Venue view ${currentImageIndex + 1}`}
@@ -25,7 +24,7 @@ const ListingGallery: React.FC<ListingGalleryProps> = ({ images }) => {
 
       {/* Navigation Arrows */}
       <button
-        onClick={() => setCurrentImageIndex(prev => Math.max(0, prev - 1))}
+        onClick={() => setCurrentImageIndex((prev) => Math.max(0, prev - 1))}
         className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/90 hover:bg-white"
         disabled={currentImageIndex === 0}
       >
@@ -33,7 +32,9 @@ const ListingGallery: React.FC<ListingGalleryProps> = ({ images }) => {
       </button>
 
       <button
-        onClick={() => setCurrentImageIndex(prev => Math.min(images.length - 1, prev + 1))}
+        onClick={() =>
+          setCurrentImageIndex((prev) => Math.min(images.length - 1, prev + 1))
+        }
         className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/90 hover:bg-white"
         disabled={currentImageIndex === images.length - 1}
       >
@@ -48,7 +49,7 @@ const ListingGallery: React.FC<ListingGalleryProps> = ({ images }) => {
               key={index}
               onClick={() => setCurrentImageIndex(index)}
               className={`w-2 h-2 rounded-full transition-all ${
-                index === currentImageIndex ? 'bg-white w-4' : 'bg-white/60'
+                index === currentImageIndex ? "bg-white w-4" : "bg-white/60"
               }`}
             />
           ))}
@@ -65,8 +66,7 @@ const ListingGallery: React.FC<ListingGalleryProps> = ({ images }) => {
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ListingGallery
-
+export default ListingGallery;

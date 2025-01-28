@@ -1,4 +1,4 @@
-import ListingCreation from '../components/ListingCreation';
+import ListingCreation from "../components/ListingCreation";
 
 export default function ListDatePage() {
   return (
@@ -7,4 +7,3 @@ export default function ListDatePage() {
     </div>
   );
 }
-

@@ -1,8 +1,8 @@
 // app/search/page.tsx
-'use client';
+"use client";
 
-import { Suspense } from 'react';
-import SearchComponent from './SearchComponent';
+import { Suspense } from "react";
+import SearchComponent from "./SearchComponent";
 
 export default function SearchPage() {
   return (

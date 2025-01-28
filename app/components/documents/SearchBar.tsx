@@ -1,12 +1,15 @@
-import React from 'react';
-import { Search, Filter } from 'lucide-react';
+import React from "react";
+import { Search, Filter } from "lucide-react";
 
 interface SearchBarProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ searchQuery, setSearchQuery }) => {
+const SearchBar: React.FC<SearchBarProps> = ({
+  searchQuery,
+  setSearchQuery,
+}) => {
   return (
     <div className="flex items-center gap-4">
       <div className="flex-1 relative">
@@ -28,4 +31,3 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchQuery, setSearchQuery }) =>
 };
 
 export default SearchBar;
-

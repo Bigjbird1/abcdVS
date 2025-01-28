@@ -1,4 +1,4 @@
-import AdminVerification from '../../components/AdminVerification';
+import AdminVerification from "../../components/AdminVerification";
 
 export default function AdminVerificationPage() {
   return (
@@ -7,4 +7,3 @@ export default function AdminVerificationPage() {
     </div>
   );
 }
-

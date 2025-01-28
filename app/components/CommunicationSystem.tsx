@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react';
-import { Search } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import ConversationList from './communication/ConversationList';
-import ChatArea from './communication/ChatArea';
-import { Conversation, ChatType, ChatStatus } from '@/types/chat';
+import React, { useState } from "react";
+import { Search } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import ConversationList from "./communication/ConversationList";
+import ChatArea from "./communication/ChatArea";
+import { Conversation, ChatType, ChatStatus } from "@/types/chat";
 
 interface TabButtonProps {
   label: string;
@@ -17,9 +17,7 @@ const TabButton: React.FC<TabButtonProps> = ({ label, isActive, onClick }) => (
   <button
     onClick={onClick}
     className={`flex-1 py-1.5 rounded-lg text-sm ${
-      isActive
-        ? 'bg-gray-900 text-white'
-        : 'text-gray-600 hover:bg-gray-100'
+      isActive ? "bg-gray-900 text-white" : "text-gray-600 hover:bg-gray-100"
     }`}
   >
     {label}
@@ -43,42 +41,44 @@ const SearchBox: React.FC<{
 );
 
 const CommunicationSystem: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'messages' | 'support'>('messages');
+  const [activeTab, setActiveTab] = useState<"messages" | "support">(
+    "messages",
+  );
   const [selectedChat, setSelectedChat] = useState<Conversation | null>(null);
-  const [message, setMessage] = useState<string>('');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [message, setMessage] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const conversations: Conversation[] = [
     {
       id: 1,
-      type: 'buyer',
-      name: 'Sarah & Michael',
+      type: "buyer",
+      name: "Sarah & Michael",
       avatar: null,
       lastMessage: "Hi, I'm interested in your Sep 24 date",
-      timestamp: '2 min ago',
+      timestamp: "2 min ago",
       unread: 2,
-      status: 'online'
+      status: "online",
     },
     {
       id: 2,
-      type: 'venue',
-      name: 'Grand Estate Venue',
+      type: "venue",
+      name: "Grand Estate Venue",
       avatar: null,
       lastMessage: "Your transfer request has been received",
-      timestamp: '1 hour ago',
+      timestamp: "1 hour ago",
       unread: 0,
-      status: 'offline'
+      status: "offline",
     },
     {
       id: 3,
-      type: 'support',
-      name: 'WeddingTransfer Support',
+      type: "support",
+      name: "WeddingTransfer Support",
       avatar: null,
       lastMessage: "How can I help you today?",
-      timestamp: '1 day ago',
+      timestamp: "1 day ago",
       unread: 0,
-      status: 'online'
-    }
+      status: "online",
+    },
   ];
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,27 +96,24 @@ const CommunicationSystem: React.FC = () => {
         <div className="col-span-4 flex flex-col">
           {/* Search and Filters */}
           <div className="p-4 border-b">
-            <SearchBox 
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
+            <SearchBox value={searchQuery} onChange={handleSearchChange} />
 
             <div className="flex gap-2">
               <TabButton
                 label="Messages"
-                isActive={activeTab === 'messages'}
-                onClick={() => setActiveTab('messages')}
+                isActive={activeTab === "messages"}
+                onClick={() => setActiveTab("messages")}
               />
               <TabButton
                 label="Support"
-                isActive={activeTab === 'support'}
-                onClick={() => setActiveTab('support')}
+                isActive={activeTab === "support"}
+                onClick={() => setActiveTab("support")}
               />
             </div>
           </div>
 
           {/* Conversations List */}
-          <ConversationList 
+          <ConversationList
             conversations={conversations}
             activeTab={activeTab}
             selectedChat={selectedChat}
@@ -126,7 +123,7 @@ const CommunicationSystem: React.FC = () => {
 
         {/* Chat Area */}
         <div className="col-span-8 flex flex-col">
-          <ChatArea 
+          <ChatArea
             selectedChat={selectedChat}
             message={message}
             setMessage={setMessage}

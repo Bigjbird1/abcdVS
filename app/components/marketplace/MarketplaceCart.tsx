@@ -1,11 +1,19 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react';
-import { Trash2, Minus, Plus, ChevronRight, Lock, Truck, AlertCircle } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import CartItem from './CartItem';
-import OrderSummary from './OrderSummary';
-import RecentOrders from './RecentOrders';
+import React, { useState } from "react";
+import {
+  Trash2,
+  Minus,
+  Plus,
+  ChevronRight,
+  Lock,
+  Truck,
+  AlertCircle,
+} from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import CartItem from "./CartItem";
+import OrderSummary from "./OrderSummary";
+import RecentOrders from "./RecentOrders";
 
 const MarketplaceCart = () => {
   const [cartItems, setCartItems] = useState([
@@ -20,7 +28,7 @@ const MarketplaceCart = () => {
       image: "/placeholder.svg?height=200&width=200&text=Wedding-Dress",
       seller: "Emma's Boutique",
       shipping: 25,
-      condition: "Like New"
+      condition: "Like New",
     },
     {
       id: 2,
@@ -31,21 +39,24 @@ const MarketplaceCart = () => {
       image: "/placeholder.svg?height=200&width=200&text=Centerpieces",
       seller: "Wedding Decor Co",
       shipping: 35,
-      condition: "New"
-    }
+      condition: "New",
+    },
   ]);
 
-  const [shippingOption, setShippingOption] = useState('standard');
-  const [promoCode, setPromoCode] = useState('');
-  const [promoError, setPromoError] = useState('');
+  const [shippingOption, setShippingOption] = useState("standard");
+  const [promoCode, setPromoCode] = useState("");
+  const [promoError, setPromoError] = useState("");
 
   const calculateSubtotal = () => {
-    return cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
 
   const calculateShipping = () => {
-    const baseShipping = cartItems.reduce((sum, item) => sum + (item.shipping * item.quantity), 0);
-    return shippingOption === 'express' ? baseShipping * 1.5 : baseShipping;
+    const baseShipping = cartItems.reduce(
+      (sum, item) => sum + item.shipping * item.quantity,
+      0,
+    );
+    return shippingOption === "express" ? baseShipping * 1.5 : baseShipping;
   };
 
   const calculateTotal = () => {
@@ -54,24 +65,24 @@ const MarketplaceCart = () => {
 
   const updateQuantity = (itemId: number, newQuantity: number) => {
     if (newQuantity < 1) return;
-    setCartItems(items =>
-      items.map(item =>
-        item.id === itemId ? { ...item, quantity: newQuantity } : item
-      )
+    setCartItems((items) =>
+      items.map((item) =>
+        item.id === itemId ? { ...item, quantity: newQuantity } : item,
+      ),
     );
   };
 
   const removeItem = (itemId: number) => {
-    setCartItems(items => items.filter(item => item.id !== itemId));
+    setCartItems((items) => items.filter((item) => item.id !== itemId));
   };
 
   const handlePromoCode = () => {
     // Simulated promo code validation
-    if (promoCode.toUpperCase() === 'WEDDING10') {
-      setPromoError('');
+    if (promoCode.toUpperCase() === "WEDDING10") {
+      setPromoError("");
       // Apply discount logic
     } else {
-      setPromoError('Invalid promo code');
+      setPromoError("Invalid promo code");
     }
   };
 
@@ -81,7 +92,9 @@ const MarketplaceCart = () => {
         {/* Cart Items */}
         <div className="lg:col-span-2">
           <div className="bg-white rounded-xl border p-6">
-            <h1 className="text-xl font-semibold mb-6">Shopping Cart ({cartItems.length} items)</h1>
+            <h1 className="text-xl font-semibold mb-6">
+              Shopping Cart ({cartItems.length} items)
+            </h1>
 
             {cartItems.length > 0 ? (
               <div className="space-y-6">
@@ -124,4 +137,3 @@ const MarketplaceCart = () => {
 };
 
 export default MarketplaceCart;
-

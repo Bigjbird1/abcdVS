@@ -1,4 +1,4 @@
-import MarketplaceCart from '../../components/marketplace/MarketplaceCart';
+import MarketplaceCart from "../../components/marketplace/MarketplaceCart";
 
 export default function CartPage() {
   return (
@@ -7,4 +7,3 @@ export default function CartPage() {
     </div>
   );
 }
-

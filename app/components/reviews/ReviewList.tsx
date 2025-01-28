@@ -1,5 +1,5 @@
-import React from 'react';
-import { Review } from '@/types/reviews';
+import React from "react";
+import { Review } from "@/types/reviews";
 
 interface ReviewListProps {
   reviews: Review[];

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { MessageCircle, DollarSign } from 'lucide-react';
+import React, { useState } from "react";
+import { MessageCircle, DollarSign } from "lucide-react";
 
 const ContactOfferSystem = () => {
   const [showContactForm, setShowContactForm] = useState(false);
@@ -77,4 +77,3 @@ const ContactOfferSystem = () => {
 };
 
 export default ContactOfferSystem;
-

@@ -4,16 +4,16 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: '**',
+        protocol: "https",
+        hostname: "**",
       },
     ],
-    domains: ['placeholder.com'],
+    domains: ["placeholder.com"],
   },
   webpack: (config, { isServer }) => {
     // Disable asm.js optimizations
     config.optimization.minimizer.forEach((minimizer) => {
-      if (minimizer.constructor.name === 'TerserPlugin') {
+      if (minimizer.constructor.name === "TerserPlugin") {
         minimizer.options.terserOptions = {
           ...minimizer.options.terserOptions,
           ecma: 5,
@@ -30,6 +30,6 @@ const nextConfig = {
     });
     return config;
   },
-}
+};
 
-module.exports = nextConfig;
+export default nextConfig;

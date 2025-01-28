@@ -1,5 +1,5 @@
-import React from 'react';
-import DocumentCard from './DocumentCard';
+import React from "react";
+import DocumentCard from "./DocumentCard";
 
 interface Document {
   id: number;
@@ -27,4 +27,3 @@ const DocumentGrid: React.FC<DocumentGridProps> = ({ documents }) => {
 };
 
 export default DocumentGrid;
-

@@ -1,5 +1,5 @@
-import React from 'react';
-import { FileText, Download, Eye, Star } from 'lucide-react';
+import React from "react";
+import { FileText, Download, Eye, Star } from "lucide-react";
 
 interface Document {
   id: number;
@@ -22,14 +22,24 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ document }) => {
       <div className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-              document.type === 'contract' ? 'bg-blue-50' :
-              document.type === 'addendum' ? 'bg-purple-50' : 'bg-green-50'
-            }`}>
-              <FileText className={`w-5 h-5 ${
-                document.type === 'contract' ? 'text-blue-500' :
-                document.type === 'addendum' ? 'text-purple-500' : 'text-green-500'
-              }`} />
+            <div
+              className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                document.type === "contract"
+                  ? "bg-blue-50"
+                  : document.type === "addendum"
+                    ? "bg-purple-50"
+                    : "bg-green-50"
+              }`}
+            >
+              <FileText
+                className={`w-5 h-5 ${
+                  document.type === "contract"
+                    ? "text-blue-500"
+                    : document.type === "addendum"
+                      ? "text-purple-500"
+                      : "text-green-500"
+                }`}
+              />
             </div>
             <div>
               <div className="font-medium">{document.title}</div>
@@ -37,9 +47,11 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ document }) => {
             </div>
           </div>
           <button
-            onClick={() => {/* Toggle star */}}
+            onClick={() => {
+              /* Toggle star */
+            }}
             className={`p-1 rounded hover:bg-gray-100 ${
-              document.starred ? 'text-yellow-500' : 'text-gray-400'
+              document.starred ? "text-yellow-500" : "text-gray-400"
             }`}
           >
             <Star className="w-4 h-4" />
@@ -47,11 +59,15 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ document }) => {
         </div>
 
         <div className="flex items-center gap-2 mb-3">
-          <span className={`px-2 py-1 rounded-full text-xs ${
-            document.status === 'signed' ? 'bg-green-100 text-green-800' :
-            document.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-            'bg-blue-100 text-blue-800'
-          }`}>
+          <span
+            className={`px-2 py-1 rounded-full text-xs ${
+              document.status === "signed"
+                ? "bg-green-100 text-green-800"
+                : document.status === "pending"
+                  ? "bg-yellow-100 text-yellow-800"
+                  : "bg-blue-100 text-blue-800"
+            }`}
+          >
             {document.status}
           </span>
           <span className="text-sm text-gray-500">{document.size}</span>
@@ -84,4 +100,3 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ document }) => {
 };
 
 export default DocumentCard;
-

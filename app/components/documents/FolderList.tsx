@@ -1,5 +1,5 @@
-import React from 'react';
-import { Folder } from 'lucide-react';
+import React from "react";
+import { Folder } from "lucide-react";
 
 interface Folder {
   id: string;
@@ -13,7 +13,11 @@ interface FolderListProps {
   setSelectedFolder: (id: string) => void;
 }
 
-const FolderList: React.FC<FolderListProps> = ({ folders, selectedFolder, setSelectedFolder }) => {
+const FolderList: React.FC<FolderListProps> = ({
+  folders,
+  selectedFolder,
+  setSelectedFolder,
+}) => {
   return (
     <div className="w-64 border-r">
       <div className="p-4">
@@ -25,8 +29,8 @@ const FolderList: React.FC<FolderListProps> = ({ folders, selectedFolder, setSel
               onClick={() => setSelectedFolder(folder.id)}
               className={`w-full px-3 py-2 rounded-lg text-left flex items-center justify-between ${
                 selectedFolder === folder.id
-                  ? 'bg-gray-100'
-                  : 'hover:bg-gray-50'
+                  ? "bg-gray-100"
+                  : "hover:bg-gray-50"
               }`}
             >
               <div className="flex items-center gap-3">
@@ -43,4 +47,3 @@ const FolderList: React.FC<FolderListProps> = ({ folders, selectedFolder, setSel
 };
 
 export default FolderList;
-

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Filter, ChevronDown, ArrowUpDown, X } from 'lucide-react';
+import React, { useState } from "react";
+import { Filter, ChevronDown, ArrowUpDown, X } from "lucide-react";
 
 interface FilterBarProps {
   sizes: string[];
   conditions: string[];
-  priceRanges: { label: string; range: [number, number]; }[];
-  sortOptions: { value: string; label: string; }[];
+  priceRanges: { label: string; range: [number, number] }[];
+  sortOptions: { value: string; label: string }[];
   selectedSize: string | null;
   selectedCondition: string | null;
   priceRange: [number, number] | null;
@@ -40,14 +40,14 @@ const FilterBar: React.FC<FilterBarProps> = ({
       <div className="flex items-center gap-3">
         {/* Size Filter */}
         <div className="relative">
-          <button 
-            onClick={() => toggleDropdown('size')}
-            className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm hover:border-gray-300 ${selectedSize ? 'bg-gray-50' : ''}`}
+          <button
+            onClick={() => toggleDropdown("size")}
+            className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm hover:border-gray-300 ${selectedSize ? "bg-gray-50" : ""}`}
           >
             Size
             <ChevronDown className="w-4 h-4" />
           </button>
-          {activeDropdown === 'size' && (
+          {activeDropdown === "size" && (
             <div className="absolute top-full left-0 mt-1 w-48 bg-white border rounded-lg shadow-lg z-50">
               <div className="p-2">
                 {sizes.map((size) => (
@@ -58,7 +58,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
                       setActiveDropdown(null);
                     }}
                     className={`w-full text-left px-3 py-2 text-sm rounded hover:bg-gray-100 ${
-                      selectedSize === size ? 'bg-gray-100' : ''
+                      selectedSize === size ? "bg-gray-100" : ""
                     }`}
                   >
                     {size}
@@ -71,14 +71,14 @@ const FilterBar: React.FC<FilterBarProps> = ({
 
         {/* Price Range Filter */}
         <div className="relative">
-          <button 
-            onClick={() => toggleDropdown('price')}
-            className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm hover:border-gray-300 ${priceRange ? 'bg-gray-50' : ''}`}
+          <button
+            onClick={() => toggleDropdown("price")}
+            className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm hover:border-gray-300 ${priceRange ? "bg-gray-50" : ""}`}
           >
             Price Range
             <ChevronDown className="w-4 h-4" />
           </button>
-          {activeDropdown === 'price' && (
+          {activeDropdown === "price" && (
             <div className="absolute top-full left-0 mt-1 w-48 bg-white border rounded-lg shadow-lg z-50">
               <div className="p-2">
                 {priceRanges.map((range, index) => (
@@ -86,16 +86,18 @@ const FilterBar: React.FC<FilterBarProps> = ({
                     key={index}
                     onClick={() => {
                       onPriceRangeChange(
-                        priceRange?.[0] === range.range[0] && priceRange?.[1] === range.range[1]
+                        priceRange?.[0] === range.range[0] &&
+                          priceRange?.[1] === range.range[1]
                           ? null
-                          : range.range
+                          : range.range,
                       );
                       setActiveDropdown(null);
                     }}
                     className={`w-full text-left px-3 py-2 text-sm rounded hover:bg-gray-100 ${
-                      priceRange?.[0] === range.range[0] && priceRange?.[1] === range.range[1]
-                        ? 'bg-gray-100'
-                        : ''
+                      priceRange?.[0] === range.range[0] &&
+                      priceRange?.[1] === range.range[1]
+                        ? "bg-gray-100"
+                        : ""
                     }`}
                   >
                     {range.label}
@@ -108,25 +110,27 @@ const FilterBar: React.FC<FilterBarProps> = ({
 
         {/* Condition Filter */}
         <div className="relative">
-          <button 
-            onClick={() => toggleDropdown('condition')}
-            className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm hover:border-gray-300 ${selectedCondition ? 'bg-gray-50' : ''}`}
+          <button
+            onClick={() => toggleDropdown("condition")}
+            className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm hover:border-gray-300 ${selectedCondition ? "bg-gray-50" : ""}`}
           >
             Condition
             <ChevronDown className="w-4 h-4" />
           </button>
-          {activeDropdown === 'condition' && (
+          {activeDropdown === "condition" && (
             <div className="absolute top-full left-0 mt-1 w-48 bg-white border rounded-lg shadow-lg z-50">
               <div className="p-2">
                 {conditions.map((condition) => (
                   <button
                     key={condition}
                     onClick={() => {
-                      onConditionChange(selectedCondition === condition ? null : condition);
+                      onConditionChange(
+                        selectedCondition === condition ? null : condition,
+                      );
                       setActiveDropdown(null);
                     }}
                     className={`w-full text-left px-3 py-2 text-sm rounded hover:bg-gray-100 ${
-                      selectedCondition === condition ? 'bg-gray-100' : ''
+                      selectedCondition === condition ? "bg-gray-100" : ""
                     }`}
                   >
                     {condition}
@@ -140,14 +144,14 @@ const FilterBar: React.FC<FilterBarProps> = ({
 
       {/* Sort Options */}
       <div className="relative">
-        <button 
-          onClick={() => toggleDropdown('sort')}
+        <button
+          onClick={() => toggleDropdown("sort")}
           className="flex items-center gap-2 text-sm text-gray-600"
         >
           <ArrowUpDown className="w-4 h-4" />
-          Sort by: {sortOptions.find(opt => opt.value === sortBy)?.label}
+          Sort by: {sortOptions.find((opt) => opt.value === sortBy)?.label}
         </button>
-        {activeDropdown === 'sort' && (
+        {activeDropdown === "sort" && (
           <div className="absolute top-full right-0 mt-1 w-48 bg-white border rounded-lg shadow-lg z-50">
             <div className="p-2">
               {sortOptions.map((option) => (
@@ -158,7 +162,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
                     setActiveDropdown(null);
                   }}
                   className={`w-full text-left px-3 py-2 text-sm rounded hover:bg-gray-100 ${
-                    sortBy === option.value ? 'bg-gray-100' : ''
+                    sortBy === option.value ? "bg-gray-100" : ""
                   }`}
                 >
                   {option.label}
@@ -171,7 +175,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
 
       {/* Click outside to close dropdowns */}
       {activeDropdown && (
-        <div 
+        <div
           className="fixed inset-0 z-40"
           onClick={() => setActiveDropdown(null)}
         />

@@ -1,4 +1,4 @@
-import CommunicationSystem from '../components/CommunicationSystem';
+import CommunicationSystem from "../components/CommunicationSystem";
 
 export default function MessagesPage() {
   return (
@@ -10,4 +10,3 @@ export default function MessagesPage() {
     </div>
   );
 }
-

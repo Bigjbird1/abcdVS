@@ -1,17 +1,19 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react';
-import { AlertCircle } from 'lucide-react';
+import React, { useState } from "react";
+import { AlertCircle } from "lucide-react";
 
 const VerificationStatus = ({ status }: { status: string }) => {
   const styles = {
-    pending: 'bg-yellow-100 text-yellow-800',
-    approved: 'bg-green-100 text-green-800',
-    rejected: 'bg-red-100 text-red-800'
+    pending: "bg-yellow-100 text-yellow-800",
+    approved: "bg-green-100 text-green-800",
+    rejected: "bg-red-100 text-red-800",
   };
 
   return (
-    <span className={`px-2 py-0.5 rounded text-sm ${styles[status as keyof typeof styles]}`}>
+    <span
+      className={`px-2 py-0.5 rounded text-sm ${styles[status as keyof typeof styles]}`}
+    >
       {status.charAt(0).toUpperCase() + status.slice(1)}
     </span>
   );
@@ -34,8 +36,9 @@ interface Application {
 }
 
 const AdminVerification = () => {
-  const [selectedStatus, setSelectedStatus] = useState('pending');
-  const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState("pending");
+  const [selectedApplication, setSelectedApplication] =
+    useState<Application | null>(null);
 
   const mockApplications: Application[] = [
     {
@@ -47,8 +50,8 @@ const AdminVerification = () => {
       type: "seller",
       documents: [
         { type: "ID", url: "#", status: "pending" },
-        { type: "Venue Contract", url: "#", status: "pending" }
-      ]
+        { type: "Venue Contract", url: "#", status: "pending" },
+      ],
     },
     {
       id: 2,
@@ -59,19 +62,19 @@ const AdminVerification = () => {
       type: "seller",
       documents: [
         { type: "ID", url: "#", status: "pending" },
-        { type: "Venue Contract", url: "#", status: "pending" }
-      ]
-    }
+        { type: "Venue Contract", url: "#", status: "pending" },
+      ],
+    },
   ];
 
   const handleApprove = () => {
     // Handle approval logic
-    console.log('Approved');
+    console.log("Approved");
   };
 
   const handleReject = () => {
     // Handle rejection logic
-    console.log('Rejected');
+    console.log("Rejected");
   };
 
   return (
@@ -103,31 +106,31 @@ const AdminVerification = () => {
               <div className="p-4 border-b">
                 <div className="flex gap-2">
                   <button
-                    onClick={() => setSelectedStatus('pending')}
+                    onClick={() => setSelectedStatus("pending")}
                     className={`px-3 py-1.5 rounded-full text-sm ${
-                      selectedStatus === 'pending' 
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      selectedStatus === "pending"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                     }`}
                   >
                     Pending Review
                   </button>
                   <button
-                    onClick={() => setSelectedStatus('approved')}
+                    onClick={() => setSelectedStatus("approved")}
                     className={`px-3 py-1.5 rounded-full text-sm ${
-                      selectedStatus === 'approved'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      selectedStatus === "approved"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                     }`}
                   >
                     Approved
                   </button>
                   <button
-                    onClick={() => setSelectedStatus('rejected')}
+                    onClick={() => setSelectedStatus("rejected")}
                     className={`px-3 py-1.5 rounded-full text-sm ${
-                      selectedStatus === 'rejected'
-                        ? 'bg-red-100 text-red-800'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      selectedStatus === "rejected"
+                        ? "bg-red-100 text-red-800"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                     }`}
                   >
                     Rejected
@@ -142,7 +145,9 @@ const AdminVerification = () => {
                     key={application.id}
                     onClick={() => setSelectedApplication(application)}
                     className={`w-full p-4 text-left hover:bg-gray-50 ${
-                      selectedApplication?.id === application.id ? 'bg-gray-50' : ''
+                      selectedApplication?.id === application.id
+                        ? "bg-gray-50"
+                        : ""
                     }`}
                   >
                     <div className="flex justify-between mb-1">
@@ -151,7 +156,9 @@ const AdminVerification = () => {
                         {new Date(application.submittedAt).toLocaleDateString()}
                       </span>
                     </div>
-                    <div className="text-sm text-gray-600 mb-2">{application.email}</div>
+                    <div className="text-sm text-gray-600 mb-2">
+                      {application.email}
+                    </div>
                     <div className="flex items-center gap-2">
                       <span className="px-2 py-0.5 bg-purple-100 text-purple-800 rounded text-sm">
                         {application.type}
@@ -171,8 +178,12 @@ const AdminVerification = () => {
                 <div className="p-6 border-b">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h2 className="text-xl font-semibold mb-1">{selectedApplication.name}</h2>
-                      <p className="text-gray-600">{selectedApplication.email}</p>
+                      <h2 className="text-xl font-semibold mb-1">
+                        {selectedApplication.name}
+                      </h2>
+                      <p className="text-gray-600">
+                        {selectedApplication.email}
+                      </p>
                     </div>
                     <VerificationStatus status={selectedApplication.status} />
                   </div>
@@ -229,7 +240,9 @@ const AdminVerification = () => {
                 <div className="text-gray-400 mb-4">
                   <AlertCircle className="w-12 h-12 mx-auto" />
                 </div>
-                <h3 className="text-lg font-medium mb-2">No Application Selected</h3>
+                <h3 className="text-lg font-medium mb-2">
+                  No Application Selected
+                </h3>
                 <p className="text-gray-600">
                   Select an application from the list to review
                 </p>
@@ -243,4 +256,3 @@ const AdminVerification = () => {
 };
 
 export default AdminVerification;
-

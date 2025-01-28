@@ -1,18 +1,18 @@
-import { ESLint } from 'eslint';
+import { ESLint } from "eslint";
 
 const eslint = new ESLint({
   baseConfig: {
-    parser: '@typescript-eslint/parser',
+    parser: "@typescript-eslint/parser",
     parserOptions: {
       ecmaVersion: 2020,
-      sourceType: 'module',
+      sourceType: "module",
       ecmaFeatures: {
         jsx: true,
       },
     },
     settings: {
       react: {
-        version: 'detect',
+        version: "detect",
       },
     },
     rules: {
@@ -21,15 +21,15 @@ const eslint = new ESLint({
   },
   overrides: [
     {
-      files: ['*.ts', '*.tsx'],
+      files: ["*.ts", "*.tsx"],
       rules: {
-        '@typescript-eslint/no-explicit-any': 'warn', // Example rule
+        "@typescript-eslint/no-explicit-any": "warn", // Example rule
       },
     },
     {
-      files: ['*.jsx', '*.js'],
+      files: ["*.jsx", "*.js"],
       rules: {
-        'react/prop-types': 'off', // Example rule
+        "react/prop-types": "off", // Example rule
       },
     },
   ],
