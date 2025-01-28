@@ -10,8 +10,12 @@ import {
   ChevronRight,
   Star,
   User,
-  MapPin
+  MapPin,
+  Minus,
+  Plus,
+  ShoppingCart
 } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface Seller {
@@ -75,8 +79,37 @@ const MarketplaceListingDetail: React.FC<Props> = ({ params }) => {
 
   const router = useRouter();
 
-  const handleBuyNow = () => {
+  const { addItem } = useCart();
+  const [quantity, setQuantity] = useState(1);
+
+  const handleAddToCart = () => {
+    addItem({
+      id: listing.id,
+      name: listing.title,
+      price: listing.price,
+      originalPrice: listing.originalPrice,
+      size: listing.size,
+      quantity: quantity,
+      image: listing.images[0],
+      seller: listing.seller.name,
+      shipping: listing.shippingPrice,
+      condition: listing.condition
+    });
     router.push('/marketplace/cart');
+  };
+
+  const handleBuyNow = () => {
+    handleAddToCart();
+  };
+
+  const incrementQuantity = () => {
+    setQuantity(prev => prev + 1);
+  };
+
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(prev => prev - 1);
+    }
   };
 
   return (
@@ -224,16 +257,45 @@ const MarketplaceListingDetail: React.FC<Props> = ({ params }) => {
                 </AlertDescription>
               </Alert>
 
-              <div className="grid grid-cols-2 gap-3">
-                <button className="px-6 py-2 border rounded-lg hover:bg-gray-50">
-                  Make Offer
-                </button>
-                <button 
-                  onClick={handleBuyNow}
-                  className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
-                >
-                  Buy Now
-                </button>
+              <div className="space-y-4">
+                {/* Quantity Selector */}
+                <div className="flex items-center justify-start gap-4">
+                  <span className="text-sm text-gray-600">Quantity:</span>
+                  <div className="flex items-center border rounded-lg">
+                    <button
+                      onClick={decrementQuantity}
+                      className="p-2 hover:bg-gray-100 rounded-l-lg"
+                      disabled={quantity <= 1}
+                    >
+                      <Minus className="w-4 h-4" />
+                    </button>
+                    <span className="px-4 py-2 border-x text-center min-w-[3rem]">
+                      {quantity}
+                    </span>
+                    <button
+                      onClick={incrementQuantity}
+                      className="p-2 hover:bg-gray-100 rounded-r-lg"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => handleAddToCart()}
+                    className="px-6 py-2 border rounded-lg hover:bg-gray-50 flex items-center justify-center gap-2"
+                  >
+                    <ShoppingCart className="w-4 h-4" />
+                    Add to Cart
+                  </button>
+                  <button 
+                    onClick={handleBuyNow}
+                    className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
+                  >
+                    Buy Now
+                  </button>
+                </div>
               </div>
             </div>
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Calendar,
   MapPin,
@@ -11,13 +12,14 @@ import {
 import { Alert, AlertDescription } from "./ui/alert";
 
 const DateTradingBoard = () => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState("available");
   const [showProposalForm, setShowProposalForm] = useState(false);
 
   // Demo data
   const tradingPosts = [
     {
-      id: 1,
+      id: "venue-1",
       currentDate: "2024-09-24",
       desiredDateRange: ["2024-10", "2024-12"],
       venue: "The Grand Estate",
@@ -27,7 +29,7 @@ const DateTradingBoard = () => {
       reason: "Seeking winter date",
     },
     {
-      id: 2,
+      id: "venue-2",
       currentDate: "2024-08-15",
       desiredDateRange: ["2024-07", "2024-08"],
       venue: "Crystal Gardens",
@@ -82,7 +84,11 @@ const DateTradingBoard = () => {
 
       <div className="divide-y">
         {tradingPosts.map((post) => (
-          <div key={post.id} className="p-6">
+          <div 
+            key={post.id} 
+            className="p-6 cursor-pointer hover:bg-gray-50"
+            onClick={() => router.push(`/listing/${post.id}`)}
+          >
             <div className="flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-4 mb-2">

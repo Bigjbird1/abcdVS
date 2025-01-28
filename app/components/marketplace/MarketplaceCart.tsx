@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useCart } from "@/context/CartContext";
 import {
   Trash2,
   Minus,
@@ -16,32 +17,7 @@ import OrderSummary from "./OrderSummary";
 import RecentOrders from "./RecentOrders";
 
 const MarketplaceCart = () => {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Vintage Wedding Dress",
-      price: 899,
-      originalPrice: 2200,
-      size: "6",
-      color: "Ivory",
-      quantity: 1,
-      image: "/placeholder.svg?height=200&width=200&text=Wedding-Dress",
-      seller: "Emma's Boutique",
-      shipping: 25,
-      condition: "Like New",
-    },
-    {
-      id: 2,
-      name: "Crystal Table Centerpieces (Set of 10)",
-      price: 299,
-      originalPrice: 450,
-      quantity: 2,
-      image: "/placeholder.svg?height=200&width=200&text=Centerpieces",
-      seller: "Wedding Decor Co",
-      shipping: 35,
-      condition: "New",
-    },
-  ]);
+  const { items: cartItems, updateQuantity, removeItem } = useCart();
 
   const [shippingOption, setShippingOption] = useState("standard");
   const [promoCode, setPromoCode] = useState("");
@@ -63,18 +39,6 @@ const MarketplaceCart = () => {
     return calculateSubtotal() + calculateShipping();
   };
 
-  const updateQuantity = (itemId: number, newQuantity: number) => {
-    if (newQuantity < 1) return;
-    setCartItems((items) =>
-      items.map((item) =>
-        item.id === itemId ? { ...item, quantity: newQuantity } : item,
-      ),
-    );
-  };
-
-  const removeItem = (itemId: number) => {
-    setCartItems((items) => items.filter((item) => item.id !== itemId));
-  };
 
   const handlePromoCode = () => {
     // Simulated promo code validation
