@@ -1,10 +1,13 @@
 'use client';
 import React, { useState } from 'react';
-import { Search, Calendar, MapPin, Heart, ArrowRight, ShoppingBag, Sparkles, Shield } from 'lucide-react';
+import { Search, Calendar, MapPin, Heart, ArrowRight, ShoppingBag, Sparkles, Shield, Mail } from 'lucide-react';
 
 const Homepage = () => {
   const [activeTab, setActiveTab] = useState('shop');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [email, setEmail] = useState('');
+  const [recentSearches] = useState(['Wedding Dress Size 6', 'Rustic Decor', 'Fall 2025']);
 
   return (
     <div className="min-h-screen bg-white">
@@ -65,14 +68,33 @@ const Homepage = () => {
                     />
                   </div>
                   <button 
-                    className="bg-gradient-to-r from-rose-500 to-purple-600 text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity"
-                    onClick={(e) => {
+                    className="bg-gradient-to-r from-rose-500 to-purple-600 text-white p-4 rounded-full hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center"
+                    onClick={async (e) => {
                       e.preventDefault();
-                      const query = document.querySelector('input[name="searchQuery"]').value;
-                      window.location.href = `/marketplace?query=${encodeURIComponent(query)}`;
+                      try {
+                        setIsSearching(true);
+                        const input = document.querySelector('input[name="searchQuery"]') as HTMLInputElement;
+                        const query = input?.value || '';
+                        if (!query.trim()) {
+                          alert('Please enter a search term');
+                          return;
+                        }
+                        window.location.href = `/marketplace?query=${encodeURIComponent(query)}`;
+                      } catch (error) {
+                        console.error('Search error:', error);
+                        alert('An error occurred while searching. Please try again.');
+                      } finally {
+                        setIsSearching(false);
+                      }
                     }}
+                    disabled={isSearching}
+                    aria-label="Search wedding items"
                   >
-                    Search Items
+                    {isSearching ? (
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Search className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               ) : (
@@ -85,6 +107,8 @@ const Homepage = () => {
                       className="w-full py-3 focus:outline-none text-gray-900 placeholder-gray-500 text-lg font-light"
                       onFocus={() => setIsSearchFocused(true)}
                       onBlur={() => setIsSearchFocused(false)}
+                      aria-label="Wedding date"
+                      name="weddingDate"
                     />
                   </div>
                   <div className="h-8 w-px bg-gray-200"></div>
@@ -96,10 +120,42 @@ const Homepage = () => {
                       className="w-full py-3 focus:outline-none text-gray-900 placeholder-gray-500 text-lg font-light"
                       onFocus={() => setIsSearchFocused(true)}
                       onBlur={() => setIsSearchFocused(false)}
+                      aria-label="Wedding location"
+                      name="weddingLocation"
                     />
                   </div>
-                  <button className="bg-gradient-to-r from-rose-500 to-purple-600 text-white p-4 rounded-full hover:opacity-90 transition-opacity">
-                    <Search className="h-5 w-5" />
+                  <button 
+                    className="bg-gradient-to-r from-rose-500 to-purple-600 text-white p-4 rounded-full hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center"
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      try {
+                        setIsSearching(true);
+                        const dateInput = document.querySelector('input[name="weddingDate"]') as HTMLInputElement;
+                        const locationInput = document.querySelector('input[name="weddingLocation"]') as HTMLInputElement;
+                        const date = dateInput?.value || '';
+                        const location = locationInput?.value || '';
+                        
+                        if (!date.trim() || !location.trim()) {
+                          alert('Please enter both date and location');
+                          return;
+                        }
+                        
+                        window.location.href = `/date-trading?date=${encodeURIComponent(date)}&location=${encodeURIComponent(location)}`;
+                      } catch (error) {
+                        console.error('Search error:', error);
+                        alert('An error occurred while searching. Please try again.');
+                      } finally {
+                        setIsSearching(false);
+                      }
+                    }}
+                    disabled={isSearching}
+                    aria-label="Search wedding dates"
+                  >
+                    {isSearching ? (
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Search className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               )}
@@ -129,7 +185,20 @@ const Homepage = () => {
               { name: "Accessories", details: "Like-new condition" },
               { name: "Wedding Dates", details: "Browse Dates" }
             ].map((item, index) => (
-              <div key={index} className="group cursor-pointer">
+              <div 
+                key={index} 
+                className="group cursor-pointer"
+                onClick={() => window.location.href = `/marketplace/category/${item.name.toLowerCase().replace(' ', '-')}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    window.location.href = `/marketplace/category/${item.name.toLowerCase().replace(' ', '-')}`;
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label={`Browse ${item.name} category - ${item.details}`}
+              >
                 <div className="aspect-square relative rounded-xl overflow-hidden">
                   <img 
                     src={`/api/placeholder/400/400?text=${item.name}`}
@@ -216,6 +285,94 @@ const Homepage = () => {
               <p className="text-gray-600">Quality checked items from trusted sellers</p>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Testimonials */}
+      <div className="py-24">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">What Our Couples Say</h2>
+            <p className="text-gray-600">Join thousands of happy couples who found their perfect match</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                name: "Sarah & Mike",
+                image: "/api/placeholder/80/80?text=S&M",
+                text: "Found our dream venue date at 40% off! The transfer process was seamless.",
+                date: "December 2024"
+              },
+              {
+                name: "Jessica & Tom",
+                image: "/api/placeholder/80/80?text=J&T",
+                text: "Bought my pre-loved Vera Wang dress for a fraction of the retail price. It was in perfect condition!",
+                date: "January 2025"
+              },
+              {
+                name: "Emily & Chris",
+                image: "/api/placeholder/80/80?text=E&C",
+                text: "Great platform for finding unique decor pieces. Saved us thousands on our wedding budget.",
+                date: "November 2024"
+              }
+            ].map((testimonial, index) => (
+              <div key={index} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-4 mb-4">
+                  <img 
+                    src={testimonial.image} 
+                    alt={testimonial.name} 
+                    className="w-12 h-12 rounded-full"
+                  />
+                  <div>
+                    <div className="font-medium">{testimonial.name}</div>
+                    <div className="text-sm text-gray-500">{testimonial.date}</div>
+                  </div>
+                </div>
+                <p className="text-gray-600">{testimonial.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Newsletter */}
+      <div className="bg-gradient-to-r from-rose-50 to-purple-50 py-24">
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
+            <p className="text-gray-600">Get the latest deals and wedding planning tips delivered to your inbox</p>
+          </div>
+          
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            if (!email.trim()) {
+              alert('Please enter your email');
+              return;
+            }
+            // Add newsletter signup logic here
+            alert('Thank you for subscribing!');
+            setEmail('');
+          }} className="flex gap-4 max-w-md mx-auto">
+            <div className="flex-1">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                aria-label="Email for newsletter"
+              />
+            </div>
+            <button 
+              type="submit"
+              className="bg-gradient-to-r from-rose-500 to-purple-600 text-white px-6 py-3 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2"
+              aria-label="Subscribe to newsletter"
+            >
+              <Mail className="w-5 h-5" />
+              Subscribe
+            </button>
+          </form>
         </div>
       </div>
     </div>

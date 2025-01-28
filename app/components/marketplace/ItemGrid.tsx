@@ -1,13 +1,37 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
 
-interface ItemGridProps {
-  visibleItems: number;
+interface Item {
+  id: number;
+  name: string;
+  price: number;
+  originalPrice: number;
+  size?: string;
+  location: string;
+  condition: string;
 }
 
-const ItemGrid: React.FC<ItemGridProps> = ({ visibleItems }) => {
-  const items = [
+interface ItemGridProps {
+  visibleItems: number;
+  selectedSize: string | null;
+  selectedCondition: string | null;
+  priceRange: [number, number] | null;
+  sortBy: string;
+  searchQuery: string;
+  selectedCategory: string;
+}
+
+const ItemGrid: React.FC<ItemGridProps> = ({ 
+  visibleItems,
+  selectedSize,
+  selectedCondition,
+  priceRange,
+  sortBy,
+  searchQuery,
+  selectedCategory
+}) => {
+  const allItems: Item[] = [
     { id: 1, name: 'Vera Wang Wedding Dress', price: 1200, originalPrice: 3500, size: '6', location: 'San Francisco', condition: 'Like New' },
     { id: 2, name: 'Crystal Centerpiece Set', price: 250, originalPrice: 400, location: 'New York', condition: 'New' },
     { id: 3, name: 'Bridal Tiara', price: 150, originalPrice: 300, location: 'Los Angeles', condition: 'Excellent' },
@@ -34,10 +58,80 @@ const ItemGrid: React.FC<ItemGridProps> = ({ visibleItems }) => {
     { id: 24, name: 'Wedding Signage Set', price: 90, originalPrice: 150, location: 'Kansas City', condition: 'Handmade' },
   ];
 
+  // Filter and sort items
+  const filteredItems = useMemo(() => {
+    let filtered = [...allItems];
+
+    // Apply search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((item: Item) => 
+        item.name.toLowerCase().includes(query) ||
+        item.condition.toLowerCase().includes(query) ||
+        item.location.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply category filter
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter((item: Item) => {
+        const itemCategory = item.name.toLowerCase();
+        return (
+          (selectedCategory === 'dresses' && itemCategory.includes('dress')) ||
+          (selectedCategory === 'accessories' && itemCategory.includes('accessory')) ||
+          (selectedCategory === 'decor' && itemCategory.includes('decor')) ||
+          (selectedCategory === 'shoes' && itemCategory.includes('shoe')) ||
+          (selectedCategory === 'veils' && (itemCategory.includes('veil') || itemCategory.includes('tiara'))) ||
+          (selectedCategory === 'jewelry' && (itemCategory.includes('ring') || itemCategory.includes('earring')))
+        );
+      });
+    }
+
+    // Apply size filter
+    if (selectedSize) {
+      filtered = filtered.filter((item: Item) => item.size === selectedSize);
+    }
+
+    // Apply condition filter
+    if (selectedCondition) {
+      filtered = filtered.filter((item: Item) => item.condition === selectedCondition);
+    }
+
+    // Apply price range filter
+    if (priceRange) {
+      filtered = filtered.filter((item: Item) => 
+        item.price >= priceRange[0] && item.price <= priceRange[1]
+      );
+    }
+
+    // Apply sorting
+    switch (sortBy) {
+      case 'price-asc':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-desc':
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case 'newest':
+        filtered.sort((a, b) => b.id - a.id);
+        break;
+      default: // 'featured'
+        // Keep original order
+        break;
+    }
+
+    return filtered;
+  }, [allItems, searchQuery, selectedCategory, selectedSize, selectedCondition, priceRange, sortBy]);
+
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {items.slice(0, visibleItems).map((item) => (
-        <Link href={`/marketplace/item/${item.id}`} key={item.id}>
+      {filteredItems.length === 0 ? (
+        <div className="col-span-full text-center py-12">
+          <p className="text-gray-500">No items found matching your criteria</p>
+        </div>
+      ) : (
+        filteredItems.slice(0, visibleItems).map((item) => (
+          <Link href={`/marketplace/item/${item.id}`} key={item.id}>
           <div className="group cursor-pointer">
             <div className="aspect-square relative rounded-xl overflow-hidden mb-3">
               <img 
@@ -63,11 +157,11 @@ const ItemGrid: React.FC<ItemGridProps> = ({ visibleItems }) => {
               {item.size ? `Size ${item.size} • ` : ''}{item.location}
             </p>
           </div>
-        </Link>
-      ))}
+          </Link>
+        ))
+      )}
     </div>
   );
 };
 
 export default ItemGrid;
-

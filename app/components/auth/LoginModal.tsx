@@ -28,21 +28,13 @@ const LoginModal = ({ onClose }: LoginModalProps) => {
     // Add event listeners
     document.addEventListener('keydown', handleEscapeKey);
     
-    // Prevent scrolling on mount
-    const originalStyle = window.getComputedStyle(document.body).overflow;
+    // Prevent scrolling on mount using a better approach
     document.body.style.overflow = 'hidden';
-    // Prevent touch scrolling on mobile
-    document.body.style.position = 'fixed';
-    document.body.style.width = '100%';
-    document.body.style.height = '100%';
-
+    
     return () => {
-      // Clean up event listeners and restore original styles
+      // Clean up event listeners and restore scrolling
       document.removeEventListener('keydown', handleEscapeKey);
-      document.body.style.overflow = originalStyle;
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.height = '';
+      document.body.style.overflow = '';
     };
   }, [handleEscapeKey]);
 
@@ -50,15 +42,43 @@ const LoginModal = ({ onClose }: LoginModalProps) => {
     e.preventDefault();
     setError('');
 
+    if (!email || !password) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return;
+    }
+
     try {
       if (isSignUp) {
         await signUp(email, password, userType);
+        // Show success message before closing
+        setTimeout(() => {
+          onClose();
+        }, 1000);
       } else {
         await signIn(email, password);
+        onClose();
       }
-      onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      if (err instanceof Error) {
+        // Convert technical error messages to user-friendly ones
+        const errorMessage = err.message.toLowerCase();
+        if (errorMessage.includes('invalid login')) {
+          setError('Invalid email or password');
+        } else if (errorMessage.includes('email already exists')) {
+          setError('An account with this email already exists');
+        } else if (errorMessage.includes('network')) {
+          setError('Network error. Please check your connection');
+        } else {
+          setError('An error occurred. Please try again');
+        }
+      } else {
+        setError('An unexpected error occurred');
+      }
     }
   };
 

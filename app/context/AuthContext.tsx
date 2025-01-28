@@ -26,12 +26,11 @@ type AuthContextType = {
   isAuthenticated: boolean;
   isLoading: boolean;
   hasCompletedProfileSetup: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, userType: 'buyer' | 'seller') => Promise<void>; // Ensure this is defined
-  signIn: (email: string, password: string) => Promise<void>; // Ensure this is defined
+  signUp: (email: string, password: string, userType: 'buyer' | 'seller') => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
-  setHasCompletedProfileSetup: (value: boolean) => void; // Ensure this is present
+  setHasCompletedProfileSetup: (value: boolean) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -67,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const handleAuthStateChange = useCallback(async (session: any) => {
+  const handleAuthStateChange = useCallback(async (event: 'SIGNED_IN' | 'SIGNED_OUT' | 'TOKEN_REFRESHED', session: any) => {
     if (session?.user) {
       await fetchProfile(session.user.id);
     } else {
@@ -93,33 +92,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => subscription.unsubscribe();
   }, [fetchProfile, handleAuthStateChange]);
 
-  const login = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, userType: 'buyer' | 'seller') => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const signUp = async (email: string, password: string, userType: 'buyer' | 'seller') => {
-    try {
-      const { error } = await supabase.auth.signUp({ 
+      // Sign up the user
+      const { data: authData, error: signUpError } = await supabase.auth.signUp({ 
         email, 
         password,
         options: {
           data: { userType }
         }
       });
-      if (error) throw error;
-      return;
+      if (signUpError) throw signUpError;
+      
+      if (!authData.user) {
+        throw new Error('Failed to create user account');
+      }
+
+      // Create the user profile
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert([
+          { 
+            id: authData.user.id,
+            email: email,
+            userType: userType,
+            has_completed_setup: false
+          }
+        ]);
+
+      if (profileError) {
+        // If profile creation fails, we should clean up the auth user
+        await supabase.auth.signOut();
+        throw new Error('Failed to create user profile');
+      }
+
     } catch (error) {
       console.error('Error signing up:', error);
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -127,7 +139,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
+      if (error) {
+        if (error.message.includes('Invalid login')) {
+          throw new Error('Invalid email or password');
+        }
+        throw error;
+      }
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -162,7 +179,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated,
         isLoading,
         hasCompletedProfileSetup,
-        login,
         signUp,
         signIn,
         logout,

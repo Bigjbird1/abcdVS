@@ -27,9 +27,8 @@ const Navigation = () => {
             <div className="flex items-center gap-6">
               <Link href="/list-date">List your date</Link>
               <Link href="/sell-items">Sell items</Link>
-              <Link href="/date-trading" className="flex items-center gap-1">
-                <ArrowLeftRight className="w-4 h-4" />
-                Date Trading
+              <Link href="/marketplace" className="text-gray-600 hover:text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-100">
+                Shop
               </Link>
               {isAuthenticated ? (
                 <>
