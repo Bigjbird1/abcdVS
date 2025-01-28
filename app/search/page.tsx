@@ -1,14 +1,13 @@
-'use client'
+// app/search/page.tsx
+'use client';
 
-import { useSearchParams } from 'next/navigation'
-import EnhancedSearch from '@/components/EnhancedSearch';
-import ReviewFilters from '@/components/reviews/ReviewFilters';
+import { Suspense } from 'react';
+import SearchComponent from './SearchComponent';
 
 export default function SearchPage() {
-  const searchParams = useSearchParams()
-  const searchType = searchParams?.get('type') ?? 'dates'
-  const validatedSearchType = (searchType === 'marketplace' || searchType === 'dates') ? searchType : 'dates' as const
-
-  return <EnhancedSearch initialSearchType={validatedSearchType} />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchComponent />
+    </Suspense>
+  );
 }
-

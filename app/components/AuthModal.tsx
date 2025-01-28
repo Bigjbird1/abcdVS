@@ -28,12 +28,24 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, initialMode }) => {
   }, [onClose]);
 
   useEffect(() => {
+    // Add event listeners
     document.addEventListener('keydown', handleEscapeKey);
+    
+    // Prevent scrolling on mount
+    const originalStyle = window.getComputedStyle(document.body).overflow;
     document.body.style.overflow = 'hidden';
+    // Prevent touch scrolling on mobile
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.height = '100%';
 
     return () => {
+      // Clean up event listeners and restore original styles
       document.removeEventListener('keydown', handleEscapeKey);
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = originalStyle;
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
     };
   }, [handleEscapeKey]);
 
@@ -241,10 +253,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, initialMode }) => {
     <div 
       className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[99]"
       onClick={(e) => {
+        // Ensure we're clicking the backdrop, not the modal content
         if (e.target === e.currentTarget) {
-          onClose();
+          if (!isLoading) { // Only close if not loading
+            onClose();
+          }
         }
       }}
+      onTouchMove={(e) => e.preventDefault()} // Prevent touch scrolling on mobile
     >
       <div 
         className="bg-white rounded-xl w-full max-w-md relative overflow-visible shadow-xl"

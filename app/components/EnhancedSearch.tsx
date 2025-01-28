@@ -5,6 +5,7 @@ import { Search, Calendar, MapPin, Filter, LayoutGrid, ChevronDown, Check, X, He
 import { useDebounce } from 'use-debounce';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import { searchDeepSeek } from '../deepseekApi'; // Adjust the import path as necessary
 
 const Lightbox = dynamic(() => import('yet-another-react-lightbox'), { 
   ssr: false,
@@ -19,13 +20,24 @@ interface AdvancedFilters {
   venueType: string[];
   amenities: string[];
   priceRange: [number, number];
+  categories?: string[];
+  condition?: string[];
+  sellerRating?: number;
 }
 
-export default function EnhancedSearch({ initialSearchType }: EnhancedSearchProps) {
+interface SearchModeConfig {
+  placeholder: string;
+  filters: string[];
+  sortOptions: string[];
+}
+
+export default function EnhancedSearch({ initialSearchType }: EnhancedSearchProps): JSX.Element {
   const [viewMode, setViewMode] = useState('grid');
   const [showFilters, setShowFilters] = useState(false);
   const [savedSearch, setSavedSearch] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [homepageContent, setHomepageContent] = useState<'dates' | 'marketplace'>(initialSearchType);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState('September 2024');
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,6 +52,19 @@ export default function EnhancedSearch({ initialSearchType }: EnhancedSearchProp
   });
   const [sortOption, setSortOption] = useState('relevance');
   const [searchType, setSearchType] = useState(initialSearchType);
+  
+  const searchModes: Record<'dates' | 'marketplace', SearchModeConfig> = {
+    dates: {
+      placeholder: 'Search locations or venues',
+      filters: ['priceRange', 'guestCount', 'dateRange', 'packageTypes', 'amenities'],
+      sortOptions: ['relevance', 'price_low_high', 'price_high_low', 'date_newest', 'popularity']
+    },
+    marketplace: {
+      placeholder: 'Search wedding items or services',
+      filters: ['priceRange', 'categories', 'condition', 'sellerRating'],
+      sortOptions: ['relevance', 'price_low_high', 'price_high_low', 'newest', 'best_selling']
+    }
+  };
   const [visibleResults, setVisibleResults] = useState(12);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -48,12 +73,23 @@ export default function EnhancedSearch({ initialSearchType }: EnhancedSearchProp
   amenities: [],
   priceRange: [0, 50000],
 });
+  interface SearchResult {
+    id: number;
+    title: string;
+    location: string;
+    price: number;
+    originalPrice: number;
+    date: string;
+    guestCapacity: number;
+    image: string;
+    description: string[];
+  }
 
   const venueTypes = ['Indoor', 'Outdoor', 'Beach', 'Garden', 'Ballroom', 'Rustic'];
   const amenities = ['Catering', 'Bar Service', 'Parking', 'Wheelchair Accessible', 'Pet Friendly', 'Accommodation'];
 
   // Generate 24 mock results with added description points
-  const mockResults = Array.from({ length: 24 }, (_, i) => ({
+  const mockResults: SearchResult[] = Array.from({ length: 24 }, (_, i) => ({
     id: i + 1,
     title: `Luxury Venue ${i + 1}`,
     location: 'San Francisco, CA',
@@ -69,6 +105,8 @@ export default function EnhancedSearch({ initialSearchType }: EnhancedSearchProp
       'Bridal suite'
     ]
   }));
+
+  const [results, setResults] = useState<SearchResult[]>(mockResults);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -153,159 +191,22 @@ const handleFilterChange = (filter: string, value: any) => {
   import('yet-another-react-lightbox/styles.css');
 }, []);
 
+const handleSearch = async () => {
+  try {
+    const data = await searchDeepSeek(searchQuery);
+    setResults(data.results); // Adjust based on the API response structure
+  } catch (error) {
+    console.error('Search failed:', error);
+  }
+};
+
 return (
-  <div className="min-h-screen bg-gray-50">
-    <div className="sticky top-0 bg-white border-b z-50">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="py-4 flex gap-4">
-          <div className="flex-1 flex gap-2">
-            <div className="relative flex-1">
-              <input 
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full p-3 pl-10 border rounded-lg"
-                placeholder="Search locations or venues"
-              />
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-              {suggestions.length > 0 && (
-                <div 
-                  className="absolute top-full left-0 right-0 bg-white border rounded-lg mt-1 shadow-lg"
-                  role="listbox"
-                  id="search-suggestions"
-                >
-                  {suggestions.map((suggestion, index) => (
-                    <div 
-                      key={index}
-                      role="option"
-                      tabIndex={0}
-                      aria-selected={false}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          setSearchQuery(suggestion);
-                          setSuggestions([]);
-                        }
-                      }}
-                      className="p-2 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => {
-                        setSearchQuery(suggestion);
-                        setSuggestions([]);
-                      }}
-                    >
-                      {suggestion}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div className="relative flex-1">
-              <input 
-                type="text"
-                value={selectedMonth}
-                className="w-full p-3 pl-10 border rounded-lg cursor-pointer"
-                placeholder="Select dates"
-                onClick={() => setShowDatePicker(!showDatePicker)}
-                readOnly
-              />
-              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-              {showDatePicker && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border max-h-64 overflow-y-auto z-50">
-                  {/* Date picker implementation */}
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <button className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 flex items-center gap-2">
-              <Search className="w-4 h-4" />
-              Search
-            </button>
-            <button 
-              onClick={() => setSavedSearch(!savedSearch)}
-              className={`p-2 rounded-lg border ${savedSearch ? 'text-purple-600 border-purple-200 bg-purple-50' : 'text-gray-400 hover:border-gray-300'}`}
-            >
-              <Bookmark className="w-4 h-4" />
-            </button>
-          </div>
+  <div className="min-h-screen bg-gray-50 relative">
+      {isTransitioning && (
+        <div className="absolute inset-0 bg-white/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900" />
         </div>
-
-        <div className="py-3 border-t flex items-center justify-between">
-          <div className="flex-1 flex items-center gap-2 overflow-x-auto pb-2">
-            <button 
-              onClick={() => setShowFilters(true)}
-              className="px-3 py-1.5 bg-gray-100 rounded-full text-sm whitespace-nowrap hover:bg-gray-200 flex items-center gap-1"
-            >
-              <Filter className="w-3 h-3" />
-              All Filters
-            </button>
-            <div className="h-4 w-px bg-gray-200"></div>
-            <button className="px-3 py-1.5 bg-gray-100 rounded-full text-sm whitespace-nowrap hover:bg-gray-200">
-              Under $15,000
-            </button>
-            <button className="px-3 py-1.5 bg-gray-100 rounded-full text-sm whitespace-nowrap hover:bg-gray-200">
-              All-Inclusive
-            </button>
-            <button className="px-3 py-1.5 bg-gray-100 rounded-full text-sm whitespace-nowrap hover:bg-gray-200">
-              Under 100 guests
-            </button>
-          </div>
-
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <select
-              value={sortOption}
-              onChange={(e) => setSortOption(e.target.value)}
-              className="text-sm text-gray-600 border rounded-lg px-2 py-1"
-            >
-              <option value="relevance">Sort: Relevance</option>
-              <option value="price_low_high">Price: Low to High</option>
-              <option value="price_high_low">Price: High to Low</option>
-              <option value="date_newest">Date: Newest</option>
-              <option value="popularity">Popularity</option>
-            </select>
-            <div className="h-4 w-px bg-gray-200"></div>
-            <div className="flex border rounded-lg p-1">
-              <button 
-                className={`p-1.5 rounded ${viewMode === 'grid' ? 'bg-gray-100' : ''}`}
-                onClick={() => setViewMode('grid')}
-              >
-                <LayoutGrid className="w-4 h-4" />
-              </button>
-              <button 
-                className={`p-1.5 rounded ${viewMode === 'map' ? 'bg-gray-100' : ''}`}
-                onClick={() => setViewMode('map')}
-              >
-                <Globe className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {Object.entries(activeFilters).some(([key, value]) => 
-          Array.isArray(value) ? value.length > 0 : value !== null
-        ) && (
-          <div className="py-3 border-t flex items-center gap-2 overflow-x-auto">
-            {activeFilters.priceRange[0] > 0 && (
-              <div className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 rounded-full text-sm">
-                <span>${activeFilters.priceRange[0].toLocaleString()} - ${activeFilters.priceRange[1].toLocaleString()}</span>
-                <button 
-                  onClick={() => handleAdvancedFilterChange('priceRange', [0, 50000])}
-                  className="ml-1 p-0.5 rounded-full hover:bg-gray-200"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </div>
-            )}
-            <button 
-              onClick={clearAllFilters}
-              className="text-sm text-gray-500 hover:text-gray-700"
-            >
-              Clear all
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-
+      )}
     {/* Add this section for advanced filters */}
     {showFilters && (
       <div className="bg-white border-t p-4">
@@ -375,7 +276,7 @@ return (
       </div>
     )}
 
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8 transition-opacity duration-300 ease-in-out" style={{ opacity: isTransitioning ? 0 : 1 }}>
       {isLoading ? (
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {Array.from({ length: 12 }).map((_, i) => (
@@ -384,7 +285,7 @@ return (
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {mockResults.slice(0, visibleResults).map((item, index) => (
+          {results.slice(0, visibleResults).map((item: SearchResult, index: number) => (
             <div key={item.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all group">
               <div className="aspect-[16/9] relative">
                 <Image 
@@ -439,7 +340,7 @@ return (
         </div>
       )}
 
-      {visibleResults < mockResults.length && (
+      {visibleResults < results.length && (
         <div className="mt-12 text-center">
           <button 
             className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 inline-flex items-center gap-2"

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Mail, Eye, EyeOff, Shield } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/context/AuthContext';
@@ -8,7 +8,7 @@ interface LoginModalProps {
   onClose: () => void;
 }
 
-  const LoginModal = ({ onClose }: LoginModalProps) => {
+const LoginModal = ({ onClose }: LoginModalProps) => {
   const { signIn, signUp, isLoading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,6 +16,35 @@ interface LoginModalProps {
   const [error, setError] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [userType, setUserType] = useState<'buyer' | 'seller'>('buyer');
+
+  // Handle escape key press
+  const handleEscapeKey = useCallback((event: KeyboardEvent) => {
+    if (event.key === 'Escape' && !isLoading) {
+      onClose();
+    }
+  }, [onClose, isLoading]);
+
+  useEffect(() => {
+    // Add event listeners
+    document.addEventListener('keydown', handleEscapeKey);
+    
+    // Prevent scrolling on mount
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = 'hidden';
+    // Prevent touch scrolling on mobile
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.height = '100%';
+
+    return () => {
+      // Clean up event listeners and restore original styles
+      document.removeEventListener('keydown', handleEscapeKey);
+      document.body.style.overflow = originalStyle;
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+    };
+  }, [handleEscapeKey]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,8 +63,38 @@ interface LoginModalProps {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl max-w-md w-full">
+    <div 
+      className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !isLoading) {
+          onClose();
+        }
+      }}
+      onTouchMove={(e) => e.preventDefault()}
+    >
+      <div 
+        className="bg-white rounded-xl max-w-md w-full relative"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          disabled={isLoading}
+          className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-colors"
+          aria-label="Close modal"
+        >
+          <svg 
+            className="w-4 h-4 text-gray-600" 
+            fill="none" 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            strokeWidth="2" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+
         <div className="p-6">
           <h2 className="text-xl font-semibold mb-6">
             {isSignUp ? 'Create account' : 'Log in to your account'}
