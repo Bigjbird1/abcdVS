@@ -167,7 +167,7 @@ const Homepage = () => {
                             `location=${encodeURIComponent(location)}`,
                           );
 
-                        window.location.href = `/date-trading${queryParams.length ? `?${queryParams.join("&")}` : ""}`;
+                        window.location.href = `/search?type=dates${queryParams.length ? `&${queryParams.join("&")}` : ""}`;
                       } catch (error) {
                         console.error("Search error:", error);
                         alert(

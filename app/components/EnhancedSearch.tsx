@@ -39,6 +39,8 @@ interface AdvancedFilters {
   categories?: string[];
   condition?: string[];
   sellerRating?: number;
+  size?: string | null;
+  sortBy: string;
 }
 
 interface SearchModeConfig {
@@ -110,7 +112,24 @@ export default function EnhancedSearch({
     venueType: [],
     amenities: [],
     priceRange: [0, 50000],
+    size: null,
+    sortBy: "relevance"
   });
+
+  const sizes = ["Small", "Medium", "Large", "Extra Large"];
+  const conditions = ["New", "Like New", "Good", "Fair"];
+  const sortOptions = [
+    { value: "relevance", label: "Most Relevant" },
+    { value: "price_low_high", label: "Price: Low to High" },
+    { value: "price_high_low", label: "Price: High to Low" },
+    { value: "newest", label: "Newest First" }
+  ];
+
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+  const toggleDropdown = (dropdown: string) => {
+    setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
+  };
   interface SearchResult {
     id: number;
     title: string;
@@ -249,11 +268,70 @@ export default function EnhancedSearch({
   const handleSearch = async () => {
     try {
       const data = await searchDeepSeek(searchQuery);
-      setResults(data.results); // Adjust based on the API response structure
+      let filteredResults: SearchResult[] = data.results || mockResults;
+
+      // Apply filters
+      if (advancedFilters.size) {
+        filteredResults = filteredResults.filter((item: SearchResult) => {
+          // Map guest capacity to size categories
+          const getSize = (capacity: number) => {
+            if (capacity <= 50) return "Small";
+            if (capacity <= 100) return "Medium";
+            if (capacity <= 200) return "Large";
+            return "Extra Large";
+          };
+          return getSize(item.guestCapacity) === advancedFilters.size;
+        });
+      }
+
+      // Apply price range filter
+      filteredResults = filteredResults.filter((item: SearchResult) => 
+        item.price >= advancedFilters.priceRange[0] && 
+        item.price <= advancedFilters.priceRange[1]
+      );
+
+      // Apply venue type filter if any selected
+      if (advancedFilters.venueType.length > 0) {
+        filteredResults = filteredResults.filter((item: SearchResult) =>
+          advancedFilters.venueType.some(type => 
+            item.description.some((desc: string) => desc.toLowerCase().includes(type.toLowerCase()))
+          )
+        );
+      }
+
+      // Apply amenities filter if any selected
+      if (advancedFilters.amenities.length > 0) {
+        filteredResults = filteredResults.filter((item: SearchResult) =>
+          advancedFilters.amenities.some(amenity => 
+            item.description.some((desc: string) => desc.toLowerCase().includes(amenity.toLowerCase()))
+          )
+        );
+      }
+
+      // Apply sorting
+      filteredResults.sort((a: SearchResult, b: SearchResult) => {
+        switch (advancedFilters.sortBy) {
+          case 'price_low_high':
+            return a.price - b.price;
+          case 'price_high_low':
+            return b.price - a.price;
+          case 'newest':
+            return new Date(b.date).getTime() - new Date(a.date).getTime();
+          default: // relevance - keep original order
+            return 0;
+        }
+      });
+
+      setResults(filteredResults);
     } catch (error) {
       console.error("Search failed:", error);
     }
   };
+
+  // Apply filters whenever they change
+  useEffect(() => {
+    handleSearch();
+  }, [advancedFilters, debouncedSearchQuery]);
 
   return (
     <div className="min-h-screen bg-gray-50 relative">
@@ -262,7 +340,138 @@ export default function EnhancedSearch({
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900" />
         </div>
       )}
-      {/* Add this section for advanced filters */}
+      {/* Filter Bar */}
+      <div className="bg-white mb-6 px-4">
+        <div className="relative py-3 border-t flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {/* Size Filter */}
+            <div className="relative">
+              <button
+                onClick={() => toggleDropdown("size")}
+                className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm hover:border-gray-300 ${
+                  advancedFilters.size ? "bg-gray-50" : ""
+                }`}
+              >
+                Size
+                <ChevronDown className="w-4 h-4" />
+              </button>
+              {activeDropdown === "size" && (
+                <div className="absolute top-full left-0 mt-1 w-48 bg-white border rounded-lg shadow-lg z-50">
+                  <div className="p-2">
+                    {sizes.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => {
+                          setAdvancedFilters(prev => ({
+                            ...prev,
+                            size: prev.size === size ? null : size
+                          }));
+                          setActiveDropdown(null);
+                        }}
+                        className={`w-full text-left px-3 py-2 text-sm rounded hover:bg-gray-100 ${
+                          advancedFilters.size === size ? "bg-gray-100" : ""
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Price Range Filter */}
+            <div className="relative">
+              <button
+                onClick={() => toggleDropdown("price")}
+                className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm hover:border-gray-300`}
+              >
+                Price Range
+                <ChevronDown className="w-4 h-4" />
+              </button>
+              {activeDropdown === "price" && (
+                <div className="absolute top-full left-0 mt-1 w-48 bg-white border rounded-lg shadow-lg z-50">
+                  <div className="p-4">
+                    <input
+                      type="range"
+                      min="0"
+                      max="50000"
+                      step="1000"
+                      value={advancedFilters.priceRange[1]}
+                      onChange={(e) =>
+                        setAdvancedFilters(prev => ({
+                          ...prev,
+                          priceRange: [0, parseInt(e.target.value)]
+                        }))
+                      }
+                      className="w-full"
+                    />
+                    <div className="flex justify-between mt-2 text-sm">
+                      <span>$0</span>
+                      <span>${advancedFilters.priceRange[1].toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* More Filters Button */}
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm hover:border-gray-300 ${
+                showFilters ? "bg-gray-50" : ""
+              }`}
+            >
+              <Filter className="w-4 h-4" />
+              More Filters
+            </button>
+          </div>
+
+          {/* Sort Options */}
+          <div className="relative">
+            <button
+              onClick={() => toggleDropdown("sort")}
+              className="flex items-center gap-2 text-sm text-gray-600"
+            >
+              <ArrowUpDown className="w-4 h-4" />
+              Sort by: {sortOptions.find((opt) => opt.value === advancedFilters.sortBy)?.label}
+            </button>
+            {activeDropdown === "sort" && (
+              <div className="absolute top-full right-0 mt-1 w-48 bg-white border rounded-lg shadow-lg z-50">
+                <div className="p-2">
+                  {sortOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => {
+                        setAdvancedFilters(prev => ({
+                          ...prev,
+                          sortBy: option.value
+                        }));
+                        setActiveDropdown(null);
+                      }}
+                      className={`w-full text-left px-3 py-2 text-sm rounded hover:bg-gray-100 ${
+                        advancedFilters.sortBy === option.value ? "bg-gray-100" : ""
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Click outside to close dropdowns */}
+          {activeDropdown && (
+            <div
+              className="fixed inset-0 z-40"
+              onClick={() => setActiveDropdown(null)}
+            />
+          )}
+        </div>
+      </div>
+
+      {/* Advanced filters panel */}
       {showFilters && (
         <div className="bg-white border-t p-4">
           <h3 className="font-semibold mb-4">Advanced Filters</h3>

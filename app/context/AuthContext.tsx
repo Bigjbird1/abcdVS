@@ -24,7 +24,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 interface UserProfile {
   id: string;
   email: string;
-  userType: "buyer" | "seller"; // Ensure this matches your Supabase table's column name
+  user_type: "buyer" | "seller"; // Column name in Supabase profiles table
   has_completed_setup: boolean;
 }
 
@@ -129,7 +129,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           email,
           password,
           options: {
-            data: { userType },
+            data: { user_type: userType },
           },
         },
       );
@@ -144,7 +144,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         {
           id: authData.user.id,
           email: email,
-          userType: userType,
+          user_type: userType,
           has_completed_setup: false,
         },
       ]);
@@ -162,7 +162,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         p_ip_address: '', // IP is captured server-side
         p_user_agent: userAgent,
         p_metadata: {
-          userType: userType,
+          user_type: userType,
           email: email
         }
       });

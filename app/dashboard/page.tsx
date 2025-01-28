@@ -22,23 +22,23 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gray-50">
       <DashboardHeader />
       <main className="max-w-7xl mx-auto px-4 py-8">
-        <DashboardStats userType={user?.userType} />
+        <DashboardStats userType={user?.user_type} />
         <div className="bg-white rounded-xl border mt-8">
           <DashboardTabs activeTab={activeTab} setActiveTab={setActiveTab} />
           <div className="p-6">
             {activeTab === "overview" && (
               <div className="space-y-8">
-                <ActiveListings userType={user?.userType} />
-                <SavedSearches userType={user?.userType} />
+                <ActiveListings userType={user?.user_type} />
+                <SavedSearches userType={user?.user_type} />
                 <RecentMessages />
               </div>
             )}
             {activeTab === "listings" && (
-              <ActiveListings userType={user?.userType} />
+              <ActiveListings userType={user?.user_type} />
             )}
             {activeTab === "messages" && <RecentMessages />}
             {activeTab === "analytics" && (
-              <Analytics userType={user?.userType} />
+              <Analytics userType={user?.user_type} />
             )}
           </div>
         </div>

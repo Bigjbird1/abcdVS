@@ -76,6 +76,8 @@ const LoginModal = ({ onClose }: LoginModalProps) => {
           setError("An account with this email already exists");
         } else if (errorMessage.includes("network")) {
           setError("Network error. Please check your connection");
+        } else if (errorMessage.includes("rate limit exceeded")) {
+          setError("Too many signup attempts. Please try again in a few minutes");
         } else {
           setError("An error occurred. Please try again");
         }

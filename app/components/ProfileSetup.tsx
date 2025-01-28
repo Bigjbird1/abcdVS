@@ -32,13 +32,21 @@ const buyerSchema = z.object({
   guestCount: z.number().min(1, "Guest count must be at least 1"),
 });
 
+// Custom file validation that only runs on client side
+const fileSchema = z.custom<File>((file) => {
+  // Skip validation during SSR
+  if (typeof window === "undefined") return true;
+  
+  return file instanceof File;
+}, "Please upload a valid file");
+
 const sellerSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
   lastName: z.string().min(2, "Last name must be at least 2 characters"),
   phoneNumber: z.string().regex(/^\d{10}$/, "Invalid phone number"),
   location: z.string().min(2, "Location is required"),
-  governmentId: z.instanceof(File),
-  venueContract: z.instanceof(File),
+  governmentId: fileSchema,
+  venueContract: fileSchema,
 });
 
 export default function ProfileSetup() {
@@ -49,7 +57,7 @@ export default function ProfileSetup() {
   if (!user) {
     throw new Error("User must be authenticated");
   }
-  const userType = user.userType || "buyer";
+  const userType = user.user_type || "buyer";
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -133,7 +141,15 @@ export default function ProfileSetup() {
     }
   };
 
-  const uploadFile = async (file: File): Promise<string> => {
+  const uploadFile = async (file: File | null): Promise<string> => {
+    if (typeof window === "undefined") {
+      throw new Error("File upload can only be performed on the client side");
+    }
+    
+    if (!file || !(file instanceof File)) {
+      throw new Error("Invalid file");
+    }
+
     const { data, error } = await supabase.storage
       .from("verification-documents")
       .upload(`${user.id}/${file.name}`, file);

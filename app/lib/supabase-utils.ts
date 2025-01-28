@@ -1,12 +1,25 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+// Use the same configuration as AuthContext
+const supabaseUrl = "https://sbgdbsfwpjeuzvpuzqsh.supabase.co";
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiZ2Ric2Z3cGpldXp2cHV6cXNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc3NDQ5OTAsImV4cCI6MjA1MzMyMDk5MH0.VX5XncLFLLfHU78un_bmU3So9G5peYlKKIvGMaebf_8";
 
+// Create a single instance of the Supabase client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export async function uploadImage(file: File, bucket: string = 'listing-images'): Promise<string | null> {
+// Get the current session
+const getCurrentSession = async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  return session;
+};
+
+export async function uploadImage(file: File, bucket: string = 'wedding-transfer-images'): Promise<string | null> {
   try {
+    // Check if user is authenticated
+    const session = await getCurrentSession();
+    if (!session) {
+      throw new Error('User must be authenticated to upload images');
+    }
     // Create a unique file name to avoid collisions
     const fileExt = file.name.split('.').pop();
     const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
@@ -43,8 +56,13 @@ export async function uploadMultipleImages(files: File[]): Promise<string[]> {
   return results.filter((url): url is string => url !== null);
 }
 
-export async function deleteImage(imagePath: string, bucket: string = 'listing-images'): Promise<boolean> {
+export async function deleteImage(imagePath: string, bucket: string = 'wedding-transfer-images'): Promise<boolean> {
   try {
+    // Check if user is authenticated
+    const session = await getCurrentSession();
+    if (!session) {
+      throw new Error('User must be authenticated to delete images');
+    }
     // Extract file name from the full URL
     const fileName = imagePath.split('/').pop();
     if (!fileName) return false;

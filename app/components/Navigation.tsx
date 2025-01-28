@@ -29,6 +29,7 @@ const Navigation = () => {
             </Link>
             <div className="flex items-center gap-6">
               <Link href="/list-date">List your date</Link>
+              <Link href="/date-trading">Date Trading</Link>
               <Link href="/sell-items">Sell items</Link>
               <Link
                 href="/marketplace"
