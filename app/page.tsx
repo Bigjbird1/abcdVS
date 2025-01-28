@@ -75,11 +75,7 @@ const Homepage = () => {
                         setIsSearching(true);
                         const input = document.querySelector('input[name="searchQuery"]') as HTMLInputElement;
                         const query = input?.value || '';
-                        if (!query.trim()) {
-                          alert('Please enter a search term');
-                          return;
-                        }
-                        window.location.href = `/marketplace?query=${encodeURIComponent(query)}`;
+                        window.location.href = `/marketplace${query.trim() ? `?query=${encodeURIComponent(query)}` : ''}`;
                       } catch (error) {
                         console.error('Search error:', error);
                         alert('An error occurred while searching. Please try again.');
@@ -135,12 +131,11 @@ const Homepage = () => {
                         const date = dateInput?.value || '';
                         const location = locationInput?.value || '';
                         
-                        if (!date.trim() || !location.trim()) {
-                          alert('Please enter both date and location');
-                          return;
-                        }
+                        let queryParams = [];
+                        if (date.trim()) queryParams.push(`date=${encodeURIComponent(date)}`);
+                        if (location.trim()) queryParams.push(`location=${encodeURIComponent(location)}`);
                         
-                        window.location.href = `/date-trading?date=${encodeURIComponent(date)}&location=${encodeURIComponent(location)}`;
+                        window.location.href = `/date-trading${queryParams.length ? `?${queryParams.join('&')}` : ''}`;
                       } catch (error) {
                         console.error('Search error:', error);
                         alert('An error occurred while searching. Please try again.');
