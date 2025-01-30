@@ -42,9 +42,9 @@ function validateSearchParams(query: string, filters?: SearchFilters) {
 }
 
 async function executeWithRetry<T>(
-  operation: () => Promise<{ data: T | null; error: PostgrestError | null }>,
+  operation: () => Promise<{ data: T[]; error: PostgrestError | null }>,
   retries = MAX_RETRIES
-): Promise<T> {
+): Promise<{ data: T[]; error: PostgrestError | null }> {
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       const timeoutPromise = new Promise((_, reject) => {
@@ -52,22 +52,16 @@ async function executeWithRetry<T>(
       });
       
       const operationPromise = operation();
-      const { data, error } = await Promise.race([operationPromise, timeoutPromise]) as { data: T | null; error: PostgrestError | null };
-
-      if (error) {
+      const result = await Promise.race([operationPromise, timeoutPromise]) as { data: T[]; error: PostgrestError | null };
+      if (result.error) {
         if (attempt === retries) {
-          throw new Error(`Operation failed after ${retries} attempts: ${error.message}`);
+          throw new Error(`Operation failed after ${retries} attempts: ${result.error.message}`);
         }
-        console.warn(`Attempt ${attempt} failed, retrying...`, error);
+        console.warn(`Attempt ${attempt} failed, retrying...`, result.error);
         await new Promise(resolve => setTimeout(resolve, Math.min(1000 * attempt, 3000)));
         continue;
       }
-
-      if (!data) {
-        return [] as T;
-      }
-
-      return data;
+      return result;
     } catch (err) {
       if (attempt === retries) {
         throw err;
@@ -101,9 +95,14 @@ export async function searchItems(
 
     console.log('Executing search with parameters:', rpcQuery);
 
-    const data = await executeWithRetry(() => 
-      supabase.rpc('search_items', rpcQuery)
-    );
+    const { data, error } = await executeWithRetry(async () => {
+      const { data, error } = await supabase.rpc('search_items', rpcQuery) as { data: SearchIndexItem[]; error: PostgrestError | null };
+      return { data: data ?? [], error };
+    });
+
+    if (error) {
+      throw error;
+    }
 
     console.log(`Search completed successfully. Found ${data.length} results.`);
     return data;

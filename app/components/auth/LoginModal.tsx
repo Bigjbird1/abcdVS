@@ -15,7 +15,6 @@ const LoginModal = ({ onClose }: LoginModalProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
-  const [userType, setUserType] = useState<"buyer" | "seller">("buyer");
 
   // Handle escape key press
   const handleEscapeKey = useCallback(
@@ -41,50 +40,58 @@ const LoginModal = ({ onClose }: LoginModalProps) => {
     };
   }, [handleEscapeKey]);
 
+  let debounceTimeout: NodeJS.Timeout | null = null;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (!email || !password) {
-      setError("Please fill in all fields");
-      return;
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout);
     }
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters long");
-      return;
-    }
-
-    try {
-      if (isSignUp) {
-        await signUp(email, password, userType);
-        // Show success message before closing
-        setTimeout(() => {
-          onClose();
-        }, 1000);
-      } else {
-        await signIn(email, password);
-        onClose();
+    debounceTimeout = setTimeout(async () => {
+      if (!email || !password) {
+        setError("Please fill in all fields");
+        return;
       }
-    } catch (err) {
-      if (err instanceof Error) {
-        // Convert technical error messages to user-friendly ones
-        const errorMessage = err.message.toLowerCase();
-        if (errorMessage.includes("invalid login")) {
-          setError("Invalid email or password");
-        } else if (errorMessage.includes("email already exists")) {
-          setError("An account with this email already exists");
-        } else if (errorMessage.includes("network")) {
-          setError("Network error. Please check your connection");
-        } else if (errorMessage.includes("rate limit exceeded")) {
-          setError("Too many signup attempts. Please try again in a few minutes");
+
+      if (password.length < 6) {
+        setError("Password must be at least 6 characters long");
+        return;
+      }
+
+      try {
+        if (isSignUp) {
+          await signUp(email, password, "buyer");
+          // Show success message before closing
+          setTimeout(() => {
+            onClose();
+          }, 1000);
         } else {
-          setError("An error occurred. Please try again");
+          await signIn(email, password);
+          onClose();
         }
-      } else {
-        setError("An unexpected error occurred");
+      } catch (err) {
+        if (err instanceof Error) {
+          // Convert technical error messages to user-friendly ones
+          const errorMessage = err.message.toLowerCase();
+          if (errorMessage.includes("invalid login")) {
+            setError("Invalid email or password");
+          } else if (errorMessage.includes("email already exists")) {
+            setError("An account with this email already exists");
+          } else if (errorMessage.includes("network")) {
+            setError("Network error. Please check your connection");
+          } else if (errorMessage.includes("rate limit exceeded")) {
+            setError("Too many signup attempts. Please try again in a few minutes");
+          } else {
+            setError("An error occurred. Please try again");
+          }
+        } else {
+          setError("An unexpected error occurred");
+        }
       }
-    }
+    }, 1000); // 1 second debounce
   };
 
   return (
@@ -176,38 +183,6 @@ const LoginModal = ({ onClose }: LoginModalProps) => {
                 </button>
               </div>
             </div>
-
-            {isSignUp && (
-              <div>
-                <label className="block text-sm font-medium mb-1.5">
-                  I want to:
-                </label>
-                <div className="flex gap-4">
-                  <button
-                    type="button"
-                    onClick={() => setUserType("buyer")}
-                    className={`flex-1 py-2 px-4 rounded-lg border transition-colors ${
-                      userType === "buyer"
-                        ? "border-gray-900 bg-gray-900 text-white"
-                        : "border-gray-200 hover:bg-gray-50"
-                    }`}
-                  >
-                    Find a date
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setUserType("seller")}
-                    className={`flex-1 py-2 px-4 rounded-lg border transition-colors ${
-                      userType === "seller"
-                        ? "border-gray-900 bg-gray-900 text-white"
-                        : "border-gray-200 hover:bg-gray-50"
-                    }`}
-                  >
-                    Sell my date
-                  </button>
-                </div>
-              </div>
-            )}
 
             <button
               type="submit"
