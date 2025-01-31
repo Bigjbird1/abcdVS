@@ -6,6 +6,12 @@ import { useCart } from "../../context/CartContext";
 import OrderSummary from "../../components/marketplace/OrderSummary";
 import { Alert, AlertDescription } from "../../components/ui/alert";
 
+interface Discount {
+  type: 'percentage' | 'fixed' | 'shipping';
+  value: number;
+  code: string;
+}
+
 export default function CheckoutPage() {
   const { items, clearCart } = useCart();
   const [formData, setFormData] = useState({
@@ -25,6 +31,7 @@ export default function CheckoutPage() {
   const [shippingOption, setShippingOption] = useState("standard");
   const [promoCode, setPromoCode] = useState("");
   const [promoError, setPromoError] = useState("");
+  const [discount, setDiscount] = useState<Discount | null>(null);
 
   const calculateSubtotal = () => {
     return items.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -39,9 +46,31 @@ export default function CheckoutPage() {
     return calculateSubtotal() + calculateShipping();
   };
 
+  const calculateDiscount = () => {
+    if (!discount) return 0;
+    
+    if (discount.type === 'percentage') {
+      return (calculateSubtotal() * discount.value) / 100;
+    } else if (discount.type === 'fixed') {
+      return discount.value;
+    } else if (discount.type === 'shipping') {
+      return calculateShipping();
+    }
+    return 0;
+  };
+
   const handlePromoCode = () => {
-    // TODO: Implement promo code validation
-    setPromoError("Invalid promo code");
+    // Simple promo code validation
+    if (promoCode === 'SAVE10') {
+      setDiscount({ type: 'percentage', value: 10, code: 'SAVE10' });
+      setPromoError('');
+    } else if (promoCode === 'FREESHIP') {
+      setDiscount({ type: 'shipping', value: 100, code: 'FREESHIP' });
+      setPromoError('');
+    } else {
+      setDiscount(null);
+      setPromoError('Invalid promo code');
+    }
   };
 
   const validateForm = () => {
@@ -331,10 +360,11 @@ export default function CheckoutPage() {
             promoCode={promoCode}
             setPromoCode={setPromoCode}
             promoError={promoError}
-            handlePromoCode={handlePromoCode}
             calculateSubtotal={calculateSubtotal}
             calculateShipping={calculateShipping}
             calculateTotal={calculateTotal}
+            calculateDiscount={calculateDiscount}
+            discount={discount}
           />
         </div>
       </div>

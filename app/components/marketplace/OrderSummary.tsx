@@ -16,13 +16,24 @@ interface CartItem {
   condition: string;
 }
 
+interface Discount {
+  type: 'percentage' | 'fixed' | 'shipping';
+  value: number;
+  code: string;
+}
+
 interface OrderSummaryProps {
   cartItems: CartItem[];
   shippingOption: string;
   setShippingOption: (option: string) => void;
   calculateSubtotal: () => number;
   calculateShipping: () => number;
+  calculateDiscount: () => number;
   calculateTotal: () => number;
+  promoCode: string;
+  setPromoCode: (code: string) => void;
+  discount: Discount | null;
+  promoError: string;
 }
 
 const OrderSummary: React.FC<OrderSummaryProps> = ({
@@ -31,7 +42,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   setShippingOption,
   calculateSubtotal,
   calculateShipping,
-  calculateTotal
+  calculateDiscount,
+  calculateTotal,
+  promoCode,
+  setPromoCode,
+  discount,
+  promoError
 }) => {
   const router = useRouter();
 
@@ -94,6 +110,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
             <span className="text-gray-600">Shipping</span>
             <span>${calculateShipping().toFixed(2)}</span>
           </div>
+          {discount && (
+            <div className="flex justify-between text-sm text-green-600">
+              <span>Discount ({discount.code})</span>
+              <span>-${calculateDiscount().toFixed(2)}</span>
+            </div>
+          )}
           <div className="flex justify-between font-medium pt-2 border-t">
             <span>Total</span>
             <span>${calculateTotal().toFixed(2)}</span>

@@ -19,6 +19,8 @@ const MarketplaceCart = () => {
   const { items: cartItems, updateQuantity, removeItem } = useCart();
   const [shippingOption, setShippingOption] = useState("standard");
   const [discount, setDiscount] = useState<Discount | null>(null);
+  const [promoCode, setPromoCode] = useState("");
+  const [promoError, setPromoError] = useState("");
 
   const calculateSubtotal = () => {
     return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -109,6 +111,9 @@ const MarketplaceCart = () => {
           calculateDiscount={calculateDiscount}
           calculateTotal={calculateTotal}
           discount={discount}
+          promoCode={promoCode}
+          setPromoCode={setPromoCode}
+          promoError={promoError}
         />
       </div>
 
