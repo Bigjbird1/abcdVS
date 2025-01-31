@@ -1,14 +1,17 @@
 import MarketplaceListingDetail from "../../components/marketplace/MarketplaceListingDetail";
 import ListingDetail from "../../components/ListingDetail";
 
+import { redirect } from 'next/navigation';
+
 export default function ListingDetailPage({ params }: { params: { id: string } }) {
-  // TODO: In production, this should check against your venue listings database
-  // For now, we'll assume all listings in /listing/[id] are venue listings
-  const isVenueListing = true;
+  // Check if the referrer is from marketplace
+  const isMarketplaceListing = params.id.startsWith('mkt-');
   
-  return isVenueListing ? (
-    <ListingDetail params={params} />
-  ) : (
-    <MarketplaceListingDetail params={params} />
-  );
+  if (isMarketplaceListing) {
+    // If it's a marketplace listing, redirect to the marketplace detail page
+    redirect(`/marketplace/listing/${params.id}`);
+  }
+
+  // If it's not a marketplace listing, show the venue listing detail
+  return <ListingDetail params={params} />;
 }

@@ -330,7 +330,7 @@ const ItemGrid: React.FC<ItemGridProps> = ({
               onClick={(e) => {
                 // Don't navigate if clicking the heart button
                 if (!(e.target as HTMLElement).closest('button')) {
-                  router.push(`/marketplace/listing/${item.id}`);
+                  router.push(`/marketplace/listing/mkt-${item.id}`);
                 }
               }}
             >
