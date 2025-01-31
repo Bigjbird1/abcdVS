@@ -1,34 +1,40 @@
 import React from "react";
 import { Lock, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "../ui/alert";
+import { useRouter } from "next/navigation";
+
+interface CartItem {
+  id: number;
+  name: string;
+  price: number;
+  originalPrice: number;
+  size?: string;
+  color?: string;
+  quantity: number;
+  image: string;
+  seller: string;
+  condition: string;
+}
 
 interface OrderSummaryProps {
-  cartItems: any[];
+  cartItems: CartItem[];
   shippingOption: string;
   setShippingOption: (option: string) => void;
-  promoCode: string;
-  setPromoCode: (code: string) => void;
-  promoError: string;
-  handlePromoCode: () => void;
   calculateSubtotal: () => number;
   calculateShipping: () => number;
   calculateTotal: () => number;
 }
 
-import { useRouter } from "next/navigation";
-
 const OrderSummary: React.FC<OrderSummaryProps> = ({
   cartItems,
   shippingOption,
   setShippingOption,
-  promoCode,
-  setPromoCode,
-  promoError,
-  handlePromoCode,
   calculateSubtotal,
   calculateShipping,
-  calculateTotal,
+  calculateTotal
 }) => {
+  const router = useRouter();
+
   return (
     <div className="lg:col-span-1">
       <div className="bg-white rounded-xl border p-6 sticky top-6">
@@ -78,31 +84,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           </div>
         </div>
 
-        {/* Promo Code */}
-        <div className="mb-6">
-          <h3 className="font-medium mb-3">Promo Code</h3>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              id="promoCode"
-              name="promoCode"
-              value={promoCode}
-              onChange={(e) => setPromoCode(e.target.value)}
-              className="flex-1 px-3 py-2 border rounded-lg"
-              placeholder="Enter code"
-            />
-            <button
-              onClick={handlePromoCode}
-              className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
-            >
-              Apply
-            </button>
-          </div>
-          {promoError && (
-            <p className="text-red-600 text-sm mt-1">{promoError}</p>
-          )}
-        </div>
-
         {/* Calculations */}
         <div className="space-y-2 mb-6">
           <div className="flex justify-between text-sm">
@@ -120,10 +101,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         </div>
 
         <button 
-          onClick={() => {
-            // Navigate to checkout page
-            window.location.href = "/marketplace/checkout";
-          }}
+          onClick={() => router.push("/marketplace/checkout")}
           className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 flex items-center justify-center gap-2">
           <Lock className="w-4 h-4" />
           Checkout

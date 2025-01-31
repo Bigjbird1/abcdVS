@@ -1,9 +1,17 @@
 import MarketplaceListingDetail from "../../components/marketplace/MarketplaceListingDetail";
 import ListingDetail from "../../components/ListingDetail";
-
 import { redirect } from 'next/navigation';
 
-export default function ListingDetailPage({ params }: { params: { id: string } }) {
+interface PageParams {
+  id: string;
+}
+
+interface PageProps {
+  params: PageParams;
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export default async function ListingDetailPage({ params }: PageProps) {
   // Check if the referrer is from marketplace
   const isMarketplaceListing = params.id.startsWith('mkt-');
   

@@ -2,26 +2,23 @@
 
 import React, { useState } from "react";
 import { useCart } from "@/context/CartContext";
-import {
-  Trash2,
-  Minus,
-  Plus,
-  ChevronRight,
-  Lock,
-  Truck,
-  AlertCircle,
-} from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import CartItem from "./CartItem";
 import OrderSummary from "./OrderSummary";
 import RecentOrders from "./RecentOrders";
+import PromoCode from "./PromoCode";
+
+interface Discount {
+  type: 'percentage' | 'fixed' | 'shipping';
+  value: number;
+  code: string;
+}
 
 const MarketplaceCart = () => {
   const { items: cartItems, updateQuantity, removeItem } = useCart();
-
   const [shippingOption, setShippingOption] = useState("standard");
-  const [promoCode, setPromoCode] = useState("");
-  const [promoError, setPromoError] = useState("");
+  const [discount, setDiscount] = useState<Discount | null>(null);
 
   const calculateSubtotal = () => {
     return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -32,22 +29,36 @@ const MarketplaceCart = () => {
       (sum, item) => sum + item.shipping * item.quantity,
       0,
     );
+    // If shipping discount is applied, return 0
+    if (discount?.type === 'shipping') {
+      return 0;
+    }
     return shippingOption === "express" ? baseShipping * 1.5 : baseShipping;
   };
 
-  const calculateTotal = () => {
-    return calculateSubtotal() + calculateShipping();
+  const calculateDiscount = () => {
+    if (!discount) return 0;
+    
+    const subtotal = calculateSubtotal();
+    
+    switch (discount.type) {
+      case 'percentage':
+        return (subtotal * discount.value) / 100;
+      case 'fixed':
+        return discount.value;
+      case 'shipping':
+        return calculateShipping();
+      default:
+        return 0;
+    }
   };
 
+  const calculateTotal = () => {
+    return calculateSubtotal() + calculateShipping() - calculateDiscount();
+  };
 
-  const handlePromoCode = () => {
-    // Simulated promo code validation
-    if (promoCode.toUpperCase() === "WEDDING10") {
-      setPromoError("");
-      // Apply discount logic
-    } else {
-      setPromoError("Invalid promo code");
-    }
+  const handleApplyPromo = (newDiscount: Discount) => {
+    setDiscount(newDiscount.value === 0 ? null : newDiscount);
   };
 
   return (
@@ -76,6 +87,15 @@ const MarketplaceCart = () => {
                 <p className="text-gray-600">Your cart is empty</p>
               </div>
             )}
+
+            {cartItems.length > 0 && (
+              <div className="mt-6 pt-6 border-t">
+                <PromoCode
+                  onApplyPromo={handleApplyPromo}
+                  subtotal={calculateSubtotal()}
+                />
+              </div>
+            )}
           </div>
         </div>
 
@@ -84,13 +104,11 @@ const MarketplaceCart = () => {
           cartItems={cartItems}
           shippingOption={shippingOption}
           setShippingOption={setShippingOption}
-          promoCode={promoCode}
-          setPromoCode={setPromoCode}
-          promoError={promoError}
-          handlePromoCode={handlePromoCode}
           calculateSubtotal={calculateSubtotal}
           calculateShipping={calculateShipping}
+          calculateDiscount={calculateDiscount}
           calculateTotal={calculateTotal}
+          discount={discount}
         />
       </div>
 
