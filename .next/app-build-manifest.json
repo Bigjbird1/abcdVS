@@ -11,11 +11,6 @@
       "static/chunks/main-app.js",
       "static/chunks/app/page.js"
     ],
-    "/search/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/search/page.js"
-    ],
     "/marketplace/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -26,10 +21,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/marketplace/listing/[id]/page.js"
     ],
-    "/listing/[id]/page": [
+    "/list-date/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/listing/[id]/page.js"
+      "static/chunks/app/list-date/page.js"
+    ],
+    "/date-trading/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/date-trading/page.js"
+    ],
+    "/sell-items/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/sell-items/page.js"
     ],
     "/_not-found/page": [
       "static/chunks/webpack.js",

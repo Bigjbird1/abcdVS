@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
-  Heart, 
   Share,
   Shield, 
   ChevronLeft, 
@@ -17,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import SaveItemButton from './SaveItemButton';
 
 interface Seller {
   name: string;
@@ -146,9 +146,7 @@ const MarketplaceListingDetail: React.FC<Props> = ({ params }) => {
                 <button className="p-2 rounded-full bg-white/90 hover:bg-white">
                   <Share className="w-5 h-5" />
                 </button>
-                <button className="p-2 rounded-full bg-white/90 hover:bg-white">
-                  <Heart className="w-5 h-5" />
-                </button>
+                <SaveItemButton itemId={params.id} className="bg-white/90 hover:bg-white" />
               </div>
             </div>
 

@@ -1,9 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Lock } from "lucide-react";
+import { Lock, AlertCircle } from "lucide-react";
+import { useCart } from "../../context/CartContext";
+import OrderSummary from "../../components/marketplace/OrderSummary";
+import { Alert, AlertDescription } from "../../components/ui/alert";
 
 export default function CheckoutPage() {
+  const { items, clearCart } = useCart();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -16,36 +20,121 @@ export default function CheckoutPage() {
     expiryDate: "",
     cvv: "",
   });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [shippingOption, setShippingOption] = useState("standard");
+  const [promoCode, setPromoCode] = useState("");
+  const [promoError, setPromoError] = useState("");
+
+  const calculateSubtotal = () => {
+    return items.reduce((total, item) => total + (item.price * item.quantity), 0);
+  };
+
+  const calculateShipping = () => {
+    const baseShipping = items.reduce((total, item) => total + (item.shipping * item.quantity), 0);
+    return shippingOption === "express" ? baseShipping * 1.5 : baseShipping;
+  };
+
+  const calculateTotal = () => {
+    return calculateSubtotal() + calculateShipping();
+  };
+
+  const handlePromoCode = () => {
+    // TODO: Implement promo code validation
+    setPromoError("Invalid promo code");
+  };
+
+  const validateForm = () => {
+    if (!formData.cardNumber.match(/^\d{16}$/)) {
+      setError("Invalid card number");
+      return false;
+    }
+    if (!formData.expiryDate.match(/^(0[1-9]|1[0-2])\/\d{2}$/)) {
+      setError("Invalid expiry date (MM/YY)");
+      return false;
+    }
+    if (!formData.cvv.match(/^\d{3,4}$/)) {
+      setError("Invalid CVV");
+      return false;
+    }
+    if (!formData.zipCode.match(/^\d{5}(-\d{4})?$/)) {
+      setError("Invalid ZIP code");
+      return false;
+    }
+    return true;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     
+    if (!validateForm()) {
+      return;
+    }
+
+    if (items.length === 0) {
+      setError("Your cart is empty");
+      return;
+    }
+    
+    setLoading(true);
     try {
       // TODO: Implement actual payment processing here
-      console.log("Processing payment...", formData);
+      const paymentData = {
+        ...formData,
+        amount: calculateTotal(),
+        items,
+        shipping: {
+          method: shippingOption,
+          cost: calculateShipping()
+        }
+      };
+      console.log("Processing payment...", paymentData);
       
       // For now, simulate a successful payment
       await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Clear the cart after successful payment
+      clearCart();
       
       // Redirect to success page
       window.location.href = "/marketplace/checkout/success";
     } catch (error) {
       console.error("Payment failed:", error);
-      // TODO: Show error message to user
+      setError("Payment processing failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    setError(""); // Clear error when user makes changes
   };
+
+  if (items.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-3xl mx-auto px-4">
+          <Alert className="bg-yellow-50 border-yellow-200">
+            <AlertCircle className="h-5 w-5 text-yellow-600" />
+            <AlertDescription className="text-yellow-800">
+              Your cart is empty. Please add items before proceeding to checkout.
+            </AlertDescription>
+          </Alert>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-3xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4">
         <h1 className="text-2xl font-semibold mb-8">Checkout</h1>
         
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl border p-6 space-y-6">
+        <div className="grid lg:grid-cols-3 gap-8">
+          <form onSubmit={handleSubmit} className="lg:col-span-2 bg-white rounded-xl border p-6 space-y-6">
           <div className="grid grid-cols-2 gap-6">
             {/* Personal Information */}
             <div className="col-span-2">
@@ -214,14 +303,40 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 flex items-center justify-center gap-2 mt-8"
-          >
-            <Lock className="w-4 h-4" />
-            Complete Purchase
-          </button>
-        </form>
+            {error && (
+              <Alert className="bg-red-50 border-red-200 mb-4">
+                <AlertCircle className="h-5 w-5 text-red-600" />
+                <AlertDescription className="text-red-800">
+                  {error}
+                </AlertDescription>
+              </Alert>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 flex items-center justify-center gap-2 mt-8 ${
+                loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              <Lock className="w-4 h-4" />
+              {loading ? 'Processing...' : 'Complete Purchase'}
+            </button>
+          </form>
+
+          <OrderSummary
+            cartItems={items}
+            shippingOption={shippingOption}
+            setShippingOption={setShippingOption}
+            promoCode={promoCode}
+            setPromoCode={setPromoCode}
+            promoError={promoError}
+            handlePromoCode={handlePromoCode}
+            calculateSubtotal={calculateSubtotal}
+            calculateShipping={calculateShipping}
+            calculateTotal={calculateTotal}
+          />
+        </div>
       </div>
     </div>
   );

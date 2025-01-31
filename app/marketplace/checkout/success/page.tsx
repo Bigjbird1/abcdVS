@@ -1,38 +1,53 @@
-"use client";
+'use client';
 
-import React from "react";
-import { CheckCircle } from "lucide-react";
-import Link from "next/link";
+import React from 'react';
+import OrderTrackingSystem from '../../../components/marketplace/OrderTrackingSystem';
+import { Alert, AlertDescription } from '../../../components/ui/alert';
+import { CheckCircle } from 'lucide-react';
+import Link from 'next/link';
 
-export default function CheckoutSuccessPage() {
+const CheckoutSuccessPage = () => {
   return (
-    <div className="min-h-screen bg-gray-50 py-16">
-      <div className="max-w-xl mx-auto px-4 text-center">
-        <div className="bg-white rounded-xl border p-8">
-          <div className="flex justify-center mb-4">
-            <CheckCircle className="w-16 h-16 text-green-500" />
-          </div>
-          <h1 className="text-2xl font-semibold mb-4">Thank You for Your Purchase!</h1>
-          <p className="text-gray-600 mb-8">
-            Your order has been successfully placed. You will receive a confirmation
-            email shortly with your order details.
-          </p>
-          <div className="space-y-4">
-            <Link 
-              href="/marketplace"
-              className="block w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800"
-            >
-              Continue Shopping
-            </Link>
-            <Link
-              href="/dashboard"
-              className="block w-full bg-white text-gray-900 py-3 rounded-lg border hover:bg-gray-50"
-            >
-              View Order Status
-            </Link>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        {/* Success Message */}
+        <div className="mb-8">
+          <Alert className="bg-green-50 border-green-200">
+            <CheckCircle className="h-5 w-5 text-green-600" />
+            <AlertDescription className="text-green-800">
+              Thank you for your purchase! Your order has been successfully placed.
+            </AlertDescription>
+          </Alert>
+          
+          <div className="mt-4 p-4 bg-white rounded-lg border">
+            <h2 className="text-lg font-semibold mb-2">What's Next?</h2>
+            <ul className="space-y-2 text-gray-600">
+              <li>• You will receive an order confirmation email shortly</li>
+              <li>• Track your order status and shipping updates below</li>
+              <li>• For any questions, contact our support team</li>
+            </ul>
+            <div className="mt-4 flex gap-4">
+              <Link 
+                href="/marketplace" 
+                className="text-sm text-indigo-600 hover:text-indigo-800"
+              >
+                Continue Shopping
+              </Link>
+              <Link 
+                href="/support" 
+                className="text-sm text-indigo-600 hover:text-indigo-800"
+              >
+                Contact Support
+              </Link>
+            </div>
           </div>
         </div>
+
+        {/* Order Tracking System */}
+        <OrderTrackingSystem />
       </div>
     </div>
   );
-}
+};
+
+export default CheckoutSuccessPage;
